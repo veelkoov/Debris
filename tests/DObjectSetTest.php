@@ -4,10 +4,9 @@ namespace Veelkoov\Debris\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\TestCase;
 use stdClass;
 use Veelkoov\Debris\DObjectSet;
-use Veelkoov\Debris\DScalarSet;
-use PHPUnit\Framework\TestCase;
 
 #[CoversClass(DObjectSet::class)]
 class DObjectSetTest extends TestCase

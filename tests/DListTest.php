@@ -4,11 +4,9 @@ namespace Veelkoov\Debris\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Metadata\CoversFunction;
-use Veelkoov\Debris\DList;
 use PHPUnit\Framework\TestCase;
+use Veelkoov\Debris\DList;
 use Veelkoov\Debris\EmptyCollectionException;
-use Veelkoov\Debris\UnsupportedTypeException;
 
 #[CoversClass(DList::class)]
 class DListTest extends TestCase

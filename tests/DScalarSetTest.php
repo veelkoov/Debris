@@ -4,8 +4,8 @@ namespace Veelkoov\Debris\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
-use Veelkoov\Debris\DScalarSet;
 use PHPUnit\Framework\TestCase;
+use Veelkoov\Debris\DScalarSet;
 
 #[CoversClass(DScalarSet::class)]
 class DScalarSetTest extends TestCase
