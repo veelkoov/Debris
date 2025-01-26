@@ -1,0 +1,43 @@
+{
+    "name": "veelkoov/debris",
+    "version": "0.1.0",
+    "type": "library",
+    "require": {
+        "php": "^8.3"
+    },
+    "require-dev": {
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpunit/phpunit": "^11.5",
+        "phpstan/extension-installer": "^1.4",
+        "friendsofphp/php-cs-fixer": "^3.67"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Veelkoov\\Debris\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Veelkoov\\Debris\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Veelkoov",
+            "email": "veelkoov@protonmail.com"
+        }
+    ],
+    "scripts": {
+        "pcf": "vendor/bin/php-cs-fixer fix",
+        "ps": "vendor/bin/phpstan analyse",
+        "pu": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage --path-coverage"
+    },
+    "config": {
+        "allow-plugins": {
+            "phpstan/extension-installer": true
+        }
+    }
+}
