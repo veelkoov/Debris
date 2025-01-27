@@ -109,11 +109,11 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param T $item
+     * @param T ...$item
      */
-    public function plus(mixed $item): static
+    public function plus(mixed ...$item): static
     {
-        return $this->plusAll([$item]);
+        return $this->plusAll($item);
     }
 
     /**
@@ -146,6 +146,27 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
     public function contains(mixed $item): bool
     {
         return \array_key_exists($item, $this->items);
+    }
+
+    /**
+     * @template TResult
+     *
+     * @param ?callable(T): TResult $callable
+     *
+     * @return ($callable is null ? T : TResult)
+     */
+    public function max(?callable $callable = null): mixed
+    {
+        if ($this->isEmpty()) {
+            throw new EmptyCollectionException('Cannot find max() of an empty set.');
+        }
+
+        return max(null === $callable ? array_keys($this->items) : array_map($callable, array_keys($this->items)));
+    }
+
+    public function filter(callable $filterFunction): static
+    {
+        return new static(array_filter(array_keys($this->items), $filterFunction));
     }
 
     /**

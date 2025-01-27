@@ -112,11 +112,11 @@ class DObjectSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param T $item
+     * @param T ...$item
      */
-    public function plus(mixed $item): static
+    public function plus(mixed ...$item): static
     {
-        return $this->plusAll([$item]);
+        return $this->plusAll($item);
     }
 
     /**
