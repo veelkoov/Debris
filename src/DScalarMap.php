@@ -4,12 +4,7 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use ArrayIterator;
 use IteratorAggregate;
-use JsonSerializable;
-use Override;
-use RuntimeException;
-use Traversable;
 
 /**
  * @template K of array-key
@@ -17,7 +12,7 @@ use Traversable;
  *
  * @implements IteratorAggregate<K, V>
  */
-class DScalarMap implements IteratorAggregate, JsonSerializable
+class DScalarMap implements \IteratorAggregate, \JsonSerializable
 {
     /**
      * @var array<K, V>
@@ -68,7 +63,7 @@ class DScalarMap implements IteratorAggregate, JsonSerializable
 
     public function count(): int
     {
-        return count($this->items);
+        return \count($this->items);
     }
 
     /**
@@ -101,13 +96,13 @@ class DScalarMap implements IteratorAggregate, JsonSerializable
      * @template T
      *
      * @param K                 $key
-     * @param T|(callable(): T) $default
+     * @param (callable(): T)|T $default
      *
-     * @return V|T
+     * @return T|V
      */
     public function getOrDefault(int|string $key, mixed $default): mixed
     {
-        return array_key_exists($key, $this->items) ? $this->items[$key] : (is_callable($default) ? $default() : $default);
+        return \array_key_exists($key, $this->items) ? $this->items[$key] : (\is_callable($default) ? $default() : $default);
     }
 
     /**
@@ -115,7 +110,7 @@ class DScalarMap implements IteratorAggregate, JsonSerializable
      */
     public function contains(mixed $value): bool
     {
-        return in_array($value, $this->items, true);
+        return \in_array($value, $this->items, true);
     }
 
     /**
@@ -123,7 +118,7 @@ class DScalarMap implements IteratorAggregate, JsonSerializable
      */
     public function hasKey(int|string $key): bool
     {
-        return array_key_exists($key, $this->items);
+        return \array_key_exists($key, $this->items);
     }
 
     /**
@@ -131,7 +126,7 @@ class DScalarMap implements IteratorAggregate, JsonSerializable
      */
     public function filter(callable $function): static
     {
-        return new static(array_filter($this->items, fn($value, $key) => $function($key, $value), ARRAY_FILTER_USE_BOTH));
+        return new static(array_filter($this->items, static fn ($value, $key) => $function($key, $value), ARRAY_FILTER_USE_BOTH));
     }
 
     /**
@@ -139,19 +134,19 @@ class DScalarMap implements IteratorAggregate, JsonSerializable
      */
     public function filterValues(callable $function): static
     {
-        return new static(array_filter($this->items, fn($value) => $function($value)));
+        return new static(array_filter($this->items, static fn ($value) => $function($value)));
     }
 
     /**
-     * @return Traversable<K, V>
+     * @return \Traversable<K, V>
      */
-    #[Override]
-    public function getIterator(): Traversable
+    #[\Override]
+    public function getIterator(): \Traversable
     {
-        return new ArrayIterator($this->items);
+        return new \ArrayIterator($this->items);
     }
 
-    #[Override]
+    #[\Override]
     public function jsonSerialize(): mixed
     {
         return $this->items;

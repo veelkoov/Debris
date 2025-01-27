@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use ArrayIterator;
 use IteratorAggregate;
-use JsonSerializable;
-use Override;
-use Traversable;
 
 /**
  * @template T of array-key
  *
  * @implements IteratorAggregate<int, T>
  */
-class DScalarSet implements IteratorAggregate, JsonSerializable
+class DScalarSet implements \IteratorAggregate, \JsonSerializable
 {
     /**
      * @var array<T, null>
@@ -77,7 +73,7 @@ class DScalarSet implements IteratorAggregate, JsonSerializable
 
     public function count(): int
     {
-        return count($this->items);
+        return \count($this->items);
     }
 
     /**
@@ -149,16 +145,16 @@ class DScalarSet implements IteratorAggregate, JsonSerializable
      */
     public function contains(mixed $item): bool
     {
-        return array_key_exists($item, $this->items);
+        return \array_key_exists($item, $this->items);
     }
 
     /**
-     * @return Traversable<int, T>
+     * @return \Traversable<int, T>
      */
-    #[Override]
-    public function getIterator(): Traversable
+    #[\Override]
+    public function getIterator(): \Traversable
     {
-        return new ArrayIterator($this->toArray());
+        return new \ArrayIterator($this->toArray());
     }
 
     /**
@@ -169,7 +165,7 @@ class DScalarSet implements IteratorAggregate, JsonSerializable
         return array_keys($this->items);
     }
 
-    #[Override]
+    #[\Override]
     public function jsonSerialize(): mixed
     {
         return $this->toArray();

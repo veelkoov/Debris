@@ -10,8 +10,11 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\DList;
 use Veelkoov\Debris\EmptyCollectionException;
 
+/**
+ * @internal
+ */
 #[CoversClass(DList::class)]
-class DListTest extends TestCase
+final class DListTest extends TestCase
 {
     #[Test]
     public function maxOnEmptyThrows(): void
@@ -39,7 +42,7 @@ class DListTest extends TestCase
         /** @var DList<int> $subject */
         $subject = new DList([1, 2, 3]);
 
-        self::assertSame(4, $subject->max(fn(int $item) => 5 - $item));
+        self::assertSame(4, $subject->max(static fn (int $item) => 5 - $item));
     }
 
     #[Test]

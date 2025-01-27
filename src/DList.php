@@ -4,20 +4,14 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use ArrayIterator;
-use Closure;
 use IteratorAggregate;
-use JsonSerializable;
-use Override;
-use RuntimeException;
-use Traversable;
 
 /**
  * @template T
  *
  * @implements IteratorAggregate<int, T>
  */
-class DList implements IteratorAggregate, JsonSerializable
+class DList implements \IteratorAggregate, \JsonSerializable
 {
     /**
      * @var list<T>
@@ -76,7 +70,7 @@ class DList implements IteratorAggregate, JsonSerializable
 
     public function count(): int
     {
-        return count($this->items);
+        return \count($this->items);
     }
 
     /**
@@ -106,10 +100,10 @@ class DList implements IteratorAggregate, JsonSerializable
      */
     public function contains(mixed $item): bool
     {
-        return in_array($item, $this->items, true);
+        return \in_array($item, $this->items, true);
     }
 
-    public function each(Closure $closure): static
+    public function each(\Closure $closure): static
     {
         foreach ($this->items as $item) {
             $closure($item);
@@ -118,7 +112,7 @@ class DList implements IteratorAggregate, JsonSerializable
         return $this;
     }
 
-    public function sortInPlace(?Closure $function = null): static
+    public function sortInPlace(?\Closure $function = null): static
     {
         if (null === $function) {
             sort($this->items);
@@ -129,7 +123,7 @@ class DList implements IteratorAggregate, JsonSerializable
         return $this;
     }
 
-    public function sorted(?Closure $function = null): static
+    public function sorted(?\Closure $function = null): static
     {
         $result = clone $this;
 
@@ -168,7 +162,7 @@ class DList implements IteratorAggregate, JsonSerializable
      */
     public function minusAll(array $items): static
     {
-        return (new static($this->items))->filter(fn($item) => !in_array($item, $items, true));
+        return (new static($this->items))->filter(static fn ($item) => !\in_array($item, $items, true));
     }
 
     /**
@@ -176,16 +170,16 @@ class DList implements IteratorAggregate, JsonSerializable
      */
     public function intersect(mixed $other): static
     {
-        return self::filter(fn(mixed $item) => in_array($item, $other->items, true));
+        return self::filter(static fn (mixed $item) => \in_array($item, $other->items, true));
     }
 
     /**
-     * @return Traversable<int, T>
+     * @return \Traversable<int, T>
      */
-    #[Override]
-    public function getIterator(): Traversable
+    #[\Override]
+    public function getIterator(): \Traversable
     {
-        return new ArrayIterator($this->items);
+        return new \ArrayIterator($this->items);
     }
 
     /**
@@ -260,7 +254,7 @@ class DList implements IteratorAggregate, JsonSerializable
         return new static(array_filter($this->items, $filterFunction));
     }
 
-    #[Override]
+    #[\Override]
     public function jsonSerialize(): mixed
     {
         return $this->items;
@@ -272,7 +266,7 @@ class DList implements IteratorAggregate, JsonSerializable
     public function single(): mixed
     {
         if (1 !== $this->count()) {
-            throw new NoSingleElementException('The list has ' . $this->count() . ' items instead of exactly one.');
+            throw new NoSingleElementException('The list has '.$this->count().' items instead of exactly one.');
         }
 
         return $this->items[0];

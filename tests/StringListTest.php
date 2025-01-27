@@ -11,11 +11,14 @@ use Veelkoov\Debris\DScalarSet;
 use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
+/**
+ * @internal
+ */
 #[CoversClass(StringList::class)]
 #[UsesClass(DList::class)]
 #[UsesClass(DScalarSet::class)]
 #[UsesClass(StringSet::class)]
-class StringListTest extends TestCase
+final class StringListTest extends TestCase
 {
     #[Test]
     public function join(): void

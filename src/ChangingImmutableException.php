@@ -8,6 +8,6 @@ class ChangingImmutableException extends \RuntimeException
 {
     public function __construct(string $sourceClass)
     {
-        parent::__construct("Tried to modify immutable $sourceClass");
+        parent::__construct("Tried to modify immutable {$sourceClass}");
     }
 }

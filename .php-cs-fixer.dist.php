@@ -6,7 +6,8 @@ $finder = (new PhpCsFixer\Finder())
 
 return (new PhpCsFixer\Config())
     ->setRules([
-        '@PER-CS' => true,
+        '@PhpCsFixer' => true,
+        '@PhpCsFixer:risky' => true,
     ])
     ->setFinder($finder)
 ;

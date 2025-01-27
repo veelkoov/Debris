@@ -4,24 +4,19 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use ArrayIterator;
 use IteratorAggregate;
-use JsonSerializable;
-use Override;
-use SplObjectStorage;
-use Traversable;
 
 /**
  * @template T of object
  *
  * @implements IteratorAggregate<int, T>
  */
-class DObjectSet implements IteratorAggregate, JsonSerializable
+class DObjectSet implements \IteratorAggregate, \JsonSerializable
 {
     /**
-     * @var SplObjectStorage<T, null>
+     * @var \SplObjectStorage<T, null>
      */
-    protected SplObjectStorage $items;
+    protected \SplObjectStorage $items;
 
     private bool $frozen;
 
@@ -30,7 +25,7 @@ class DObjectSet implements IteratorAggregate, JsonSerializable
      */
     final public function __construct(iterable $items = [])
     {
-        $this->items = new SplObjectStorage();
+        $this->items = new \SplObjectStorage();
         $this->frozen = false;
         $this->addAll($items);
         $this->frozen = true;
@@ -68,7 +63,7 @@ class DObjectSet implements IteratorAggregate, JsonSerializable
      */
     public function isEmpty(): bool
     {
-        return 0 === count($this->items);
+        return 0 === \count($this->items);
     }
 
     /**
@@ -76,12 +71,12 @@ class DObjectSet implements IteratorAggregate, JsonSerializable
      */
     public function isNotEmpty(): bool
     {
-        return 0 !== count($this->items);
+        return 0 !== \count($this->items);
     }
 
     public function count(): int
     {
-        return count($this->items);
+        return \count($this->items);
     }
 
     /**
@@ -178,12 +173,12 @@ class DObjectSet implements IteratorAggregate, JsonSerializable
     }
 
     /**
-     * @return Traversable<int, T>
+     * @return \Traversable<int, T>
      */
-    #[Override]
-    public function getIterator(): Traversable
+    #[\Override]
+    public function getIterator(): \Traversable
     {
-        return new ArrayIterator($this->toArray());
+        return new \ArrayIterator($this->toArray());
     }
 
     /**
@@ -200,7 +195,7 @@ class DObjectSet implements IteratorAggregate, JsonSerializable
         return $result;
     }
 
-    #[Override]
+    #[\Override]
     public function jsonSerialize(): mixed
     {
         return $this->toArray();

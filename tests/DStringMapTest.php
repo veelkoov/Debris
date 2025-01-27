@@ -12,9 +12,12 @@ use Veelkoov\Debris\DScalarSet;
 use Veelkoov\Debris\DStringMap;
 use Veelkoov\Debris\StringSet;
 
+/**
+ * @internal
+ */
 #[CoversClass(DStringMap::class)]
 #[UsesClass(DScalarSet::class)]
-class DStringMapTest extends TestCase
+final class DStringMapTest extends TestCase
 {
     #[Test]
     public function getKeys(): void

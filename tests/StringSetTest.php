@@ -9,9 +9,12 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\DScalarSet;
 use Veelkoov\Debris\StringSet;
 
+/**
+ * @internal
+ */
 #[CoversClass(StringSet::class)]
 #[UsesClass(DScalarSet::class)]
-class StringSetTest extends TestCase
+final class StringSetTest extends TestCase
 {
     #[Test]
     public function join(): void

@@ -11,9 +11,12 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\ChangingImmutableException;
 use Veelkoov\Debris\DScalarSet;
 
+/**
+ * @internal
+ */
 #[CoversClass(DScalarSet::class)]
 #[UsesClass(ChangingImmutableException::class)]
-class DScalarSetTest extends TestCase
+final class DScalarSetTest extends TestCase
 {
     #[Test]
     public function deduplicationWorks(): void

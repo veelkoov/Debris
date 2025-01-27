@@ -31,7 +31,7 @@
         }
     ],
     "scripts": {
-        "pcf": "vendor/bin/php-cs-fixer fix",
+        "pcf": "vendor/bin/php-cs-fixer fix --diff -vv --allow-risky=yes",
         "ps": "vendor/bin/phpstan analyse",
         "pu": "XDEBUG_MODE=coverage vendor/bin/phpunit --coverage-html coverage --path-coverage"
     },
