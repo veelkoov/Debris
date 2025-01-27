@@ -4,12 +4,18 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use RuntimeException;
+use ArrayIterator;
+use IteratorAggregate;
+use JsonSerializable;
+use Override;
+use Traversable;
 
 /**
  * @template T of array-key
+ *
+ * @implements IteratorAggregate<int, T>
  */
-class DScalarSet
+class DScalarSet implements IteratorAggregate, JsonSerializable
 {
     /**
      * @var array<T, null>
@@ -88,7 +94,7 @@ class DScalarSet
     public function addAll(iterable $items): static
     {
         if ($this->frozen) {
-            throw new RuntimeException('Tried to modify immutable ' . __CLASS__);
+            throw new ChangingImmutableException(__CLASS__);
         }
 
         foreach ($items as $item) {
@@ -96,6 +102,22 @@ class DScalarSet
         }
 
         return $this;
+    }
+
+    /**
+     * @param iterable<T> $items
+     */
+    public function plusAll(iterable $items): static
+    {
+        return new static([...array_keys($this->items), ...$items]);
+    }
+
+    /**
+     * @param T $item
+     */
+    public function plus(mixed $item): static
+    {
+        return $this->plusAll([$item]);
     }
 
     /**
@@ -112,7 +134,7 @@ class DScalarSet
     public function removeAll(iterable $items): static
     {
         if ($this->frozen) {
-            throw new RuntimeException('Tried to modify immutable ' . __CLASS__);
+            throw new ChangingImmutableException(__CLASS__);
         }
 
         foreach ($items as $item) {
@@ -131,10 +153,25 @@ class DScalarSet
     }
 
     /**
+     * @return Traversable<int, T>
+     */
+    #[Override]
+    public function getIterator(): Traversable
+    {
+        return new ArrayIterator($this->toArray());
+    }
+
+    /**
      * @return list<T>
      */
     public function toArray(): array
     {
         return array_keys($this->items);
+    }
+
+    #[Override]
+    public function jsonSerialize(): mixed
+    {
+        return $this->toArray();
     }
 }

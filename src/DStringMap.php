@@ -11,8 +11,8 @@ namespace Veelkoov\Debris;
  */
 class DStringMap extends DScalarMap
 {
-    public function getKeys(): StringList
+    public function getKeys(): StringSet
     {
-        return new StringList(array_keys($this->items));
+        return new StringSet(array_keys($this->items));
     }
 }

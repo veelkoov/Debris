@@ -93,7 +93,7 @@ class DList implements IteratorAggregate, JsonSerializable
     public function addAll(iterable $items): static
     {
         if ($this->frozen) {
-            throw new RuntimeException('Tried to modify immutable ' . __CLASS__);
+            throw new ChangingImmutableException(__CLASS__);
         }
 
         array_push($this->items, ...$items);

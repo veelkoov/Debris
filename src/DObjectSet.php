@@ -8,7 +8,6 @@ use ArrayIterator;
 use IteratorAggregate;
 use JsonSerializable;
 use Override;
-use RuntimeException;
 use SplObjectStorage;
 use Traversable;
 
@@ -99,7 +98,7 @@ class DObjectSet implements IteratorAggregate, JsonSerializable
     public function addAll(iterable $items): static
     {
         if ($this->frozen) {
-            throw new RuntimeException('Tried to modify immutable ' . __CLASS__);
+            throw new ChangingImmutableException(__CLASS__);
         }
 
         foreach ($items as $item) {
@@ -110,7 +109,7 @@ class DObjectSet implements IteratorAggregate, JsonSerializable
     }
 
     /**
-     * @param T[] $items
+     * @param iterable<T> $items
      */
     public function plusAll(iterable $items): static
     {
@@ -139,7 +138,7 @@ class DObjectSet implements IteratorAggregate, JsonSerializable
     public function removeAll(iterable $items): static
     {
         if ($this->frozen) {
-            throw new RuntimeException('Tried to modify immutable ' . __CLASS__);
+            throw new ChangingImmutableException(__CLASS__);
         }
 
         foreach ($items as $item) {

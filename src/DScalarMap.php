@@ -78,7 +78,7 @@ class DScalarMap implements IteratorAggregate, JsonSerializable
     public function set(int|string $key, mixed $value): static
     {
         if ($this->frozen) {
-            throw new RuntimeException('Tried to modify immutable ' . __CLASS__);
+            throw new ChangingImmutableException(__CLASS__);
         }
 
         $this->items[$key] = $value;
