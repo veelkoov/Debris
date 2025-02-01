@@ -2,35 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Tests;
+namespace Veelkoov\Debris\Tests\Base;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\ChangingImmutableException;
-use Veelkoov\Debris\DObjectSet;
-use Veelkoov\Debris\EmptyCollectionException;
-use Veelkoov\Debris\Tests\Utils\Sortable;
+use Veelkoov\Debris\Base\DScalarSet;
+use Veelkoov\Debris\Exception\ChangingImmutableException;
+use Veelkoov\Debris\Exception\EmptyCollectionException;
 
 /**
  * @internal
  */
-#[CoversClass(DObjectSet::class)]
+#[CoversClass(DScalarSet::class)]
 #[UsesClass(ChangingImmutableException::class)]
-final class DObjectSetTest extends TestCase
+final class DScalarSetTest extends TestCase
 {
     #[Test]
     public function deduplicationWorks(): void
     {
-        $a = new \stdClass();
-        $b = new \stdClass();
-        $c = new \stdClass();
-        $d = new \stdClass();
-        $e = new \stdClass();
+        $a = 'a';
+        $b = 'b';
+        $c = 'c';
+        $d = 'd';
+        $e = 'e';
 
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut([$a, $a, $b]);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut([$a, $a, $b]);
         self::assertEqualsCanonicalizing([$a, $b], $subject->toArray());
 
         $subject->add($c);
@@ -51,11 +50,11 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function immutabilityWorks(): void
     {
-        $a = new \stdClass();
-        $b = new \stdClass();
+        $a = 'a';
+        $b = 'b';
 
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut([$a]);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut([$a]);
 
         $subject->add($b);
         $subject->remove($a);
@@ -83,44 +82,44 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function isEmpty_works(): void
     {
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut();
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut();
         self::assertTrue($subject->isEmpty());
 
-        $subject->add(new \stdClass());
+        $subject->add('item');
         self::assertFalse($subject->isEmpty());
     }
 
     #[Test]
     public function isNotEmpty_works(): void
     {
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut();
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut();
         self::assertFalse($subject->isNotEmpty());
 
-        $subject->add(new \stdClass());
+        $subject->add('item');
         self::assertTrue($subject->isNotEmpty());
     }
 
     #[Test]
     public function count_works(): void
     {
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut();
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut();
         self::assertSame(0, $subject->count());
 
-        $subject->add(new \stdClass());
+        $subject->add('item');
         self::assertSame(1, $subject->count());
     }
 
     #[Test]
     public function add_works(): void
     {
-        $a = new \stdClass();
-        $b = new \stdClass();
+        $a = 'a';
+        $b = 'b';
 
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut();
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut();
 
         $subject->add($a, $b);
         self::assertEqualsCanonicalizing([$b, $a], $subject->toArray());
@@ -129,11 +128,11 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function addAll_works(): void
     {
-        $a = new \stdClass();
-        $b = new \stdClass();
+        $a = 'a';
+        $b = 'b';
 
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut();
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut();
 
         $subject->addAll([$a, $b]);
         self::assertEqualsCanonicalizing([$b, $a], $subject->toArray());
@@ -142,13 +141,13 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function plusAll_works(): void
     {
-        $a = new \stdClass();
-        $b = new \stdClass();
-        $c = new \stdClass();
-        $d = new \stdClass();
+        $a = 'a';
+        $b = 'b';
+        $c = 'c';
+        $d = 'd';
 
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut([$a, $b]);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut([$a, $b]);
 
         $result = $subject->plusAll([$c, $d]);
         self::assertEqualsCanonicalizing([$b, $a, $d, $c], $result->toArray());
@@ -157,13 +156,13 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function plus_works(): void
     {
-        $a = new \stdClass();
-        $b = new \stdClass();
-        $c = new \stdClass();
-        $d = new \stdClass();
+        $a = 'a';
+        $b = 'b';
+        $c = 'c';
+        $d = 'd';
 
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::mut([$a, $b]);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::mut([$a, $b]);
 
         $result = $subject->plus($c, $d);
         self::assertEqualsCanonicalizing([$b, $a, $d, $c], $result->toArray());
@@ -172,11 +171,11 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function contains_works(): void
     {
-        $a = new \stdClass();
-        $b = new \stdClass();
+        $a = 'a';
+        $b = 'b';
 
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = DObjectSet::of($a);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::of($a);
 
         self::assertTrue($subject->contains($a));
         self::assertFalse($subject->contains($b));
@@ -185,8 +184,8 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function max_throwsOnEmpty(): void
     {
-        /** @var DObjectSet<\stdClass> $subject */
-        $subject = new DObjectSet();
+        /** @var DScalarSet<string> $subject */
+        $subject = new DScalarSet();
 
         self::expectException(EmptyCollectionException::class);
         $subject->max();
@@ -195,11 +194,11 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function max_worksWithoutCallable(): void
     {
-        $a = new Sortable('a');
-        $b = new Sortable('b');
+        $a = 'a';
+        $b = 'b';
 
-        /** @var DObjectSet<Sortable> $subject */
-        $subject = DObjectSet::of($a, $b);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::of($a, $b);
 
         self::assertSame($b, $subject->max());
     }
@@ -207,13 +206,13 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function max_worksWithCallable(): void
     {
-        $a = new Sortable('a');
-        $b = new Sortable('b');
+        $a = 'a';
+        $b = 'b';
 
-        /** @var DObjectSet<Sortable> $subject */
-        $subject = DObjectSet::of($a, $b);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::of($a, $b);
 
-        $result = $subject->max(static fn (Sortable $item) => $item.$item);
+        $result = $subject->max(static fn (string $item) => $item.$item);
 
         self::assertSame('bb', $result);
     }
@@ -221,14 +220,14 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function filter_works(): void
     {
-        $a = new Sortable('a');
-        $b = new Sortable('b');
-        $c = new Sortable('c');
+        $a = 'a';
+        $b = 'b';
+        $c = 'c';
 
-        /** @var DObjectSet<Sortable> $subject */
-        $subject = DObjectSet::of($a, $b, $c);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::of($a, $b, $c);
 
-        $result = $subject->filter(static fn (Sortable $item) => $item >= 'b');
+        $result = $subject->filter(static fn (string $item) => $item >= 'b');
 
         self::assertEqualsCanonicalizing([$b, $c], $result->toArray());
     }
@@ -236,11 +235,11 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function jsonSerialize_works(): void
     {
-        $a = new Sortable('a');
-        $b = new Sortable('b');
+        $a = 'a';
+        $b = 'b';
 
-        /** @var DObjectSet<Sortable> $subject */
-        $subject = DObjectSet::of($a, $b);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::of($a, $b);
 
         self::assertSame('["a","b"]', json_encode($subject));
     }
@@ -248,12 +247,12 @@ final class DObjectSetTest extends TestCase
     #[Test]
     public function getIterator_works(): void
     {
-        $a = new Sortable('a');
-        $b = new Sortable('b');
-        $c = new Sortable('c');
+        $a = 'a';
+        $b = 'b';
+        $c = 'c';
 
-        /** @var DObjectSet<Sortable> $subject */
-        $subject = DObjectSet::of($a, $b, $c);
+        /** @var DScalarSet<string> $subject */
+        $subject = DScalarSet::of($a, $b, $c);
 
         self::assertSame([$a, $b, $c], [...$subject]);
     }

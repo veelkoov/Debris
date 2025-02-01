@@ -1,7 +1,10 @@
 <?php
 
-namespace Veelkoov\Debris\Tests\Utils;
+namespace Veelkoov\Debris\Tests\DebrisTestsUtils;
 
+/**
+ * @internal
+ */
 final readonly class Sortable implements \Stringable, \JsonSerializable
 {
     public function __construct(

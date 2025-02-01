@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Tests;
+namespace Veelkoov\Debris\Tests\Base;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\DList;
-use Veelkoov\Debris\EmptyCollectionException;
+use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Exception\EmptyCollectionException;
 
 /**
  * @internal

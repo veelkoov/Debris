@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris;
+namespace Veelkoov\Debris\Exception;
 
-class ChangingImmutableException extends \RuntimeException
+class ChangingImmutableException extends DebrisException
 {
     public function __construct(string $sourceClass)
     {

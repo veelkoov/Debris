@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris;
+namespace Veelkoov\Debris\Base;
 
 use IteratorAggregate;
+use Veelkoov\Debris\Exception\ChangingImmutableException;
+use Veelkoov\Debris\Exception\EmptyCollectionException;
+use Veelkoov\Debris\Exception\NoSingleElementException;
 
 /**
  * @template T
@@ -219,10 +222,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
      * @template SourceK
      * @template SourceV
      *
-     * @param array<SourceK, SourceV>       $source
+     * @param iterable<SourceK, SourceV>    $source
      * @param callable(SourceK, SourceV): T $mapFunction
      */
-    public static function mapWithKey(array $source, callable $mapFunction): static
+    public static function mapWithKey(iterable $source, callable $mapFunction): static
     {
         $result = [];
 

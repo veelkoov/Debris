@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris;
+namespace Veelkoov\Debris\Base;
 
 use IteratorAggregate;
+use Veelkoov\Debris\Exception\ChangingImmutableException;
 
 /**
  * @template K of array-key
@@ -150,5 +151,68 @@ class DScalarMap implements \IteratorAggregate, \JsonSerializable
     public function jsonSerialize(): mixed
     {
         return $this->items;
+    }
+
+    /**
+     * @return array<K, V>
+     */
+    public function toArray(): array
+    {
+        return $this->items;
+    }
+
+    /**
+     * @param iterable<mixed>    $input
+     * @param int|literal-string $keyKey
+     * @param int|literal-string $valueKey
+     */
+    public static function fromRows(iterable $input, int|string $keyKey, int|string $valueKey): static
+    {
+        $result = [];
+
+        foreach ($input as $row) {
+            /** @phpstan-ignore argument.type */
+            $key = static::enforceIsArrayAndKeyExistsGetKey($row, $keyKey);
+
+            /** @phpstan-ignore argument.type */
+            $key = static::enforceKeyType($key);
+
+            /** @phpstan-ignore argument.type */
+            $value = static::enforceIsArrayAndKeyExistsGetKey($row, $valueKey);
+
+            $value = static::enforceValueType($value);
+
+            $result[$key] = $value;
+        }
+
+        return new static($result);
+    }
+
+    /**
+     * @param K $key
+     *
+     * @return K
+     */
+    protected static function enforceKeyType(mixed $key): mixed
+    {
+        return $key;
+    }
+
+    /**
+     * @param V $value
+     *
+     * @return V
+     */
+    protected static function enforceValueType(mixed $value): mixed
+    {
+        return $value;
+    }
+
+    /**
+     * @param array<mixed>|\ArrayAccess<mixed, mixed> $input
+     */
+    protected static function enforceIsArrayAndKeyExistsGetKey(array|\ArrayAccess $input, int|string $key): mixed
+    {
+        return $input[$key];
     }
 }

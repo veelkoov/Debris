@@ -6,7 +6,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\DScalarSet;
+use Veelkoov\Debris\Base\DScalarSet;
 use Veelkoov\Debris\StringSet;
 
 /**

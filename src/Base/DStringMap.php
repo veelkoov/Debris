@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris;
+namespace Veelkoov\Debris\Base;
+
+use Veelkoov\Debris\StringSet;
 
 /**
  * @template T

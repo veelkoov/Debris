@@ -2,30 +2,35 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris;
+namespace Veelkoov\Debris\Base;
 
 use IteratorAggregate;
+use Veelkoov\Debris\Exception\ChangingImmutableException;
+use Veelkoov\Debris\Exception\EmptyCollectionException;
 
 /**
- * @template T of array-key
+ * @template T of object
  *
  * @implements IteratorAggregate<int, T>
  */
-class DScalarSet implements \IteratorAggregate, \JsonSerializable
+class DObjectSet implements \IteratorAggregate, \JsonSerializable
 {
     /**
-     * @var array<T, null>
+     * @var \SplObjectStorage<T, null>
      */
-    protected array $items;
+    protected \SplObjectStorage $items;
 
-    private bool $frozen = true;
+    private bool $frozen;
 
     /**
      * @param iterable<T> $items
      */
     final public function __construct(iterable $items = [])
     {
-        $this->items = array_fill_keys([...$items], null);
+        $this->items = new \SplObjectStorage();
+        $this->frozen = false;
+        $this->addAll($items);
+        $this->frozen = true;
     }
 
     /**
@@ -56,19 +61,19 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @phpstan-assert-if-true !non-empty-array<T, null> $this->items
+     * @phpstan-assert-if-true empty $this->toArray()
      */
     public function isEmpty(): bool
     {
-        return [] === $this->items;
+        return 0 === \count($this->items);
     }
 
     /**
-     * @phpstan-assert-if-true non-empty-array<T, null> $this->items
+     * @phpstan-assert-if-true non-empty-array<T> $this->toArray()
      */
     public function isNotEmpty(): bool
     {
-        return [] !== $this->items;
+        return 0 !== \count($this->items);
     }
 
     public function count(): int
@@ -94,7 +99,7 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
         }
 
         foreach ($items as $item) {
-            $this->items[$item] = null;
+            $this->items->attach($item);
         }
 
         return $this;
@@ -105,7 +110,7 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
      */
     public function plusAll(iterable $items): static
     {
-        return new static([...array_keys($this->items), ...$items]);
+        return new static([...$this, ...$items]);
     }
 
     /**
@@ -134,7 +139,7 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
         }
 
         foreach ($items as $item) {
-            unset($this->items[$item]);
+            $this->items->detach($item);
         }
 
         return $this;
@@ -145,7 +150,7 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
      */
     public function contains(mixed $item): bool
     {
-        return \array_key_exists($item, $this->items);
+        return $this->items->contains($item);
     }
 
     /**
@@ -161,12 +166,12 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
             throw new EmptyCollectionException('Cannot find max() of an empty set.');
         }
 
-        return max(null === $callable ? array_keys($this->items) : array_map($callable, array_keys($this->items)));
+        return max(null === $callable ? $this->toArray() : array_map($callable, $this->toArray()));
     }
 
     public function filter(callable $filterFunction): static
     {
-        return new static(array_filter(array_keys($this->items), $filterFunction));
+        return new static(array_filter($this->toArray(), $filterFunction));
     }
 
     /**
@@ -183,7 +188,13 @@ class DScalarSet implements \IteratorAggregate, \JsonSerializable
      */
     public function toArray(): array
     {
-        return array_keys($this->items);
+        $result = [];
+
+        foreach ($this->items as $item) {
+            $result[] = $item;
+        }
+
+        return $result;
     }
 
     #[\Override]
