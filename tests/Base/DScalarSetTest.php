@@ -188,6 +188,7 @@ final class DScalarSetTest extends TestCase
         $subject = new DScalarSet();
 
         self::expectException(EmptyCollectionException::class);
+        self::expectExceptionMessage('Cannot find max() of an empty set.');
         $subject->max();
     }
 

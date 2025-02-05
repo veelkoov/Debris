@@ -115,17 +115,6 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return $this;
     }
 
-    public function sortInPlace(?\Closure $function = null): static
-    {
-        if (null === $function) {
-            sort($this->items);
-        } else {
-            usort($this->items, $function);
-        }
-
-        return $this;
-    }
-
     public function sorted(?\Closure $function = null): static
     {
         $result = clone $this;
@@ -161,11 +150,23 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param T[] $items
+     * @param iterable<T> $items
      */
-    public function minusAll(array $items): static
+    public function minusAll(iterable $items): static
     {
-        return (new static($this->items))->filter(static fn ($item) => !\in_array($item, $items, true));
+        $result = $this->items;
+
+        foreach ($items as $item) {
+            $key = array_search($item, $result, true);
+
+            if (false === $key) {
+                continue;
+            }
+
+            unset($result[$key]);
+        }
+
+        return new static($result);
     }
 
     /**

@@ -162,6 +162,24 @@ class DScalarMap implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
+     * @param iterable<V>    $input
+     * @param callable(V): K $valueToKeyFunction
+     */
+    public static function fromValues(iterable $input, callable $valueToKeyFunction): static
+    {
+        $result = [];
+
+        foreach ($input as $value) {
+            $key = static::enforceKeyType($valueToKeyFunction($value));
+            $value = static::enforceValueType($value);
+
+            $result[$key] = $value;
+        }
+
+        return new static($result);
+    }
+
+    /**
      * @param iterable<mixed>    $input
      * @param int|literal-string $keyKey
      * @param int|literal-string $valueKey

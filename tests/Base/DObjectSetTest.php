@@ -189,6 +189,7 @@ final class DObjectSetTest extends TestCase
         $subject = new DObjectSet();
 
         self::expectException(EmptyCollectionException::class);
+        self::expectExceptionMessage('Cannot find max() of an empty set.');
         $subject->max();
     }
 
