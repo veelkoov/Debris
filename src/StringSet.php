@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use Veelkoov\Debris\Base\DScalarSet;
+use Veelkoov\Debris\Base\DSet;
 
 /**
- * @extends DScalarSet<string>
+ * @extends DSet<string>
  */
-class StringSet extends DScalarSet
+class StringSet extends DSet
 {
     public function join(string $separator): string
     {
-        return implode($separator, $this->toArray());
+        return implode($separator, $this->getValuesArray());
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Veelkoov\Debris\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -7,7 +9,10 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DScalarSet;
+use Veelkoov\Debris\Base\DMap;
+use Veelkoov\Debris\Base\DSet;
+use Veelkoov\Debris\Base\Internal\DMapKey;
+use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
 use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
 
@@ -16,7 +21,10 @@ use Veelkoov\Debris\StringSet;
  */
 #[CoversClass(StringList::class)]
 #[UsesClass(DList::class)]
-#[UsesClass(DScalarSet::class)]
+#[UsesClass(DMap::class)]
+#[UsesClass(DMapKey::class)]
+#[UsesClass(DMapKeyMapper::class)]
+#[UsesClass(DSet::class)]
 #[UsesClass(StringSet::class)]
 final class StringListTest extends TestCase
 {
@@ -35,6 +43,6 @@ final class StringListTest extends TestCase
 
         $result = $subject->toSet();
 
-        self::assertEqualsCanonicalizing(['abc', 'def'], $result->toArray());
+        self::assertEqualsCanonicalizing(['abc', 'def'], $result->getValuesArray());
     }
 }

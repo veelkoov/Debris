@@ -7,14 +7,14 @@ namespace Veelkoov\Debris\Base;
 use Veelkoov\Debris\StringSet;
 
 /**
- * @template T
+ * @template V of object|scalar|null
  *
- * @extends DScalarMap<string, T>
+ * @extends DMap<string, V>
  */
-class DStringMap extends DScalarMap
+class DStringMap extends DMap
 {
     public function getKeys(): StringSet
     {
-        return new StringSet(array_keys($this->items));
+        return new StringSet(parent::getKeysArray());
     }
 }
