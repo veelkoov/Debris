@@ -11,10 +11,8 @@ use Veelkoov\Debris\Base\Internal\DPair;
 /**
  * @template K of object|scalar|null
  * @template V of object|scalar|null
- *
- *@implements \IteratorAggregate<DPair<K, V>>
  */
-class DMap implements \IteratorAggregate, \JsonSerializable
+class DMap implements \JsonSerializable
 {
     /**
      * @var \SplObjectStorage<DMapKey<K>, V>
@@ -174,11 +172,33 @@ class DMap implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
+     * @return list<V>
+     */
+    public function getValuesArray(): array
+    {
+        $result = [];
+
+        foreach ($this->items as $key) {
+            $result[] = $this->items[$key];
+        }
+
+        return $result;
+    }
+
+    /**
      * @return DSet<K>
      */
     public function getKeys(): DSet
     {
         return new DSet($this->getKeysArray());
+    }
+
+    /**
+     * @return DList<V>
+     */
+    public function getValues(): DList
+    {
+        return new DList($this->getValuesArray());
     }
 
     /**
@@ -248,11 +268,6 @@ class DMap implements \IteratorAggregate, \JsonSerializable
         $this->items->detach($this->mappedKeys->get($key));
 
         return $this;
-    }
-
-    public function getIterator(): \Traversable
-    {
-        return new \ArrayIterator($this->getPairsArray());
     }
 
     public function jsonSerialize(): mixed
