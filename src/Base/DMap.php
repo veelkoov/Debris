@@ -6,20 +6,26 @@ namespace Veelkoov\Debris\Base;
 
 use Veelkoov\Debris\Base\Internal\DMapKey;
 use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
+use Veelkoov\Debris\Base\Internal\DPair;
 
 /**
  * @template K of object|scalar|null
  * @template V of object|scalar|null
+ *
+ *@implements \IteratorAggregate<DPair<K, V>>
  */
-class DMap // TODO implements \IteratorAggregate, \JsonSerializable
+class DMap implements \IteratorAggregate, \JsonSerializable
 {
     /**
-     * @var \SplObjectStorage<DMapKey, V>
+     * @var \SplObjectStorage<DMapKey<K>, V>
      */
     protected \SplObjectStorage $items;
 
     // TODO private bool $frozen = true;
 
+    /**
+     * @var DMapKeyMapper<K>
+     */
     protected readonly DMapKeyMapper $mappedKeys;
 
     /**
@@ -164,7 +170,7 @@ class DMap // TODO implements \IteratorAggregate, \JsonSerializable
             $result[] = $key->key;
         }
 
-        return $result; // @phpstan-ignore return.type (Set items key type properly)
+        return $result;
     }
 
     /**
@@ -173,6 +179,20 @@ class DMap // TODO implements \IteratorAggregate, \JsonSerializable
     public function getKeys(): DSet
     {
         return new DSet($this->getKeysArray());
+    }
+
+    /**
+     * @return list<DPair<K, V>>
+     */
+    public function getPairsArray(): array
+    {
+        $result = [];
+
+        foreach ($this->items as $wrappedKey) {
+            $result[] = new DPair($wrappedKey->key, $this->items[$wrappedKey]);
+        }
+
+        return $result;
     }
 
     /**
@@ -228,6 +248,16 @@ class DMap // TODO implements \IteratorAggregate, \JsonSerializable
         $this->items->detach($this->mappedKeys->get($key));
 
         return $this;
+    }
+
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->getPairsArray());
+    }
+
+    public function jsonSerialize(): mixed
+    {
+        return $this->getPairsArray();
     }
 
     /**

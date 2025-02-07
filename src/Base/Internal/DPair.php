@@ -6,15 +6,16 @@ namespace Veelkoov\Debris\Base\Internal;
 
 /**
  * @template K of object|scalar|null
- *
- * @internal
+ * @template V of object|scalar|null
  */
-final readonly class DMapKey
+final readonly class DPair
 {
     /**
      * @param K $key
+     * @param V $value
      */
     public function __construct(
         public mixed $key,
-    ) {} // @codeCoverageIgnore
+        public mixed $value,
+    ) {}
 }
