@@ -14,15 +14,12 @@ use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
 class DMap // TODO implements \IteratorAggregate, \JsonSerializable
 {
     /**
-     * @var \SplObjectStorage<object, V>
+     * @var \SplObjectStorage<DMapKey, V>
      */
     protected \SplObjectStorage $items;
 
     // TODO private bool $frozen = true;
 
-    /**
-     * @var DMapKeyMapper<K>
-     */
     protected readonly DMapKeyMapper $mappedKeys;
 
     /**
@@ -164,7 +161,7 @@ class DMap // TODO implements \IteratorAggregate, \JsonSerializable
         $result = [];
 
         foreach ($this->items as $key) {
-            $result[] = $key instanceof DMapKey ? $key->key : $key;
+            $result[] = $key->key;
         }
 
         return $result; // @phpstan-ignore return.type (Set items key type properly)

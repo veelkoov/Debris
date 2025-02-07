@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Veelkoov\Debris\Tests\Base\Internal;
 
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -19,9 +21,6 @@ final class DMapKeyMapperTest extends TestCase
     #[Test]
     public function get(): void
     {
-        /**
-         * @var DMapKeyMapper<null|object|scalar> $subject
-         */
         $subject = new DMapKeyMapper();
 
         $testItems = [
@@ -67,12 +66,7 @@ final class DMapKeyMapperTest extends TestCase
         for ($i = 0, $iMax = \count($testItems); $i < $iMax; ++$i) {
             self::assertSame($keysFirstRetrieval[$i], $keysSecondRetrieval[$i]);
 
-            if (\is_object($testItems[$i])) {
-                self::assertSame($testItems[$i], $keysFirstRetrieval[$i]);
-            } else {
-                self::assertInstanceOf(DMapKey::class, $keysFirstRetrieval[$i]);
-                self::assertSame($testItems[$i], $keysFirstRetrieval[$i]->key);
-            }
+            self::assertSame($testItems[$i], $keysFirstRetrieval[$i]->key);
         }
     }
 }

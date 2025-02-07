@@ -5,36 +5,41 @@ declare(strict_types=1);
 namespace Veelkoov\Debris\Base\Internal;
 
 /**
- * @template K of object|scalar|null
- *
  * @internal
  */
 final class DMapKeyMapper
 {
     /**
-     * @var array<int|string, DMapKey<int|string>>
+     * @var \SplObjectStorage<object, DMapKey>
+     */
+    private \SplObjectStorage $wrappedObjectKeys;
+
+    /**
+     * @var array<int|string, DMapKey>
      */
     private array $wrappedArrayKeys = [];
 
     /**
-     * @var array<int, list<DMapKey<null|bool|float>>>
+     * @var array<int, list<DMapKey>>
      */
     private array $wrappedScalarKeys = [];
 
+    public function __construct()
+    {
+        $this->wrappedObjectKeys = new \SplObjectStorage();
+    }
+
     /**
-     * @template T of K
-     *
-     * @param T $key
-     *
-     * @return ($key is object ? object : DMapKey<K>)
+     * @param null|object|scalar $key
      */
-    public function get(mixed $key): object
+    public function get(mixed $key): DMapKey
     {
         if (\is_object($key)) {
-            return $key;
+            return $this->wrappedObjectKeys[$key] ??= new DMapKey($key);
         } if (\is_string($key) || \is_int($key)) {
             return $this->wrappedArrayKeys[$key] ??= new DMapKey($key);
         }
+
         $intKey = (int) $key;
 
         foreach (($this->wrappedScalarKeys[$intKey] ??= []) as $wrappedKey) {
