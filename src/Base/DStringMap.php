@@ -20,8 +20,16 @@ class DStringMap extends DMap implements \IteratorAggregate
         return new StringSet(parent::getKeysArray());
     }
 
+    /**
+     * @return array<string, V>
+     */
+    public function toArray(): array
+    {
+        return array_combine($this->getKeysArray(), $this->getValuesArray());
+    }
+
     public function getIterator(): \Traversable
     {
-        return new \ArrayIterator(array_combine($this->getKeysArray(), $this->getValuesArray()));
+        return new \ArrayIterator($this->toArray());
     }
 }

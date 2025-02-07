@@ -234,16 +234,19 @@ class DMap implements \JsonSerializable
     }
 
     /**
-     * @param iterable<array<K|V>> $input
-     * @param int|literal-string   $keyKey
-     * @param int|literal-string   $valueKey
+     * @param iterable<mixed>    $input
+     * @param int|literal-string $keyKey
+     * @param int|literal-string $valueKey
      */
     public static function fromRows(iterable $input, int|string $keyKey, int|string $valueKey): static
     {
         $result = new static();
 
         foreach ($input as $row) {
+            /** @phpstan-ignore argument.type */
             $key = static::enforceIsArrayAndKeyExistsGetKey($row, $keyKey);
+
+            /** @phpstan-ignore argument.type */
             $value = static::enforceIsArrayAndKeyExistsGetKey($row, $valueKey);
 
             /** @phpstan-ignore argument.type */
