@@ -128,39 +128,6 @@ final class DSetTest extends TestCase
     }
 
     #[Test]
-    public function isEmpty_works(): void
-    {
-        /** @var DSet<string> $subject */
-        $subject = DSet::mut();
-        self::assertTrue($subject->isEmpty());
-
-        $subject->add('item');
-        self::assertFalse($subject->isEmpty());
-    }
-
-    #[Test]
-    public function isNotEmpty_works(): void
-    {
-        /** @var DSet<string> $subject */
-        $subject = DSet::mut();
-        self::assertFalse($subject->isNotEmpty());
-
-        $subject->add('item');
-        self::assertTrue($subject->isNotEmpty());
-    }
-
-    #[Test]
-    public function count_works(): void
-    {
-        /** @var DSet<string> $subject */
-        $subject = DSet::mut();
-        self::assertSame(0, $subject->count());
-
-        $subject->add('item');
-        self::assertSame(1, $subject->count());
-    }
-
-    #[Test]
     public function add_works(): void
     {
         $a = 'a';

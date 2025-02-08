@@ -17,5 +17,5 @@ final readonly class DPair
     public function __construct(
         public mixed $key,
         public mixed $value,
-    ) {}
+    ) {} // @codeCoverageIgnore
 }

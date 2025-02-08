@@ -19,7 +19,7 @@ use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
 final class DIntMapTest extends TestCase
 {
     #[Test]
-    public function toArray()
+    public function toArray(): void
     {
         $subject = new DIntMap([10 => 'a', 30 => 'c']);
 
@@ -27,7 +27,7 @@ final class DIntMapTest extends TestCase
     }
 
     #[Test]
-    public function getIterator()
+    public function getIterator(): void
     {
         $subject = new DIntMap([10 => 'a', 30 => 'c']);
 
