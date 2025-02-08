@@ -37,6 +37,18 @@ final class StringListTest extends TestCase
     }
 
     #[Test]
+    public function split_empty(): void
+    {
+        self::assertSame([], StringList::split(',', '')->toArray());
+    }
+
+    #[Test]
+    public function split_nonEmpty(): void
+    {
+        self::assertSame(['aaa', 'bbb'], StringList::split(', ', 'aaa, bbb')->toArray());
+    }
+
+    #[Test]
     public function toSet(): void
     {
         $subject = StringList::of('abc', 'def', 'abc');
