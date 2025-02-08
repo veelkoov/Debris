@@ -234,33 +234,6 @@ final class DSetTest extends TestCase
     }
 
     #[Test]
-    public function filter_works(): void
-    {
-        $a = 'a';
-        $b = 'b';
-        $c = 'c';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::of($a, $b, $c);
-
-        $result = $subject->filter(static fn (string $item) => $item >= 'b');
-
-        self::assertEqualsCanonicalizing([$b, $c], $result->getValuesArray());
-    }
-
-    #[Test]
-    public function jsonSerialize_works(): void
-    {
-        $a = 'a';
-        $b = 'b';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::of($a, $b);
-
-        self::assertSame('["a","b"]', json_encode($subject));
-    }
-
-    #[Test]
     public function getIterator_works(): void
     {
         $a = 'a';

@@ -8,7 +8,7 @@ namespace Veelkoov\Debris\Base\Internal;
  * @template K of object|scalar|null
  * @template V of object|scalar|null
  */
-final readonly class DPair
+final readonly class DPair implements \JsonSerializable
 {
     /**
      * @param K $key
@@ -17,5 +17,10 @@ final readonly class DPair
     public function __construct(
         public mixed $key,
         public mixed $value,
-    ) {} // @codeCoverageIgnore
+    ) {}
+
+    public function jsonSerialize(): mixed
+    {
+        return [$this->key, $this->value];
+    }
 }
