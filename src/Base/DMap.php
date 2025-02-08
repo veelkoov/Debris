@@ -27,15 +27,21 @@ class DMap implements \JsonSerializable
     protected readonly DMapKeyMapper $mappedKeys;
 
     /**
-     * @param iterable<K, V> $items
+     * @param iterable<K, V>|self<K, V> $items
      */
-    final public function __construct(iterable $items = [])
+    final public function __construct(iterable|self $items = [])
     {
         $this->items = new \SplObjectStorage();
         $this->mappedKeys = new DMapKeyMapper();
 
-        foreach ($items as $key => $value) {
-            $this->set($key, $value);
+        if ($items instanceof self) {
+            foreach ($items->getPairsArray() as $pair) {
+                $this->set($pair->key, $pair->value);
+            }
+        } else {
+            foreach ($items as $key => $value) {
+                $this->set($key, $value);
+            }
         }
     }
 
@@ -83,7 +89,7 @@ class DMap implements \JsonSerializable
      *
      * @return V
      */
-    public function getOrSet(mixed $key, callable $newValueFunction): mixed
+    public function getOrSet(mixed $key, callable|\Closure $newValueFunction): mixed
     {
         if (!$this->hasKey($key)) {
             $this->set($key, $newValueFunction());
@@ -155,6 +161,38 @@ class DMap implements \JsonSerializable
     public function filterValues(callable $function): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => $function($value));
+    }
+
+    /**
+     * @template NewV of object|scalar|null
+     * @template NewK of object|scalar|null
+     *
+     * @param callable(K, V): DPair<NewK, NewV> $function
+     *
+     * @return self<NewK, NewV>
+     */
+    public function map(callable $function): self
+    {
+        $result = new self();
+
+        foreach ($this->getPairsArray() as $pair) {
+            $pair = $function($pair->key, $pair->value);
+            $result->set($pair->key, $pair->value);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @template NewV of object|scalar|null
+     *
+     * @param callable(V): NewV $function
+     *
+     * @return self<K, NewV>
+     */
+    public function mapValues(callable $function): self
+    {
+        return $this->map(static fn (mixed $key, mixed $value) => new DPair($key, $function($value)));
     }
 
     /**
@@ -276,6 +314,39 @@ class DMap implements \JsonSerializable
     public function jsonSerialize(): mixed
     {
         return $this->getPairsArray();
+    }
+
+    /**
+     * @return self<V, K>
+     */
+    public function flip(): self
+    {
+        $result = new self();
+
+        foreach ($this->getPairsArray() as $pair) {
+            $result->set($pair->value, $pair->key);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param callable(V, V): int $comparator
+     */
+    public function sorted(callable $comparator, bool $reverse = false): static
+    {
+        $times = $reverse ? -1 : 1;
+
+        $pairs = $this->getPairsArray();
+        usort($pairs, static fn (DPair $pair1, DPair $pair2): int => $times * $comparator($pair1->value, $pair2->value));
+
+        $result = new static();
+
+        foreach ($pairs as $pair) {
+            $result->set($pair->key, $pair->value);
+        }
+
+        return $result;
     }
 
     /**

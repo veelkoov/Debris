@@ -16,6 +16,14 @@ class StringList extends DList
         return implode($separator, $this->items);
     }
 
+    /**
+     * @param non-empty-string $separator
+     */
+    public static function split(string $separator, string $input): static
+    {
+        return new static('' === $input ? [] : explode($separator, $input));
+    }
+
     public function toSet(): StringSet
     {
         return new StringSet($this->items);
