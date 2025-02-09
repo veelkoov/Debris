@@ -34,15 +34,7 @@ class DMap implements \JsonSerializable
         $this->items = new \SplObjectStorage();
         $this->mappedKeys = new DMapKeyMapper();
 
-        if ($items instanceof self) {
-            foreach ($items->getPairsArray() as $pair) {
-                $this->set($pair->key, $pair->value);
-            }
-        } else {
-            foreach ($items as $key => $value) {
-                $this->set($key, $value);
-            }
-        }
+        $this->setAll($items);
     }
 
     public function isEmpty(): bool
@@ -69,6 +61,26 @@ class DMap implements \JsonSerializable
     public function set(mixed $key, mixed $value): static
     {
         $this->items[$this->mappedKeys->get($key)] = $value;
+
+        return $this;
+    }
+
+    /**
+     * @param iterable<K, V>|self<K, V> $items
+     *
+     * @return $this
+     */
+    public function setAll(iterable|self $items): static
+    {
+        if ($items instanceof self) {
+            foreach ($items->getPairsArray() as $pair) {
+                $this->set($pair->key, $pair->value);
+            }
+        } else {
+            foreach ($items as $key => $value) {
+                $this->set($key, $value);
+            }
+        }
 
         return $this;
     }

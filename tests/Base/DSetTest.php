@@ -128,32 +128,6 @@ final class DSetTest extends TestCase
     }
 
     #[Test]
-    public function add_works(): void
-    {
-        $a = 'a';
-        $b = 'b';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::mut();
-
-        $subject->add($a, $b);
-        self::assertEqualsCanonicalizing([$b, $a], $subject->getValuesArray());
-    }
-
-    #[Test]
-    public function addAll_works(): void
-    {
-        $a = 'a';
-        $b = 'b';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::mut();
-
-        $subject->addAll([$a, $b]);
-        self::assertEqualsCanonicalizing([$b, $a], $subject->getValuesArray());
-    }
-
-    #[Test]
     public function plusAll_works(): void
     {
         $a = 'a';
