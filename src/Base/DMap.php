@@ -121,7 +121,7 @@ class DMap implements \JsonSerializable
     public function contains(mixed $value): bool
     {
         foreach ($this->items as $key) {
-            if ($key === $value) {
+            if ($this->items[$key] === $value) {
                 return true;
             }
         }

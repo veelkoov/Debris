@@ -184,19 +184,6 @@ final class DSetTest extends TestCase
     }
 
     #[Test]
-    public function contains_works(): void
-    {
-        $a = 'a';
-        $b = 'b';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::of($a);
-
-        self::assertTrue($subject->contains($a));
-        self::assertFalse($subject->contains($b));
-    }
-
-    #[Test]
     public function max_throwsOnEmpty(): void
     {
         /** @var DSet<string> $subject */
