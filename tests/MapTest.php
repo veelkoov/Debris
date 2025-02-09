@@ -11,8 +11,9 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
-use Veelkoov\Debris\Base\Internal\DPair;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Pair;
 
 /**
  * @internal
@@ -20,8 +21,9 @@ use Veelkoov\Debris\Base\Internal\DPair;
 #[CoversClass(DList::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
-#[UsesClass(DMapKeyMapper::class)]
-#[UsesClass(DPair::class)]
+#[UsesClass(Freezer::class)]
+#[UsesClass(MapKeyMapper::class)]
+#[UsesClass(Pair::class)]
 final class MapTest extends TestCase
 {
     #[Test]
@@ -49,7 +51,7 @@ final class MapTest extends TestCase
     public function DMap_map(): void
     {
         $result = (new DMap(['a' => 1, 'b' => 2, 'c' => 3]))
-            ->map(static fn (string $key, int $value) => new DPair($key, $value * 2))
+            ->map(static fn (string $key, int $value) => new Pair($key, $value * 2))
         ;
 
         self::assertSame(['a', 'b', 'c'], $result->getKeysArray());

@@ -8,7 +8,7 @@ namespace Veelkoov\Debris\Base\Internal;
  * @template K of object|scalar|null
  * @template V of object|scalar|null
  */
-final readonly class DPair implements \JsonSerializable
+final readonly class Pair implements \JsonSerializable
 {
     /**
      * @param K $key

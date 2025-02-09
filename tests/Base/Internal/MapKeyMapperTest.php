@@ -8,20 +8,20 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\Internal\DMapKey;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
+use Veelkoov\Debris\Base\Internal\MapKey;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 
 /**
  * @internal
  */
-#[CoversClass(DMapKeyMapper::class)]
-#[UsesClass(DMapKey::class)]
-final class DMapKeyMapperTest extends TestCase
+#[CoversClass(MapKeyMapper::class)]
+#[UsesClass(MapKey::class)]
+final class MapKeyMapperTest extends TestCase
 {
     #[Test]
     public function get(): void
     {
-        $subject = new DMapKeyMapper();
+        $subject = new MapKeyMapper();
 
         $testItems = [
             new \stdClass(),

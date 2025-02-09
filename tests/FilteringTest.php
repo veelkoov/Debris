@@ -11,7 +11,9 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Pair;
 
 /**
  * @internal
@@ -19,7 +21,9 @@ use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
 #[CoversClass(DList::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
-#[UsesClass(DMapKeyMapper::class)]
+#[UsesClass(Freezer::class)]
+#[UsesClass(MapKeyMapper::class)]
+#[UsesClass(Pair::class)]
 final class FilteringTest extends TestCase
 {
     #[Test]

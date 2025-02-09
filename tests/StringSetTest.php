@@ -10,8 +10,9 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\DMapKey;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKey;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\StringSet;
 
 /**
@@ -19,9 +20,10 @@ use Veelkoov\Debris\StringSet;
  */
 #[CoversClass(StringSet::class)]
 #[UsesClass(DMap::class)]
-#[UsesClass(DMapKey::class)]
-#[UsesClass(DMapKeyMapper::class)]
 #[UsesClass(DSet::class)]
+#[UsesClass(Freezer::class)]
+#[UsesClass(MapKey::class)]
+#[UsesClass(MapKeyMapper::class)]
 final class StringSetTest extends TestCase
 {
     #[Test]

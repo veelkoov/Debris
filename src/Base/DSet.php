@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
+use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 
 /**
@@ -13,22 +14,25 @@ use Veelkoov\Debris\Exception\EmptyCollectionException;
  */
 class DSet implements \IteratorAggregate, \JsonSerializable
 {
+    protected readonly Freezer $freezer;
+
     /**
      * @var DMap<V, null>
      */
     private DMap $items;
 
-    // TODO private bool $frozen;
-
     /**
      * @param iterable<V> $items
      */
-    final public function __construct(iterable $items = [])
+    final public function __construct(iterable $items = [], bool $frozen = true)
     {
-        $this->items = new DMap();
+        $this->items = new DMap(frozen: false);
+        $this->freezer = new Freezer($this, false);
 
-        foreach ($items as $item) {
-            $this->items->set($item, null);
+        $this->addAll($items);
+
+        if ($frozen) {
+            $this->freezer->freeze();
         }
     }
 
@@ -45,16 +49,12 @@ class DSet implements \IteratorAggregate, \JsonSerializable
      */
     public static function mut(iterable $items = []): static
     {
-        $result = new static($items);
-        //        $result->frozen = false;
-
-        return $result;
+        return new static($items, frozen: false);
     }
 
     public function frozen(): static
     {
-        return clone $this;
-        //        $result->frozen = true;
+        return new static($this->getValuesArray(), frozen: true);
     }
 
     public function isEmpty(): bool
@@ -85,9 +85,7 @@ class DSet implements \IteratorAggregate, \JsonSerializable
      */
     public function addAll(iterable $items): static
     {
-        // if ($this->frozen) {
-        //     throw new ChangingImmutableException(__CLASS__);
-        // }
+        $this->freezer->protect();
 
         foreach ($items as $item) {
             $this->items->set($item, null);
@@ -125,9 +123,7 @@ class DSet implements \IteratorAggregate, \JsonSerializable
      */
     public function removeAll(iterable $items): static
     {
-        // if ($this->frozen) {
-        //     throw new ChangingImmutableException(__CLASS__);
-        // }
+        $this->freezer->protect();
 
         foreach ($items as $item) {
             $this->items->removeKey($item);

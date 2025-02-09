@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
-use Veelkoov\Debris\Base\Internal\DMapKey;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
-use Veelkoov\Debris\Base\Internal\DPair;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKey;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Pair;
 
 /**
  * @template K of object|scalar|null
@@ -15,26 +16,44 @@ use Veelkoov\Debris\Base\Internal\DPair;
 class DMap implements \JsonSerializable
 {
     /**
-     * @var \SplObjectStorage<DMapKey<K>, V>
+     * @var \SplObjectStorage<MapKey<K>, V>
      */
     protected \SplObjectStorage $items;
 
-    // TODO private bool $frozen = true;
+    protected readonly Freezer $freezer;
 
     /**
-     * @var DMapKeyMapper<K>
+     * @var MapKeyMapper<K>
      */
-    protected readonly DMapKeyMapper $mappedKeys;
+    protected readonly MapKeyMapper $mappedKeys;
 
     /**
      * @param iterable<K, V>|self<K, V> $items
      */
-    final public function __construct(iterable|self $items = [])
+    final public function __construct(iterable|self $items = [], bool $frozen = true)
     {
         $this->items = new \SplObjectStorage();
-        $this->mappedKeys = new DMapKeyMapper();
+        $this->mappedKeys = new MapKeyMapper();
+        $this->freezer = new Freezer($this, false);
 
         $this->setAll($items);
+
+        if ($frozen) {
+            $this->freezer->freeze();
+        }
+    }
+
+    /**
+     * @param iterable<K, V>|self<K, V> $items
+     */
+    public static function mut(iterable|self $items = []): static
+    {
+        return new static($items, frozen: false);
+    }
+
+    public function frozen(): static
+    {
+        return new static($this, frozen: true);
     }
 
     public function isEmpty(): bool
@@ -60,6 +79,8 @@ class DMap implements \JsonSerializable
      */
     public function set(mixed $key, mixed $value): static
     {
+        $this->freezer->protect();
+
         $this->items[$this->mappedKeys->get($key)] = $value;
 
         return $this;
@@ -154,7 +175,7 @@ class DMap implements \JsonSerializable
      */
     public function filter(callable $function): static
     {
-        $result = new static();
+        $result = new static(frozen: false);
 
         foreach ($this->getKeysArray() as $key) {
             $value = $this->get($key);
@@ -164,7 +185,7 @@ class DMap implements \JsonSerializable
             }
         }
 
-        return $result;
+        return $result->frozen(); // TODO: Look for stuff like this and use freeze() instead
     }
 
     /**
@@ -179,20 +200,20 @@ class DMap implements \JsonSerializable
      * @template NewV of object|scalar|null
      * @template NewK of object|scalar|null
      *
-     * @param callable(K, V): DPair<NewK, NewV> $function
+     * @param callable(K, V): Pair<NewK, NewV> $function
      *
      * @return self<NewK, NewV>
      */
     public function map(callable $function): self
     {
-        $result = new self();
+        $result = new self(frozen: false);
 
         foreach ($this->getPairsArray() as $pair) {
             $pair = $function($pair->key, $pair->value);
             $result->set($pair->key, $pair->value);
         }
 
-        return $result;
+        return $result->frozen();
     }
 
     /**
@@ -204,7 +225,7 @@ class DMap implements \JsonSerializable
      */
     public function mapValues(callable $function): self
     {
-        return $this->map(static fn (mixed $key, mixed $value) => new DPair($key, $function($value)));
+        return $this->map(static fn (mixed $key, mixed $value) => new Pair($key, $function($value)));
     }
 
     /**
@@ -252,14 +273,14 @@ class DMap implements \JsonSerializable
     }
 
     /**
-     * @return list<DPair<K, V>>
+     * @return list<Pair<K, V>>
      */
     public function getPairsArray(): array
     {
         $result = [];
 
         foreach ($this->items as $wrappedKey) {
-            $result[] = new DPair($wrappedKey->key, $this->items[$wrappedKey]);
+            $result[] = new Pair($wrappedKey->key, $this->items[$wrappedKey]);
         }
 
         return $result;
@@ -271,7 +292,7 @@ class DMap implements \JsonSerializable
      */
     public static function fromValues(iterable $input, callable $valueToKeyFunction): static
     {
-        $result = new static();
+        $result = new static(frozen: false);
 
         foreach ($input as $value) {
             $key = static::enforceKeyType($valueToKeyFunction($value));
@@ -280,7 +301,7 @@ class DMap implements \JsonSerializable
             $result->set($key, $value);
         }
 
-        return $result;
+        return $result->frozen();
     }
 
     /**
@@ -290,7 +311,7 @@ class DMap implements \JsonSerializable
      */
     public static function fromRows(iterable $input, int|string $keyKey, int|string $valueKey): static
     {
-        $result = new static();
+        $result = new static(frozen: false);
 
         foreach ($input as $row) {
             /** @phpstan-ignore argument.type */
@@ -308,7 +329,7 @@ class DMap implements \JsonSerializable
             $result->set($key, $value);
         }
 
-        return $result;
+        return $result->frozen();
     }
 
     /**
@@ -318,6 +339,8 @@ class DMap implements \JsonSerializable
      */
     public function removeKey(mixed $key): static
     {
+        $this->freezer->protect();
+
         $this->items->detach($this->mappedKeys->get($key));
 
         return $this;
@@ -350,15 +373,15 @@ class DMap implements \JsonSerializable
         $times = $reverse ? -1 : 1;
 
         $pairs = $this->getPairsArray();
-        usort($pairs, static fn (DPair $pair1, DPair $pair2): int => $times * $comparator($pair1->value, $pair2->value));
+        usort($pairs, static fn (Pair $pair1, Pair $pair2): int => $times * $comparator($pair1->value, $pair2->value));
 
-        $result = new static();
+        $result = new static(frozen: false);
 
         foreach ($pairs as $pair) {
             $result->set($pair->key, $pair->value);
         }
 
-        return $result;
+        return $result->frozen();
     }
 
     /**

@@ -9,20 +9,20 @@ namespace Veelkoov\Debris\Base\Internal;
  *
  * @internal
  */
-final class DMapKeyMapper
+final class MapKeyMapper
 {
     /**
-     * @var \SplObjectStorage<object, DMapKey<object>>
+     * @var \SplObjectStorage<object, MapKey<object>>
      */
     private \SplObjectStorage $wrappedObjectKeys;
 
     /**
-     * @var array<int|string, DMapKey<int|string>>
+     * @var array<int|string, MapKey<int|string>>
      */
     private array $wrappedArrayKeys = [];
 
     /**
-     * @var array<int, list<DMapKey<null|bool|float>>>
+     * @var array<int, list<MapKey<null|bool|float>>>
      */
     private array $wrappedScalarKeys = [];
 
@@ -34,14 +34,14 @@ final class DMapKeyMapper
     /**
      * @param K $key
      *
-     * @return DMapKey<K>
+     * @return MapKey<K>
      */
-    public function get(mixed $key): DMapKey
+    public function get(mixed $key): MapKey
     {
         if (\is_object($key)) {
-            return $this->wrappedObjectKeys[$key] ??= new DMapKey($key); // @phpstan-ignore return.type (FIXME)
+            return $this->wrappedObjectKeys[$key] ??= new MapKey($key); // @phpstan-ignore return.type (FIXME)
         } if (\is_string($key) || \is_int($key)) {
-            return $this->wrappedArrayKeys[$key] ??= new DMapKey($key); // @phpstan-ignore return.type (FIXME)
+            return $this->wrappedArrayKeys[$key] ??= new MapKey($key); // @phpstan-ignore return.type (FIXME)
         }
 
         $intKey = (int) $key;
@@ -52,7 +52,7 @@ final class DMapKeyMapper
             }
         }
 
-        $wrappedKey = new DMapKey($key);
+        $wrappedKey = new MapKey($key);
         $this->wrappedScalarKeys[$intKey][] = $wrappedKey;
 
         return $wrappedKey; // @phpstan-ignore return.type (FIXME)

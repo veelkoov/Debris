@@ -6,14 +6,17 @@ namespace Veelkoov\Debris\Tests\Base;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 
 /**
  * @internal
  */
 #[CoversClass(DList::class)]
+#[UsesClass(Freezer::class)]
 final class DListTest extends TestCase
 {
     #[Test]

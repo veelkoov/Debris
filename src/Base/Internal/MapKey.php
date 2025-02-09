@@ -9,7 +9,7 @@ namespace Veelkoov\Debris\Base\Internal;
  *
  * @internal
  */
-final readonly class DMapKey
+final readonly class MapKey
 {
     /**
      * @param K $key

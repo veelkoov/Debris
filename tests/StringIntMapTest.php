@@ -8,16 +8,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
-use Veelkoov\Debris\Base\Internal\DPair;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Pair;
 use Veelkoov\Debris\StringIntMap;
 
 /**
  * @internal
  */
 #[CoversClass(StringIntMap::class)]
-#[UsesClass(DMapKeyMapper::class)]
-#[UsesClass(DPair::class)]
+#[UsesClass(Freezer::class)]
+#[UsesClass(MapKeyMapper::class)]
+#[UsesClass(Pair::class)]
 final class StringIntMapTest extends TestCase
 {
     #[Test]

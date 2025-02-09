@@ -11,8 +11,9 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
-use Veelkoov\Debris\Base\Internal\DPair;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Pair;
 
 /**
  * @internal
@@ -20,14 +21,15 @@ use Veelkoov\Debris\Base\Internal\DPair;
 #[CoversClass(DList::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
-#[CoversClass(DPair::class)]
-#[UsesClass(DMapKeyMapper::class)]
+#[CoversClass(Pair::class)]
+#[UsesClass(Freezer::class)]
+#[UsesClass(MapKeyMapper::class)]
 final class JsonSerializableTest extends TestCase
 {
     #[Test]
     public function DPair_jsonSerialize(): void
     {
-        self::assertSame('["a",1]', json_encode(new DPair('a', 1)));
+        self::assertSame('["a",1]', json_encode(new Pair('a', 1)));
     }
 
     #[Test]

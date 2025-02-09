@@ -9,15 +9,17 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\Internal\DMapKey;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKey;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 
 /**
  * @internal
  */
 #[CoversClass(DMap::class)]
-#[UsesClass(DMapKey::class)]
-#[UsesClass(DMapKeyMapper::class)]
+#[UsesClass(Freezer::class)]
+#[UsesClass(MapKey::class)]
+#[UsesClass(MapKeyMapper::class)]
 final class DMapTest extends TestCase
 {
     // #[Test] FIXME
@@ -40,7 +42,7 @@ final class DMapTest extends TestCase
         /**
          * @var DMap<null|object|scalar, int> $subject
          */
-        $subject = new DMap();
+        $subject = DMap::mut();
 
         $testKeys = [
             new \stdClass(),

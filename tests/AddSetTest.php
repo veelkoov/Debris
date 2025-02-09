@@ -11,7 +11,8 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 
 /**
  * @internal
@@ -19,7 +20,8 @@ use Veelkoov\Debris\Base\Internal\DMapKeyMapper;
 #[CoversClass(DList::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
-#[UsesClass(DMapKeyMapper::class)]
+#[UsesClass(Freezer::class)]
+#[UsesClass(MapKeyMapper::class)]
 final class AddSetTest extends TestCase
 {
     #[Test]
@@ -35,7 +37,7 @@ final class AddSetTest extends TestCase
     #[Test]
     public function DSet_add(): void
     {
-        $subject = new DSet([1]);
+        $subject = DSet::mut([1]);
         $subject->add(2);
         $subject->add(1);
 
@@ -45,7 +47,7 @@ final class AddSetTest extends TestCase
     #[Test]
     public function DMap_set(): void
     {
-        $subject = new DMap(['a' => 1]);
+        $subject = DMap::mut(['a' => 1]);
         $subject->set('b', 2);
         $subject->set('a', 3);
 
@@ -65,7 +67,7 @@ final class AddSetTest extends TestCase
     #[Test]
     public function DSet_addAll(): void
     {
-        $subject = new DSet([1]);
+        $subject = DSet::mut([1]);
         $subject->addAll([2, 1]);
 
         self::assertSame([1, 2], $subject->getValuesArray());
@@ -74,7 +76,7 @@ final class AddSetTest extends TestCase
     #[Test]
     public function DMap_setAll(): void
     {
-        $subject = new DMap(['a' => 1]);
+        $subject = DMap::mut(['a' => 1]);
         $subject->setAll(['b' => 2, 'a' => 3]);
 
         self::assertSame(['a', 'b'], $subject->getKeysArray());

@@ -5,34 +5,35 @@ declare(strict_types=1);
 namespace Veelkoov\Debris\Base;
 
 use IteratorAggregate;
-use Veelkoov\Debris\Exception\ChangingImmutableException;
+use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
 
 /**
- * @template T
+ * @template V
  *
- * @implements IteratorAggregate<int, T>
+ * @implements IteratorAggregate<int, V>
  */
 class DList implements \IteratorAggregate, \JsonSerializable
 {
     /**
-     * @var list<T>
+     * @var list<V>
      */
     protected array $items;
 
-    private bool $frozen = true;
+    protected readonly Freezer $freezer;
 
     /**
-     * @param iterable<T> $items
+     * @param iterable<V> $items
      */
-    final public function __construct(iterable $items = [])
+    final public function __construct(iterable $items = [], bool $frozen = true)
     {
+        $this->freezer = new Freezer($this, $frozen);
         $this->items = array_values([...$items]);
     }
 
     /**
-     * @param T ...$items
+     * @param V ...$items
      */
     public static function of(mixed ...$items): static
     {
@@ -40,32 +41,23 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param iterable<T> $items
+     * @param iterable<V> $items
      */
     public static function mut(iterable $items = []): static
     {
-        $result = new static($items);
-        $result->frozen = false;
-
-        return $result;
+        return new static($items, frozen: false);
     }
 
     public function frozen(): static
     {
-        return new static($this->items);
+        return (new static($this->items))->frozen();
     }
 
-    /**
-     * @phpstan-assert-if-true !non-empty-array<T> $this->items
-     */
     public function isEmpty(): bool
     {
         return [] === $this->items;
     }
 
-    /**
-     * @phpstan-assert-if-true non-empty-array<T> $this->items
-     */
     public function isNotEmpty(): bool
     {
         return [] !== $this->items;
@@ -77,7 +69,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param T ...$items
+     * @param V ...$items
      */
     public function add(mixed ...$items): static
     {
@@ -85,13 +77,11 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param iterable<T> $items
+     * @param iterable<V> $items
      */
     public function addAll(iterable $items): static
     {
-        if ($this->frozen) {
-            throw new ChangingImmutableException(__CLASS__);
-        }
+        $this->freezer->protect();
 
         array_push($this->items, ...$items);
 
@@ -99,7 +89,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param T $item
+     * @param V $item
      */
     public function contains(mixed $item): bool
     {
@@ -134,7 +124,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param T[] $items
+     * @param V[] $items
      */
     public function plusAll(iterable $items): static
     {
@@ -142,7 +132,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param T $item
+     * @param V $item
      */
     public function plus(mixed $item): static
     {
@@ -150,7 +140,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param iterable<T> $items
+     * @param iterable<V> $items
      */
     public function minusAll(iterable $items): static
     {
@@ -178,7 +168,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @return \Traversable<int, T>
+     * @return \Traversable<int, V>
      */
     #[\Override]
     public function getIterator(): \Traversable
@@ -187,7 +177,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @return list<T>
+     * @return list<V>
      */
     public function toArray(): array
     {
@@ -198,7 +188,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
      * @template SourceT
      *
      * @param iterable<SourceT>    $source
-     * @param callable(SourceT): T $mapFunction
+     * @param callable(SourceT): V $mapFunction
      */
     public static function mapFrom(iterable $source, callable $mapFunction): static
     {
@@ -212,7 +202,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param callable(T): T $mapFunction
+     * @param callable(V): V $mapFunction
      */
     public function map(callable $mapFunction): static
     {
@@ -224,7 +214,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
      * @template SourceV
      *
      * @param iterable<SourceK, SourceV>    $source
-     * @param callable(SourceK, SourceV): T $mapFunction
+     * @param callable(SourceK, SourceV): V $mapFunction
      */
     public static function mapWithKey(iterable $source, callable $mapFunction): static
     {
@@ -240,9 +230,9 @@ class DList implements \IteratorAggregate, \JsonSerializable
     /**
      * @template TResult
      *
-     * @param ?callable(T): TResult $callable
+     * @param ?callable(V): TResult $callable
      *
-     * @return ($callable is null ? T : TResult)
+     * @return ($callable is null ? V : TResult)
      */
     public function max(?callable $callable = null): mixed
     {
@@ -265,7 +255,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @return T
+     * @return V
      */
     public function single(): mixed
     {
@@ -285,7 +275,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @return T
+     * @return V
      */
     public function at(int $index): mixed
     {
