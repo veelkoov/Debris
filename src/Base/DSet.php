@@ -176,6 +176,14 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
+     * @param callable(V): V $mapFunction
+     */
+    public function map(callable $mapFunction): static
+    {
+        return new static(array_map($mapFunction, $this->getValuesArray()));
+    }
+
+    /**
      * @return list<V>
      */
     public function getValuesArray(): array
