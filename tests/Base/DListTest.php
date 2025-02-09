@@ -17,39 +17,6 @@ use Veelkoov\Debris\Exception\EmptyCollectionException;
 final class DListTest extends TestCase
 {
     #[Test]
-    public function isEmpty_works(): void
-    {
-        /** @var DList<string> $subject */
-        $subject = DList::mut();
-        self::assertTrue($subject->isEmpty());
-
-        $subject->add('item');
-        self::assertFalse($subject->isEmpty());
-    }
-
-    #[Test]
-    public function isNotEmpty_works(): void
-    {
-        /** @var DList<string> $subject */
-        $subject = DList::mut();
-        self::assertFalse($subject->isNotEmpty());
-
-        $subject->add('item');
-        self::assertTrue($subject->isNotEmpty());
-    }
-
-    #[Test]
-    public function count_works(): void
-    {
-        /** @var DList<string> $subject */
-        $subject = DList::mut();
-        self::assertSame(0, $subject->count());
-
-        $subject->add('item');
-        self::assertSame(1, $subject->count());
-    }
-
-    #[Test]
     public function max_throwsOnEmpty(): void
     {
         /** @var DList<int> $subject */

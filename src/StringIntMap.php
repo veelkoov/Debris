@@ -12,6 +12,12 @@ use Veelkoov\Debris\Base\DStringMap;
 class StringIntMap extends DStringMap
 {
     #[\Override]
+    public function sorted(?callable $comparator = null, bool $reverse = false): static
+    {
+        return parent::sorted($comparator ?? static fn (int $value1, int $value2) => $value1 - $value2, $reverse);
+    }
+
+    #[\Override]
     protected static function enforceKeyType(mixed $key): string // TODO: Implement use in all ADD
     {
         return $key;
