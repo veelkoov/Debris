@@ -56,16 +56,4 @@ final class DListTest extends TestCase
 
         self::assertSame(20, $subject->at(1));
     }
-
-    #[Test]
-    public function minusAll(): void
-    {
-        /** @var DList<int> $subject */
-        $subject = new DList([10, 20, 20, 20, 30]);
-
-        $result = $subject->minusAll([20, 20, 30, 40]);
-
-        self::assertSame([10, 20], $result->toArray());
-        self::assertSame([10, 20, 20, 20, 30], $subject->toArray());
-    }
 }

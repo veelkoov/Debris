@@ -74,31 +74,35 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param V ...$items
+     * @param V ...$value
+     *
+     * @return $this
      */
-    public function add(mixed ...$items): static
+    public function add(mixed ...$value): static
     {
-        return $this->addAll($items);
+        return $this->addAll($value);
     }
 
     /**
-     * @param iterable<V> $items
+     * @param iterable<V> $values
+     *
+     * @return $this
      */
-    public function addAll(iterable $items): static
+    public function addAll(iterable $values): static
     {
         $this->freezer->protect();
 
-        array_push($this->items, ...$items);
+        array_push($this->items, ...$values);
 
         return $this;
     }
 
     /**
-     * @param V $item
+     * @param V $value
      */
-    public function contains(mixed $item): bool
+    public function contains(mixed $value): bool
     {
-        return \in_array($item, $this->items, true);
+        return \in_array($value, $this->items, true);
     }
 
     public function sorted(?\Closure $function = null): static
@@ -120,30 +124,74 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param V $item
+     * @param V $value
      */
-    public function plus(mixed $item): static
+    public function plus(mixed $value): static
     {
-        return new static([...$this->items, $item]);
+        return new static([...$this->items, $value]);
     }
 
     /**
-     * @param V[] $items
+     * @param iterable<V> $values
      */
-    public function plusAll(iterable $items): static
+    public function plusAll(iterable $values): static
     {
-        return new static([...$this->items, ...$items]);
+        return new static([...$this->items, ...$values]);
     }
 
     /**
-     * @param iterable<V> $items
+     * @param V ...$value
+     *
+     * @return $this
      */
-    public function minusAll(iterable $items): static
+    public function remove(mixed ...$value): static
+    {
+        return $this->removeAll($value);
+    }
+
+    /**
+     * @param iterable<V> $values
+     *
+     * @return $this
+     */
+    public function removeAll(iterable $values): static
+    {
+        $this->freezer->protect();
+
+        $result = $this->items;
+
+        foreach ($values as $item) {
+            $key = array_search($item, $result, true);
+
+            if (false === $key) {
+                continue;
+            }
+
+            unset($result[$key]);
+        }
+
+        $this->items = array_values($result);
+
+        return $this;
+    }
+
+    /**
+     * @param V ...$value
+     */
+    public function minus(mixed ...$value): static
+    {
+        return $this->minusAll($value);
+    }
+
+    /**
+     * @param iterable<V> $values
+     */
+    public function minusAll(iterable $values): static
     {
         $result = $this->items;
 
-        foreach ($items as $item) {
-            $key = array_search($item, $result, true);
+        foreach ($values as $value) {
+            $key = array_search($value, $result, true);
 
             if (false === $key) {
                 continue;

@@ -112,15 +112,41 @@ class DMap implements \JsonSerializable
     }
 
     /**
+     * @param K ...$key
+     *
+     * @return $this
+     */
+    public function unset(mixed ...$key): static
+    {
+        return $this->unsetAll($key);
+    }
+
+    /**
+     * @param iterable<K> $keys
+     *
+     * @return $this
+     */
+    public function unsetAll(iterable $keys): static
+    {
+        $this->freezer->protect();
+
+        foreach ($keys as $key) {
+            $this->items->detach($this->mappedKeys->get($key));
+        }
+
+        return $this;
+    }
+
+    /**
      * @param K $key
      * @param V $value
      */
     public function plus(mixed $key, mixed $value): static
     {
-        $result = new static($this, frozen: false);
-        $result->set($key, $value);
-
-        return $result->freeze();
+        return (new static($this, frozen: false))
+            ->set($key, $value)
+            ->freeze()
+        ;
     }
 
     /**
@@ -143,6 +169,57 @@ class DMap implements \JsonSerializable
         }
 
         return $result->freeze();
+    }
+
+    /**
+     * @param V ...$value
+     */
+    public function minus(mixed ...$value): static
+    {
+        return $this->minusAll($value);
+    }
+
+    /**
+     * @param iterable<V> $values
+     */
+    public function minusAll(iterable $values): static
+    {
+        return (new static($this, frozen: false))
+            ->removeAll($values)
+            ->freeze()
+        ;
+    }
+
+    /**
+     * @param V ...$value
+     *
+     * @return $this
+     */
+    public function remove(mixed ...$value): static
+    {
+        return $this->removeAll($value);
+    }
+
+    /**
+     * @param iterable<V> $values
+     *
+     * @return $this
+     */
+    public function removeAll(iterable $values): static
+    {
+        $this->freezer->protect();
+
+        foreach ($values as $removedValue) {
+            foreach ($this->items as $wrappedKey) {
+                if ($this->items[$wrappedKey] === $removedValue) {
+                    $this->items->detach($wrappedKey);
+
+                    break;
+                }
+            }
+        }
+
+        return $this;
     }
 
     /**
@@ -369,20 +446,6 @@ class DMap implements \JsonSerializable
         }
 
         return $result->freeze();
-    }
-
-    /**
-     * @param K $key
-     *
-     * @return $this
-     */
-    public function removeKey(mixed $key): static
-    {
-        $this->freezer->protect();
-
-        $this->items->detach($this->mappedKeys->get($key));
-
-        return $this;
     }
 
     public function jsonSerialize(): mixed

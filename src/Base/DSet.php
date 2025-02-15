@@ -78,21 +78,25 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param V ...$items
+     * @param V ...$value
+     *
+     * @return $this
      */
-    public function add(mixed ...$items): static
+    public function add(mixed ...$value): static
     {
-        return $this->addAll($items);
+        return $this->addAll($value);
     }
 
     /**
-     * @param iterable<V> $items
+     * @param iterable<V> $values
+     *
+     * @return $this
      */
-    public function addAll(iterable $items): static
+    public function addAll(iterable $values): static
     {
         $this->freezer->protect();
 
-        foreach ($items as $item) {
+        foreach ($values as $item) {
             $this->items->set($item, null);
         }
 
@@ -100,51 +104,62 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param V ...$item
+     * @param V ...$value
      */
-    public function plus(mixed ...$item): static
+    public function plus(mixed ...$value): static
     {
-        return $this->plusAll($item);
+        return $this->plusAll($value);
     }
 
     /**
-     * @param iterable<V> $items
+     * @param iterable<V> $values
      */
-    public function plusAll(iterable $items): static
+    public function plusAll(iterable $values): static
     {
-        return new static([...$this, ...$items]);
+        return new static([...$this, ...$values]);
     }
 
     /**
-     * @param V ...$items
+     * @param V ...$values
+     *
+     * @return $this
      */
-    public function remove(mixed ...$items): static
+    public function remove(mixed ...$values): static
     {
-        return $this->removeAll($items);
+        return $this->removeAll($values);
     }
 
     /**
-     * @param iterable<V> $items
+     * @param iterable<V> $values
+     *
+     * @return $this
      */
-    public function removeAll(iterable $items): static
+    public function removeAll(iterable $values): static
     {
         $this->freezer->protect();
 
-        foreach ($items as $item) {
-            $this->items->removeKey($item);
-        }
+        $this->items->unsetAll($values);
 
         return $this;
     }
 
-    public function minus(): void
+    /**
+     * @param V ...$value
+     */
+    public function minus(mixed ...$value): static
     {
-        // TODO
+        return $this->minusAll($value);
     }
 
-    public function minusAll(): void
+    /**
+     * @param iterable<V> $values
+     */
+    public function minusAll(iterable $values): static
     {
-        // TODO
+        return (new static($this, frozen: false))
+            ->removeAll($values)
+            ->freeze()
+        ;
     }
 
     /**

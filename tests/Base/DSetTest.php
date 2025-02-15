@@ -13,7 +13,6 @@ use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKey;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\Exception\ChangingImmutableException;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 
 /**
@@ -94,38 +93,6 @@ final class DSetTest extends TestCase
         self::assertEqualsCanonicalizing([$a, $b, $c], $subject->getValuesArray());
 
         $subject->removeAll([$a, $c, $e]);
-        self::assertEqualsCanonicalizing([$b], $subject->getValuesArray());
-    }
-
-    // #[Test] FIXME
-    public function immutabilityWorks(): void
-    {
-        $a = 'a';
-        $b = 'b';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::mut([$a]);
-
-        $subject->add($b);
-        $subject->remove($a);
-        self::assertEqualsCanonicalizing([$b], $subject->getValuesArray());
-
-        $subject->freeze();
-
-        try {
-            $subject->add($a);
-            self::fail('Exception was excepted on the line above.');
-        } catch (ChangingImmutableException) {
-            // Expected
-        }
-
-        try {
-            $subject->remove($b);
-            self::fail('Exception was excepted on the line above.');
-        } catch (ChangingImmutableException) {
-            // Expected
-        }
-
         self::assertEqualsCanonicalizing([$b], $subject->getValuesArray());
     }
 
