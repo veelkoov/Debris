@@ -445,13 +445,13 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public function flip(): self
     {
-        $result = new self();
+        $result = new self(frozen: false);
 
-        foreach ($this->getPairsArray() as $pair) {
-            $result->set($pair->value, $pair->key);
+        foreach ($this as $key => $value) {
+            $result->set($value, $key);
         }
 
-        return $result;
+        return $result->freeze();
     }
 
     /**

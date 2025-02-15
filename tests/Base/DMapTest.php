@@ -105,4 +105,17 @@ final class DMapTest extends TestCase
             'JKL' => 6,
         ], $subject->toArray()); // @phpstan-ignore method.notFound (FIXME)
     }
+
+    #[Test]
+    public function flip(): void
+    {
+        $object = new \stdClass();
+        $input = [10, -2, 'abc', $object, 0.123, false, 'abc', null, -2];
+
+        $subject = new DMap($input);
+        $result = $subject->flip();
+
+        self::assertSame([0, 8, 6, 3, 4, 5, 7], $result->getValuesArray());
+        self::assertSame([10, -2, 'abc', $object, 0.123, false, null], $result->getKeysArray());
+    }
 }
