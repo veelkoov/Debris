@@ -11,9 +11,12 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\ChangingImmutableException;
 
+/**
+ * @internal
+ */
 #[CoversClass(Freezer::class)]
 #[UsesClass(ChangingImmutableException::class)]
-class FreezerTest extends TestCase
+final class FreezerTest extends TestCase
 {
     #[Test]
     public function protectionWorks(): void
@@ -23,6 +26,7 @@ class FreezerTest extends TestCase
         $this->expectExceptionWithTheRightMessage();
         $subject->protect();
     }
+
     #[Test]
     public function freezingWorks(): void
     {

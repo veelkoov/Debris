@@ -51,9 +51,14 @@ class DMap implements \JsonSerializable
         return new static($items, frozen: false);
     }
 
-    public function frozen(): static
+    /**
+     * @return $this
+     */
+    public function freeze(): static
     {
-        return new static($this, frozen: true);
+        $this->freezer->freeze();
+
+        return $this;
     }
 
     public function isEmpty(): bool
@@ -104,6 +109,40 @@ class DMap implements \JsonSerializable
         }
 
         return $this;
+    }
+
+    /**
+     * @param K $key
+     * @param V $value
+     */
+    public function plus(mixed $key, mixed $value): static
+    {
+        $result = new static($this, frozen: false);
+        $result->set($key, $value);
+
+        return $result->freeze();
+    }
+
+    /**
+     * @param iterable<K, V>|self<K, V> $items
+     *
+     * @return $this
+     */
+    public function plusAll(iterable|self $items): static
+    {
+        $result = new static($this, frozen: false);
+
+        if ($items instanceof self) {
+            foreach ($items->getPairsArray() as $pair) {
+                $result->set($pair->key, $pair->value);
+            }
+        } else {
+            foreach ($items as $key => $value) {
+                $result->set($key, $value);
+            }
+        }
+
+        return $result->freeze();
     }
 
     /**
@@ -185,7 +224,7 @@ class DMap implements \JsonSerializable
             }
         }
 
-        return $result->frozen(); // TODO: Look for stuff like this and use freeze() instead
+        return $result->freeze();
     }
 
     /**
@@ -213,7 +252,7 @@ class DMap implements \JsonSerializable
             $result->set($pair->key, $pair->value);
         }
 
-        return $result->frozen();
+        return $result->freeze();
     }
 
     /**
@@ -301,7 +340,7 @@ class DMap implements \JsonSerializable
             $result->set($key, $value);
         }
 
-        return $result->frozen();
+        return $result->freeze();
     }
 
     /**
@@ -329,7 +368,7 @@ class DMap implements \JsonSerializable
             $result->set($key, $value);
         }
 
-        return $result->frozen();
+        return $result->freeze();
     }
 
     /**
@@ -381,7 +420,7 @@ class DMap implements \JsonSerializable
             $result->set($pair->key, $pair->value);
         }
 
-        return $result->frozen();
+        return $result->freeze();
     }
 
     /**

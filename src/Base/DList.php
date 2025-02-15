@@ -48,9 +48,14 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return new static($items, frozen: false);
     }
 
-    public function frozen(): static
+    /**
+     * @return $this
+     */
+    public function freeze(): static
     {
-        return (new static($this->items))->frozen();
+        $this->freezer->freeze();
+
+        return $this;
     }
 
     public function isEmpty(): bool
@@ -96,15 +101,6 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return \in_array($item, $this->items, true);
     }
 
-    public function each(\Closure $closure): static
-    {
-        foreach ($this->items as $item) {
-            $closure($item);
-        }
-
-        return $this;
-    }
-
     public function sorted(?\Closure $function = null): static
     {
         $result = clone $this;
@@ -124,19 +120,19 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param V[] $items
-     */
-    public function plusAll(iterable $items): static
-    {
-        return new static([...$this->items, ...$items]);
-    }
-
-    /**
      * @param V $item
      */
     public function plus(mixed $item): static
     {
         return new static([...$this->items, $item]);
+    }
+
+    /**
+     * @param V[] $items
+     */
+    public function plusAll(iterable $items): static
+    {
+        return new static([...$this->items, ...$items]);
     }
 
     /**
@@ -264,14 +260,6 @@ class DList implements \IteratorAggregate, \JsonSerializable
         }
 
         return $this->items[0];
-    }
-
-    /**
-     * @param static $other
-     */
-    public function sameElements(mixed $other): bool
-    {
-        return $this->count() === $other->count() && $this->sorted()->items === $other->sorted()->items;
     }
 
     /**

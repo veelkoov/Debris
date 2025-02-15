@@ -52,9 +52,14 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return new static($items, frozen: false);
     }
 
-    public function frozen(): static
+    /**
+     * @return $this
+     */
+    public function freeze(): static
     {
-        return new static($this->getValuesArray(), frozen: true);
+        $this->freezer->freeze();
+
+        return $this;
     }
 
     public function isEmpty(): bool
@@ -95,19 +100,19 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param iterable<V> $items
-     */
-    public function plusAll(iterable $items): static
-    {
-        return new static([...$this, ...$items]);
-    }
-
-    /**
      * @param V ...$item
      */
     public function plus(mixed ...$item): static
     {
         return $this->plusAll($item);
+    }
+
+    /**
+     * @param iterable<V> $items
+     */
+    public function plusAll(iterable $items): static
+    {
+        return new static([...$this, ...$items]);
     }
 
     /**

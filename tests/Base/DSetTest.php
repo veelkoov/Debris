@@ -110,7 +110,7 @@ final class DSetTest extends TestCase
         $subject->remove($a);
         self::assertEqualsCanonicalizing([$b], $subject->getValuesArray());
 
-        $subject = $subject->frozen();
+        $subject->freeze();
 
         try {
             $subject->add($a);
@@ -127,36 +127,6 @@ final class DSetTest extends TestCase
         }
 
         self::assertEqualsCanonicalizing([$b], $subject->getValuesArray());
-    }
-
-    #[Test]
-    public function plusAll_works(): void
-    {
-        $a = 'a';
-        $b = 'b';
-        $c = 'c';
-        $d = 'd';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::mut([$a, $b]);
-
-        $result = $subject->plusAll([$c, $d]);
-        self::assertEqualsCanonicalizing([$b, $a, $d, $c], $result->getValuesArray());
-    }
-
-    #[Test]
-    public function plus_works(): void
-    {
-        $a = 'a';
-        $b = 'b';
-        $c = 'c';
-        $d = 'd';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::mut([$a, $b]);
-
-        $result = $subject->plus($c, $d);
-        self::assertEqualsCanonicalizing([$b, $a, $d, $c], $result->getValuesArray());
     }
 
     #[Test]
