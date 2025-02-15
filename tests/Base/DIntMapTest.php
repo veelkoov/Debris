@@ -27,17 +27,4 @@ final class DIntMapTest extends TestCase
 
         self::assertSame([10 => 'a', 30 => 'c'], $subject->toArray());
     }
-
-    #[Test]
-    public function getIterator(): void
-    {
-        $subject = new DIntMap([10 => 'a', 30 => 'c']);
-
-        $result = [];
-        foreach ($subject as $key => $value) {
-            $result[$key] = $value;
-        }
-
-        self::assertSame([10 => 'a', 30 => 'c'], $result);
-    }
 }

@@ -12,8 +12,10 @@ use Veelkoov\Debris\Base\Internal\Pair;
 /**
  * @template K of object|scalar|null
  * @template V of object|scalar|null
+ *
+ * @implements \Iterator<K, V>
  */
-class DMap implements \JsonSerializable
+class DMap implements \JsonSerializable, \Iterator
 {
     /**
      * @var \SplObjectStorage<MapKey<K>, V>
@@ -92,20 +94,14 @@ class DMap implements \JsonSerializable
     }
 
     /**
-     * @param iterable<K, V>|self<K, V> $items
+     * @param iterable<K, V> $items
      *
      * @return $this
      */
-    public function setAll(iterable|self $items): static
+    public function setAll(iterable $items): static
     {
-        if ($items instanceof self) {
-            foreach ($items->getPairsArray() as $pair) {
-                $this->set($pair->key, $pair->value);
-            }
-        } else {
-            foreach ($items as $key => $value) {
-                $this->set($key, $value);
-            }
+        foreach ($items as $key => $value) {
+            $this->set($key, $value);
         }
 
         return $this;
@@ -150,25 +146,16 @@ class DMap implements \JsonSerializable
     }
 
     /**
-     * @param iterable<K, V>|self<K, V> $items
+     * @param iterable<K, V> $items
      *
      * @return $this
      */
-    public function plusAll(iterable|self $items): static
+    public function plusAll(iterable $items): static
     {
-        $result = new static($this, frozen: false);
-
-        if ($items instanceof self) {
-            foreach ($items->getPairsArray() as $pair) {
-                $result->set($pair->key, $pair->value);
-            }
-        } else {
-            foreach ($items as $key => $value) {
-                $result->set($key, $value);
-            }
-        }
-
-        return $result->freeze();
+        return (new static($this, frozen: false))
+            ->setAll($items)
+            ->freeze()
+        ;
     }
 
     /**
@@ -484,6 +471,36 @@ class DMap implements \JsonSerializable
         }
 
         return $result->freeze();
+    }
+
+    #[\Override]
+    public function current(): mixed
+    {
+        return $this->items[$this->items->current()];
+    }
+
+    #[\Override]
+    public function next(): void
+    {
+        $this->items->next();
+    }
+
+    #[\Override]
+    public function key(): mixed
+    {
+        return $this->items->current()->key;
+    }
+
+    #[\Override]
+    public function valid(): bool
+    {
+        return $this->items->valid();
+    }
+
+    #[\Override]
+    public function rewind(): void
+    {
+        $this->items->rewind();
     }
 
     /**

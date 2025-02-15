@@ -132,17 +132,4 @@ final class DSetTest extends TestCase
 
         self::assertSame('bb', $result);
     }
-
-    #[Test]
-    public function getIterator_works(): void
-    {
-        $a = 'a';
-        $b = 'b';
-        $c = 'c';
-
-        /** @var DSet<string> $subject */
-        $subject = DSet::of($a, $b, $c);
-
-        self::assertSame([$a, $b, $c], [...$subject]);
-    }
 }

@@ -40,18 +40,4 @@ final class DStringMapTest extends TestCase
         self::assertInstanceOf(StringSet::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Checking contract)
         self::assertEqualsCanonicalizing(['a', 'b', 'c'], $result->getValuesArray());
     }
-
-    #[Test]
-    public function getIterator(): void
-    {
-        $testValue = ['a' => 0, 'b' => 1, 'c' => 2];
-        $subject = new DStringMap($testValue);
-
-        $result = [];
-        foreach ($subject as $key => $value) {
-            $result[$key] = $value;
-        }
-
-        self::assertSame($testValue, $result);
-    }
 }

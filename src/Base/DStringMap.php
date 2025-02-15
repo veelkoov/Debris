@@ -10,10 +10,8 @@ use Veelkoov\Debris\StringSet;
  * @template V of object|scalar|null
  *
  * @extends DMap<string, V>
- *
- * @implements \IteratorAggregate<string, V>
  */
-class DStringMap extends DMap implements \IteratorAggregate
+class DStringMap extends DMap
 {
     public function getKeys(): StringSet
     {
@@ -26,10 +24,5 @@ class DStringMap extends DMap implements \IteratorAggregate
     public function toArray(): array
     {
         return array_combine($this->getKeysArray(), $this->getValuesArray());
-    }
-
-    public function getIterator(): \Traversable
-    {
-        return new \ArrayIterator($this->toArray());
     }
 }
