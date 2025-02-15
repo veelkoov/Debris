@@ -4,14 +4,11 @@ It's unstable.
 
 ## Motivation
 
+– Mom, can we have type hinting?  
+– We have type hinting at home.  
+Type hinting at home:
+
 ```php
-/*
-    - Mom, can we have type hinting?
-    - We have type hinting at home.
-
-    Type hinting at home:
-*/
-
 /**
  * @var array<string, int>
  */
@@ -19,6 +16,7 @@ private array $baseAmounts = [];
 
 /**
  * @param array<string, int> $addedAmounts
+ *
  * @return array<string, int>
  */
 public function plusAmounts(array $addedAmounts): array
@@ -27,7 +25,7 @@ public function plusAmounts(array $addedAmounts): array
 }
 ```
 
-## Why not use something developed by 3rd party?
+## Why wouldn't you use something developed by 3rd party?
 
 Yes, you should use something else. I wanted a bit of fun.
 
