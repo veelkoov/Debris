@@ -133,7 +133,6 @@ class DMap implements \JsonSerializable, \Iterator
     {
         return (new static($this))
             ->set($key, $value)
-            ->freeze()
         ;
     }
 
@@ -146,7 +145,6 @@ class DMap implements \JsonSerializable, \Iterator
     {
         return (new static($this))
             ->setAll($items)
-            ->freeze()
         ;
     }
 
@@ -165,7 +163,6 @@ class DMap implements \JsonSerializable, \Iterator
     {
         return (new static($this))
             ->removeAll($values)
-            ->freeze()
         ;
     }
 
@@ -280,7 +277,7 @@ class DMap implements \JsonSerializable, \Iterator
             }
         }
 
-        return $result->freeze();
+        return $result;
     }
 
     /**
@@ -308,7 +305,7 @@ class DMap implements \JsonSerializable, \Iterator
             $result->set($pair->key, $pair->value);
         }
 
-        return $result->freeze();
+        return $result;
     }
 
     /**
@@ -396,7 +393,7 @@ class DMap implements \JsonSerializable, \Iterator
             $result->set($key, $value);
         }
 
-        return $result->freeze();
+        return $result;
     }
 
     /**
@@ -424,7 +421,7 @@ class DMap implements \JsonSerializable, \Iterator
             $result->set($key, $value);
         }
 
-        return $result->freeze();
+        return $result;
     }
 
     public function jsonSerialize(): mixed
@@ -443,7 +440,7 @@ class DMap implements \JsonSerializable, \Iterator
             $result->set($value, $key);
         }
 
-        return $result->freeze();
+        return $result;
     }
 
     /**
@@ -462,7 +459,7 @@ class DMap implements \JsonSerializable, \Iterator
             $result->set($pair->key, $pair->value);
         }
 
-        return $result->freeze();
+        return $result;
     }
 
     #[\Override]

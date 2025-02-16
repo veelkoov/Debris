@@ -150,7 +150,6 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return (new static($this))
             ->removeAll($values)
-            ->freeze()
         ;
     }
 
