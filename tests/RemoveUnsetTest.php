@@ -29,7 +29,7 @@ final class RemoveUnsetTest extends TestCase
     #[Test]
     public function DList_remove(): void
     {
-        $subject = DList::mut([1, 2, 2, 3, 2, 4]);
+        $subject = new DList([1, 2, 2, 3, 2, 4]);
 
         $result = $subject->remove(2)->remove(2)->remove(4)->remove(5);
 
@@ -40,7 +40,7 @@ final class RemoveUnsetTest extends TestCase
     #[Test]
     public function DSet_remove(): void
     {
-        $subject = DSet::mut([1, 2, 3]);
+        $subject = new DSet([1, 2, 3]);
 
         $result = $subject->remove(2)->remove(3)->remove(3)->remove(4);
 
@@ -51,7 +51,7 @@ final class RemoveUnsetTest extends TestCase
     #[Test]
     public function DMap_remove(): void
     {
-        $subject = DMap::mut(['a' => 1, 'b' => 2, 'c' => 2, 'd' => 4]);
+        $subject = new DMap(['a' => 1, 'b' => 2, 'c' => 2, 'd' => 4]);
 
         $result = $subject->remove(2)->remove(4)->remove(5);
 
@@ -63,7 +63,7 @@ final class RemoveUnsetTest extends TestCase
     #[Test]
     public function DMap_unset(): void
     {
-        $subject = DMap::mut(['a' => 1, 'b' => 2]);
+        $subject = new DMap(['a' => 1, 'b' => 2]);
 
         $result = $subject->unset('a')->unset('a')->unset('c');
 
@@ -75,7 +75,7 @@ final class RemoveUnsetTest extends TestCase
     #[Test]
     public function DList_remove_onFrozen(): void
     {
-        $subject = DList::mut([1]);
+        $subject = new DList([1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
@@ -90,7 +90,7 @@ final class RemoveUnsetTest extends TestCase
     #[Test]
     public function DSet_remove_onFrozen(): void
     {
-        $subject = DSet::mut([1]);
+        $subject = new DSet([1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
@@ -105,7 +105,7 @@ final class RemoveUnsetTest extends TestCase
     #[Test]
     public function DMap_remove_onFrozen(): void
     {
-        $subject = DMap::mut(['a' => 1]);
+        $subject = new DMap(['a' => 1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
@@ -120,7 +120,7 @@ final class RemoveUnsetTest extends TestCase
     #[Test]
     public function DMap_unset_onFrozen(): void
     {
-        $subject = DMap::mut(['a' => 1]);
+        $subject = new DMap(['a' => 1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 

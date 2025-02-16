@@ -26,7 +26,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     /**
      * @param iterable<V> $items
      */
-    final public function __construct(iterable $items = [], bool $frozen = true)
+    final public function __construct(iterable $items = [], bool $frozen = false)
     {
         $this->freezer = new Freezer($this, $frozen);
         $this->items = array_values([...$items]);
@@ -38,14 +38,6 @@ class DList implements \IteratorAggregate, \JsonSerializable
     public static function of(mixed ...$items): static
     {
         return new static($items);
-    }
-
-    /**
-     * @param iterable<V> $items
-     */
-    public static function mut(iterable $items = []): static
-    {
-        return new static($items, frozen: false);
     }
 
     /**

@@ -24,9 +24,9 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     /**
      * @param iterable<V> $items
      */
-    final public function __construct(iterable $items = [], bool $frozen = true)
+    final public function __construct(iterable $items = [], bool $frozen = false)
     {
-        $this->items = new DMap(frozen: false);
+        $this->items = new DMap();
         $this->freezer = new Freezer($this, false);
 
         $this->addAll($items);
@@ -42,14 +42,6 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     public static function of(mixed ...$items): static
     {
         return new static($items);
-    }
-
-    /**
-     * @param iterable<V> $items
-     */
-    public static function mut(iterable $items = []): static
-    {
-        return new static($items, frozen: false);
     }
 
     /**
@@ -156,7 +148,7 @@ class DSet implements \IteratorAggregate, \JsonSerializable
      */
     public function minusAll(iterable $values): static
     {
-        return (new static($this, frozen: false))
+        return (new static($this))
             ->removeAll($values)
             ->freeze()
         ;

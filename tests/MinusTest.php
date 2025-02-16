@@ -31,7 +31,7 @@ final class MinusTest extends TestCase
     #[Test]
     public function DList_minus(): void
     {
-        $subject = DList::mut([1, 2, 2, 3, 2, 4]);
+        $subject = new DList([1, 2, 2, 3, 2, 4]);
 
         $result = $subject->minus(2)->minus(2)->minus(4)->minus(5);
 
@@ -43,7 +43,7 @@ final class MinusTest extends TestCase
     #[Test]
     public function DSet_minus(): void
     {
-        $subject = DSet::mut([1, 2, 3]);
+        $subject = new DSet([1, 2, 3]);
 
         $result = $subject->minus(2)->minus(3)->minus(3)->minus(4);
 
@@ -55,7 +55,7 @@ final class MinusTest extends TestCase
     #[Test]
     public function DMap_minus(): void
     {
-        $subject = DMap::mut(['a' => 1, 'b' => 2, 'c' => 2, 'd' => 4]);
+        $subject = new DMap(['a' => 1, 'b' => 2, 'c' => 2, 'd' => 4]);
 
         $result = $subject->minus(2)->minus(4)->minus(5);
 

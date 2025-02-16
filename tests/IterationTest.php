@@ -72,7 +72,7 @@ final class IterationTest extends TestCase
         $values = ['abc', 1, new \stdClass(), false];
         $keys = [-1, new \stdClass(), 0.45, 'xyz'];
 
-        $subject = DMap::mut();
+        $subject = new DMap();
         foreach ($keys as $index => $key) {
             $subject->set($key, $values[$index]);
         }

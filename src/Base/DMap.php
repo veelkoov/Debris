@@ -30,9 +30,9 @@ class DMap implements \JsonSerializable, \Iterator
     protected readonly MapKeyMapper $mappedKeys;
 
     /**
-     * @param iterable<K, V>|self<K, V> $items
+     * @param iterable<K, V> $items
      */
-    final public function __construct(iterable|self $items = [], bool $frozen = true)
+    final public function __construct(iterable $items = [], bool $frozen = false)
     {
         $this->items = new \SplObjectStorage();
         $this->mappedKeys = new MapKeyMapper();
@@ -43,14 +43,6 @@ class DMap implements \JsonSerializable, \Iterator
         if ($frozen) {
             $this->freezer->freeze();
         }
-    }
-
-    /**
-     * @param iterable<K, V>|self<K, V> $items
-     */
-    public static function mut(iterable|self $items = []): static
-    {
-        return new static($items, frozen: false);
     }
 
     /**
@@ -139,7 +131,7 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public function plus(mixed $key, mixed $value): static
     {
-        return (new static($this, frozen: false))
+        return (new static($this))
             ->set($key, $value)
             ->freeze()
         ;
@@ -152,7 +144,7 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public function plusAll(iterable $items): static
     {
-        return (new static($this, frozen: false))
+        return (new static($this))
             ->setAll($items)
             ->freeze()
         ;
@@ -171,7 +163,7 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public function minusAll(iterable $values): static
     {
-        return (new static($this, frozen: false))
+        return (new static($this))
             ->removeAll($values)
             ->freeze()
         ;
@@ -278,7 +270,7 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public function filter(callable $function): static
     {
-        $result = new static(frozen: false);
+        $result = new static();
 
         foreach ($this->getKeysArray() as $key) {
             $value = $this->get($key);
@@ -309,7 +301,7 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public function map(callable $function): self
     {
-        $result = new self(frozen: false);
+        $result = new self();
 
         foreach ($this->getPairsArray() as $pair) {
             $pair = $function($pair->key, $pair->value);
@@ -395,7 +387,7 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public static function fromValues(iterable $input, callable $valueToKeyFunction): static
     {
-        $result = new static(frozen: false);
+        $result = new static();
 
         foreach ($input as $value) {
             $key = static::enforceKeyType($valueToKeyFunction($value));
@@ -414,7 +406,7 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public static function fromRows(iterable $input, int|string $keyKey, int|string $valueKey): static
     {
-        $result = new static(frozen: false);
+        $result = new static();
 
         foreach ($input as $row) {
             /** @phpstan-ignore argument.type */
@@ -445,7 +437,7 @@ class DMap implements \JsonSerializable, \Iterator
      */
     public function flip(): self
     {
-        $result = new self(frozen: false);
+        $result = new self();
 
         foreach ($this as $key => $value) {
             $result->set($value, $key);
@@ -464,7 +456,7 @@ class DMap implements \JsonSerializable, \Iterator
         $pairs = $this->getPairsArray();
         usort($pairs, static fn (Pair $pair1, Pair $pair2): int => $times * $comparator($pair1->value, $pair2->value));
 
-        $result = new static(frozen: false);
+        $result = new static();
 
         foreach ($pairs as $pair) {
             $result->set($pair->key, $pair->value);

@@ -78,7 +78,7 @@ final class DSetTest extends TestCase
         $e = 'e';
 
         /** @var DSet<string> $subject */
-        $subject = DSet::mut([$a, $a, $b]);
+        $subject = new DSet([$a, $a, $b]);
         self::assertEqualsCanonicalizing([$a, $b], $subject->getValuesArray());
 
         $subject->add($c);

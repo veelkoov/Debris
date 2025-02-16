@@ -42,7 +42,7 @@ final class DMapTest extends TestCase
         /**
          * @var DMap<null|object|scalar, int> $subject
          */
-        $subject = DMap::mut();
+        $subject = new DMap();
 
         $testKeys = [
             new \stdClass(),

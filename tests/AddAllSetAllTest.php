@@ -29,7 +29,7 @@ final class AddAllSetAllTest extends TestCase
     #[Test]
     public function DList_addAll(): void
     {
-        $subject = DList::mut([1]);
+        $subject = new DList([1]);
 
         $result = $subject->addAll([2, 1]);
 
@@ -40,7 +40,7 @@ final class AddAllSetAllTest extends TestCase
     #[Test]
     public function DSet_addAll(): void
     {
-        $subject = DSet::mut([1]);
+        $subject = new DSet([1]);
 
         $result = $subject->addAll([2, 1]);
 
@@ -51,7 +51,7 @@ final class AddAllSetAllTest extends TestCase
     #[Test]
     public function DMap_setAll(): void
     {
-        $subject = DMap::mut(['a' => 1]);
+        $subject = new DMap(['a' => 1]);
 
         $result = $subject->setAll(['b' => 2, 'a' => 3]);
 
@@ -63,7 +63,7 @@ final class AddAllSetAllTest extends TestCase
     #[Test]
     public function DList_addAll_onFrozen(): void
     {
-        $subject = DList::mut([1]);
+        $subject = new DList([1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
@@ -78,7 +78,7 @@ final class AddAllSetAllTest extends TestCase
     #[Test]
     public function DSet_addAll_onFrozen(): void
     {
-        $subject = DSet::mut([1]);
+        $subject = new DSet([1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
@@ -93,7 +93,7 @@ final class AddAllSetAllTest extends TestCase
     #[Test]
     public function DMap_setAll_onFrozen(): void
     {
-        $subject = DMap::mut(['a' => 1]);
+        $subject = new DMap(['a' => 1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
