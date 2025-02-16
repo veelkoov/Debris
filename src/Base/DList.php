@@ -196,11 +196,13 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param static $other
+     * @param iterable<V> $other
      */
-    public function intersect(mixed $other): static
+    public function intersect(iterable $other): static
     {
-        return self::filter(static fn (mixed $item) => \in_array($item, $other->items, true));
+        $otherValues = [...$other];
+
+        return self::filter(static fn (mixed $item) => \in_array($item, $otherValues, true));
     }
 
     /**
