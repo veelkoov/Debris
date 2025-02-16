@@ -23,44 +23,6 @@ use Veelkoov\Debris\StringIntMap;
 final class StringIntMapTest extends TestCase
 {
     #[Test]
-    public function sorted_normal(): void
-    {
-        $input = ['a' => 1, 'c' => 3, 'b' => 2];
-        $expected = ['a' => 1, 'b' => 2, 'c' => 3];
-
-        $subject = new StringIntMap($input);
-        $result = $subject->sorted()->toArray();
-
-        self::assertSame($expected, $result);
-    }
-
-    #[Test]
-    public function sorted_reversed(): void
-    {
-        $input = ['a' => 1, 'c' => 3, 'b' => 2];
-        $expected = ['c' => 3, 'b' => 2, 'a' => 1];
-
-        $subject = new StringIntMap($input);
-        $result = $subject->sorted(reverse: true)->toArray();
-
-        self::assertSame($expected, $result);
-    }
-
-    #[Test]
-    public function sorted_withComparator(): void
-    {
-        $input = ['a' => 10, 'b' => 8, 'c' => 14];
-        $expected = ['a' => 10, 'c' => 14, 'b' => 8];
-
-        $subject = new StringIntMap($input);
-        $result = $subject->sorted(
-            static fn (Pair $i1, Pair $i2) => $i1->value % 10 - $i2->value % 10
-        )->toArray();
-
-        self::assertSame($expected, $result);
-    }
-
-    #[Test]
     public function fromRows_blocksWrongKeyType(): void
     {
         $this->expectNotToPerformAssertions();

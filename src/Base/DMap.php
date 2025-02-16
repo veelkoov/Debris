@@ -221,11 +221,12 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param callable(Pair<K, V>, Pair<K, V>): int $comparator
+     * @param ?callable(Pair<K, V>, Pair<K, V>): int $comparator
      */
-    public function sorted(callable $comparator, bool $reverse = false): static
+    public function sorted(?callable $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
+        $comparator ??= static fn (Pair $a, Pair $b): int => $a->value <=> $b->value;
 
         $pairs = $this->getPairsArray();
         usort($pairs, static fn (Pair $pair1, Pair $pair2): int => $times * $comparator($pair1, $pair2));

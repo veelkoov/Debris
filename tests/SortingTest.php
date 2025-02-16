@@ -26,41 +26,122 @@ use Veelkoov\Debris\Base\Internal\Pair;
 #[UsesClass(Pair::class)]
 final class SortingTest extends TestCase
 {
+    /**
+     * @var array<int, string>
+     */
+    private static array $input = [
+        10 => 'A2',
+        20 => 'b1',
+        30 => 'c1',
+        40 => 'B2',
+        50 => 'a1',
+        60 => 'C2',
+    ];
+
+    /**
+     * @var array<int, string>
+     */
+    private static array $expectedPlain = [
+        10 => 'A2',
+        40 => 'B2',
+        60 => 'C2',
+        50 => 'a1',
+        20 => 'b1',
+        30 => 'c1',
+    ];
+
+    /**
+     * @var array<int, string>
+     */
+    private static array $expectedComparator = [
+        50 => 'a1',
+        10 => 'A2',
+        20 => 'b1',
+        40 => 'B2',
+        30 => 'c1',
+        60 => 'C2',
+    ];
+
     #[Test]
     public function DList_sorted(): void
     {
-        $subject = new DList([10, 50, 20, 40, 30]);
+        $subject = new DList(array_values(self::$input));
 
-        $comparator = static fn (int $i1, int $i2) => $i1 <=> $i2;
+        self::assertSame(
+            array_values(self::$expectedPlain),
+            $subject->sorted()->toArray(),
+        );
 
-        self::assertSame([10, 20, 30, 40, 50], $subject->sorted($comparator)->toArray());
-        self::assertSame([50, 40, 30, 20, 10], $subject->sorted($comparator, reverse: true)->toArray());
+        self::assertSame(
+            array_reverse(array_values(self::$expectedPlain)),
+            $subject->sorted(reverse: true)->toArray(),
+        );
+
+        self::assertSame(
+            array_values(self::$expectedComparator),
+            $subject->sorted(self::comparator(...))->toArray(),
+        );
+
+        self::assertSame(
+            array_reverse(array_values(self::$expectedComparator)),
+            $subject->sorted(self::comparator(...), reverse: true)->toArray(),
+        );
     }
 
     #[Test]
     public function DSet_sorted(): void
     {
-        $subject = new DSet([10, 50, 20, 40, 30]);
+        $subject = new DSet(array_values(self::$input));
 
-        $comparator = static fn (int $i1, int $i2) => $i1 <=> $i2;
+        self::assertSame(
+            array_values(self::$expectedPlain),
+            $subject->sorted()->getValuesArray(),
+        );
 
-        self::assertSame([10, 20, 30, 40, 50], $subject->sorted($comparator)->getValuesArray());
-        self::assertSame([50, 40, 30, 20, 10], $subject->sorted($comparator, reverse: true)->getValuesArray());
+        self::assertSame(
+            array_reverse(array_values(self::$expectedPlain)),
+            $subject->sorted(reverse: true)->getValuesArray(),
+        );
+
+        self::assertSame(
+            array_values(self::$expectedComparator),
+            $subject->sorted(self::comparator(...))->getValuesArray(),
+        );
+
+        self::assertSame(
+            array_reverse(array_values(self::$expectedComparator)),
+            $subject->sorted(self::comparator(...), reverse: true)->getValuesArray(),
+        );
     }
 
     #[Test]
     public function DMap_sorted(): void
     {
-        $subject = new DMap(['a' => 10, 'b' => 50, 'c' => 20, 'd' => 40, 'e' => 30]);
+        $subject = new DMap(self::$input);
 
-        $comparator = static fn (Pair $i1, Pair $i2) => $i1->value <=> $i2->value;
+        $result = $subject->sorted();
+        self::assertSame(array_values(self::$expectedPlain), $result->getValuesArray());
+        self::assertSame(array_keys(self::$expectedPlain), $result->getKeysArray());
 
-        $result = $subject->sorted($comparator);
-        self::assertSame([10, 20, 30, 40, 50], $result->getValuesArray());
-        self::assertSame(['a', 'c', 'e', 'd', 'b'], $result->getKeysArray());
+        $result = $subject->sorted(reverse: true);
+        self::assertSame(array_reverse(array_values(self::$expectedPlain)), $result->getValuesArray());
+        self::assertSame(array_reverse(array_keys(self::$expectedPlain)), $result->getKeysArray());
 
-        $result = $subject->sorted($comparator, reverse: true);
-        self::assertSame([50, 40, 30, 20, 10], $result->getValuesArray());
-        self::assertSame(['b', 'd', 'e', 'c', 'a'], $result->getKeysArray());
+        $result = $subject->sorted(self::comparator(...));
+        self::assertSame(array_values(self::$expectedComparator), $result->getValuesArray());
+        self::assertSame(array_keys(self::$expectedComparator), $result->getKeysArray());
+
+        $result = $subject->sorted(self::comparator(...), reverse: true);
+        self::assertSame(array_reverse(array_values(self::$expectedComparator)), $result->getValuesArray());
+        self::assertSame(array_reverse(array_keys(self::$expectedComparator)), $result->getKeysArray());
+    }
+
+    /**
+     * @param Pair<int, string>|string $a
+     * @param Pair<int, string>|string $b
+     */
+    private static function comparator(Pair|string $a, Pair|string $b): int
+    {
+        return strtolower(\is_string($a) ? $a : $a->value) <=> strtolower(\is_string($b) ? $b : $b->value);
     }
 }

@@ -162,11 +162,12 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param callable(V, V): int $comparator
+     * @param ?callable(V, V): int $comparator
      */
-    public function sorted(callable $comparator, bool $reverse = false): static
+    public function sorted(?callable $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
+        $comparator ??= static fn (mixed $a, mixed $b): int => $a <=> $b;
 
         $values = $this->getValuesArray();
         usort($values, static fn (mixed $value1, mixed $value2): int => $times * $comparator($value1, $value2));
