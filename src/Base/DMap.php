@@ -15,7 +15,7 @@ use Veelkoov\Debris\Base\Internal\Pair;
  *
  * @implements \Iterator<K, V>
  */
-class DMap implements \JsonSerializable, \Iterator
+class DMap implements \Iterator, \JsonSerializable
 {
     /**
      * @var \SplObjectStorage<MapKey<K>, V>
@@ -34,8 +34,8 @@ class DMap implements \JsonSerializable, \Iterator
      */
     final public function __construct(iterable $items = [], bool $frozen = false)
     {
-        $this->items = new \SplObjectStorage();
         $this->mappedKeys = new MapKeyMapper();
+        $this->items = new \SplObjectStorage();
         $this->freezer = new Freezer($this, false);
 
         $this->setAll($items);
@@ -100,32 +100,6 @@ class DMap implements \JsonSerializable, \Iterator
     }
 
     /**
-     * @param K ...$key
-     *
-     * @return $this
-     */
-    public function unset(mixed ...$key): static
-    {
-        return $this->unsetAll($key);
-    }
-
-    /**
-     * @param iterable<K> $keys
-     *
-     * @return $this
-     */
-    public function unsetAll(iterable $keys): static
-    {
-        $this->freezer->protect();
-
-        foreach ($keys as $key) {
-            $this->items->detach($this->mappedKeys->get($key));
-        }
-
-        return $this;
-    }
-
-    /**
      * @param K $key
      * @param V $value
      */
@@ -145,24 +119,6 @@ class DMap implements \JsonSerializable, \Iterator
     {
         return (new static($this))
             ->setAll($items)
-        ;
-    }
-
-    /**
-     * @param V ...$value
-     */
-    public function minus(mixed ...$value): static
-    {
-        return $this->minusAll($value);
-    }
-
-    /**
-     * @param iterable<V> $values
-     */
-    public function minusAll(iterable $values): static
-    {
-        return (new static($this))
-            ->removeAll($values)
         ;
     }
 
@@ -196,6 +152,97 @@ class DMap implements \JsonSerializable, \Iterator
         }
 
         return $this;
+    }
+
+    /**
+     * @param K ...$key
+     *
+     * @return $this
+     */
+    public function unset(mixed ...$key): static
+    {
+        return $this->unsetAll($key);
+    }
+
+    /**
+     * @param iterable<K> $keys
+     *
+     * @return $this
+     */
+    public function unsetAll(iterable $keys): static
+    {
+        $this->freezer->protect();
+
+        foreach ($keys as $key) {
+            $this->items->detach($this->mappedKeys->get($key));
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param V ...$value
+     */
+    public function minus(mixed ...$value): static
+    {
+        return $this->minusAll($value);
+    }
+
+    /**
+     * @param iterable<V> $values
+     */
+    public function minusAll(iterable $values): static
+    {
+        return (new static($this))
+            ->removeAll($values)
+        ;
+    }
+
+    /**
+     * @param V $value
+     */
+    public function contains(mixed $value): bool
+    {
+        foreach ($this->items as $key) {
+            if ($this->items[$key] === $value) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param K $key
+     */
+    public function hasKey(mixed $key): bool
+    {
+        return $this->items->contains($this->mappedKeys->get($key));
+    }
+
+    /**
+     * @param callable(Pair<K, V>, Pair<K, V>): int $comparator
+     */
+    public function sorted(callable $comparator, bool $reverse = false): static
+    {
+        $times = $reverse ? -1 : 1;
+
+        $pairs = $this->getPairsArray();
+        usort($pairs, static fn (Pair $pair1, Pair $pair2): int => $times * $comparator($pair1, $pair2));
+
+        $result = new static();
+
+        foreach ($pairs as $pair) {
+            $result->set($pair->key, $pair->value);
+        }
+
+        return $result;
+    }
+
+    #[\Override]
+    public function jsonSerialize(): mixed
+    {
+        return $this->getPairsArray();
     }
 
     /**
@@ -238,28 +285,6 @@ class DMap implements \JsonSerializable, \Iterator
         }
 
         return \is_callable($default) ? $default() : $default;
-    }
-
-    /**
-     * @param V $value
-     */
-    public function contains(mixed $value): bool
-    {
-        foreach ($this->items as $key) {
-            if ($this->items[$key] === $value) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param K $key
-     */
-    public function hasKey(mixed $key): bool
-    {
-        return $this->items->contains($this->mappedKeys->get($key));
     }
 
     /**
@@ -424,11 +449,6 @@ class DMap implements \JsonSerializable, \Iterator
         return $result;
     }
 
-    public function jsonSerialize(): mixed
-    {
-        return $this->getPairsArray();
-    }
-
     /**
      * @return self<V, K>
      */
@@ -438,25 +458,6 @@ class DMap implements \JsonSerializable, \Iterator
 
         foreach ($this as $key => $value) {
             $result->set($value, $key);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param callable(V, V): int $comparator
-     */
-    public function sorted(callable $comparator, bool $reverse = false): static
-    {
-        $times = $reverse ? -1 : 1;
-
-        $pairs = $this->getPairsArray();
-        usort($pairs, static fn (Pair $pair1, Pair $pair2): int => $times * $comparator($pair1->value, $pair2->value));
-
-        $result = new static();
-
-        foreach ($pairs as $pair) {
-            $result->set($pair->key, $pair->value);
         }
 
         return $result;

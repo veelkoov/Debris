@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
-use IteratorAggregate;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
 
 /**
- * @template V
+ * @template V of object|scalar|null
  *
- * @implements IteratorAggregate<int, V>
+ * @implements \IteratorAggregate<int, V>
  */
 class DList implements \IteratorAggregate, \JsonSerializable
 {
@@ -28,8 +27,8 @@ class DList implements \IteratorAggregate, \JsonSerializable
      */
     final public function __construct(iterable $items = [], bool $frozen = false)
     {
-        $this->freezer = new Freezer($this, $frozen);
         $this->items = array_values([...$items]);
+        $this->freezer = new Freezer($this, $frozen);
     }
 
     /**
@@ -90,37 +89,11 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param V $value
+     * @param V ...$value
      */
-    public function contains(mixed $value): bool
+    public function plus(mixed ...$value): static
     {
-        return \in_array($value, $this->items, true);
-    }
-
-    public function sorted(?\Closure $function = null): static
-    {
-        $result = clone $this;
-
-        if (null === $function) {
-            sort($result->items);
-        } else {
-            usort($result->items, $function);
-        }
-
-        return $result;
-    }
-
-    public function unique(): static
-    {
-        return new static(array_unique($this->items, SORT_REGULAR));
-    }
-
-    /**
-     * @param V $value
-     */
-    public function plus(mixed $value): static
-    {
-        return new static([...$this->items, $value]);
+        return $this->plusAll($value);
     }
 
     /**
@@ -180,19 +153,36 @@ class DList implements \IteratorAggregate, \JsonSerializable
      */
     public function minusAll(iterable $values): static
     {
-        $result = $this->items;
+        return (new static($this))
+            ->removeAll($values)
+        ;
+    }
 
-        foreach ($values as $value) {
-            $key = array_search($value, $result, true);
+    /**
+     * @param V $value
+     */
+    public function contains(mixed $value): bool
+    {
+        return \in_array($value, $this->items, true);
+    }
 
-            if (false === $key) {
-                continue;
-            }
+    /**
+     * @param callable(V, V): int $comparator
+     */
+    public function sorted(callable $comparator, bool $reverse = false): static
+    {
+        $times = $reverse ? -1 : 1;
 
-            unset($result[$key]);
-        }
+        $values = $this->toArray();
+        usort($values, static fn (mixed $value1, mixed $value2): int => $times * $comparator($value1, $value2));
 
-        return new static($result);
+        return new static($values);
+    }
+
+    #[\Override]
+    public function jsonSerialize(): mixed
+    {
+        return $this->items;
     }
 
     /**
@@ -286,12 +276,6 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return new static(array_filter($this->items, $filterFunction));
     }
 
-    #[\Override]
-    public function jsonSerialize(): mixed
-    {
-        return $this->items;
-    }
-
     /**
      * @return V
      */
@@ -310,5 +294,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
     public function at(int $index): mixed
     {
         return $this->items[$index];
+    }
+
+    public function unique(): static
+    {
+        return new static(array_unique($this->items, SORT_REGULAR));
     }
 }

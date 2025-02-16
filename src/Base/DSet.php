@@ -10,7 +10,7 @@ use Veelkoov\Debris\Exception\EmptyCollectionException;
 /**
  * @template V of object|scalar|null
  *
- * @implements \IteratorAggregate<V>
+ * @implements \IteratorAggregate<int, V>
  */
 class DSet implements \IteratorAggregate, \JsonSerializable
 {
@@ -112,13 +112,13 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param V ...$values
+     * @param V ...$value
      *
      * @return $this
      */
-    public function remove(mixed ...$values): static
+    public function remove(mixed ...$value): static
     {
-        return $this->removeAll($values);
+        return $this->removeAll($value);
     }
 
     /**
@@ -154,11 +154,30 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param V $item
+     * @param V $value
      */
-    public function contains(mixed $item): bool
+    public function contains(mixed $value): bool
     {
-        return $this->items->hasKey($item);
+        return $this->items->hasKey($value);
+    }
+
+    /**
+     * @param callable(V, V): int $comparator
+     */
+    public function sorted(callable $comparator, bool $reverse = false): static
+    {
+        $times = $reverse ? -1 : 1;
+
+        $values = $this->getValuesArray();
+        usort($values, static fn (mixed $value1, mixed $value2): int => $times * $comparator($value1, $value2));
+
+        return new static($values);
+    }
+
+    #[\Override]
+    public function jsonSerialize(): mixed
+    {
+        return $this->getValuesArray();
     }
 
     /**
@@ -201,10 +220,5 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->getValuesArray());
-    }
-
-    public function jsonSerialize(): mixed
-    {
-        return $this->getValuesArray();
     }
 }

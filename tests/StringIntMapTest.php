@@ -54,7 +54,7 @@ final class StringIntMapTest extends TestCase
 
         $subject = new StringIntMap($input);
         $result = $subject->sorted(
-            static fn (int $i1, int $i2) => $i1 % 10 - $i2 % 10
+            static fn (Pair $i1, Pair $i2) => $i1->value % 10 - $i2->value % 10
         )->toArray();
 
         self::assertSame($expected, $result);
