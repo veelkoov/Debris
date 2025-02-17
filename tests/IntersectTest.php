@@ -25,7 +25,7 @@ final class IntersectTest extends TestCase
 
         $result = $subject->intersect([-10, 10, 30, 50, 70]);
 
-        self::assertSame([10, 30, 50], $result->toArray());
+        self::assertSame([10, 30, 50], $result->getValuesArray());
     }
 
     #[Test]
@@ -35,7 +35,7 @@ final class IntersectTest extends TestCase
 
         $result = $subject->intersect(new DList([-10, 10, 30, 50, 70]));
 
-        self::assertSame([10, 30, 50], $result->toArray());
+        self::assertSame([10, 30, 50], $result->getValuesArray());
     }
 
     // TODO: DSet & DMap

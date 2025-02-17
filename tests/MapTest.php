@@ -33,7 +33,7 @@ final class MapTest extends TestCase
             ->map(static fn (int $value) => $value * 2)
         ;
 
-        self::assertSame([2, 4, 6], $result->toArray());
+        self::assertSame([2, 4, 6], $result->getValuesArray());
     }
 
     #[Test]

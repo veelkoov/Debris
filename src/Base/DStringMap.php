@@ -4,25 +4,21 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
+use Veelkoov\Debris\Base\Internal\EnforceStringKeysTrait;
 use Veelkoov\Debris\StringSet;
 
 /**
  * @template V of object|scalar|null
  *
- * @extends DMap<string, V>
+ * @extends DScalarMap<string, V>
  */
-class DStringMap extends DMap
+class DStringMap extends DScalarMap
 {
+    use EnforceStringKeysTrait;
+
+    #[\Override]
     public function getKeys(): StringSet
     {
         return new StringSet(parent::getKeysArray());
-    }
-
-    /**
-     * @return array<string, V>
-     */
-    public function toArray(): array
-    {
-        return array_combine($this->getKeysArray(), $this->getValuesArray());
     }
 }

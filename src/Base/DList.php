@@ -174,7 +174,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
         $times = $reverse ? -1 : 1;
         $comparator ??= static fn (mixed $a, mixed $b): int => $a <=> $b;
 
-        $values = $this->toArray();
+        $values = $this->getValuesArray();
         usort($values, static fn (mixed $value1, mixed $value2): int => $times * $comparator($value1, $value2));
 
         return new static($values);
@@ -208,7 +208,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     /**
      * @return list<V>
      */
-    public function toArray(): array
+    public function getValuesArray(): array
     {
         return $this->items;
     }

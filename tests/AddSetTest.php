@@ -34,7 +34,7 @@ final class AddSetTest extends TestCase
         $result = $subject->add(2)->add(1);
 
         self::assertSame($subject, $result, 'Result should be the modified, original instance');
-        self::assertSame([1, 2, 1], $result->toArray());
+        self::assertSame([1, 2, 1], $result->getValuesArray());
     }
 
     #[Test]

@@ -34,8 +34,8 @@ final class PlusAllTest extends TestCase
         $result = $subject->plusAll([2, 1]);
 
         self::assertNotSame($subject, $result, 'Result should be a new, different instance');
-        self::assertSame([1], $subject->toArray(), 'Original object should remain unchanged');
-        self::assertSame([1, 2, 1], $result->toArray());
+        self::assertSame([1], $subject->getValuesArray(), 'Original object should remain unchanged');
+        self::assertSame([1, 2, 1], $result->getValuesArray());
     }
 
     #[Test]

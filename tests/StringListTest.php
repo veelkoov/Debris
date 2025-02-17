@@ -41,13 +41,13 @@ final class StringListTest extends TestCase
     #[Test]
     public function split_empty(): void
     {
-        self::assertSame([], StringList::split(',', '')->toArray());
+        self::assertSame([], StringList::split(',', '')->getValuesArray());
     }
 
     #[Test]
     public function split_nonEmpty(): void
     {
-        self::assertSame(['aaa', 'bbb'], StringList::split(', ', 'aaa, bbb')->toArray());
+        self::assertSame(['aaa', 'bbb'], StringList::split(', ', 'aaa, bbb')->getValuesArray());
     }
 
     #[Test]

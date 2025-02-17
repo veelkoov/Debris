@@ -69,22 +69,22 @@ final class SortingTest extends TestCase
 
         self::assertSame(
             array_values(self::$expectedPlain),
-            $subject->sorted()->toArray(),
+            $subject->sorted()->getValuesArray(),
         );
 
         self::assertSame(
             array_reverse(array_values(self::$expectedPlain)),
-            $subject->sorted(reverse: true)->toArray(),
+            $subject->sorted(reverse: true)->getValuesArray(),
         );
 
         self::assertSame(
             array_values(self::$expectedComparator),
-            $subject->sorted(self::comparator(...))->toArray(),
+            $subject->sorted(self::comparator(...))->getValuesArray(),
         );
 
         self::assertSame(
             array_reverse(array_values(self::$expectedComparator)),
-            $subject->sorted(self::comparator(...), reverse: true)->toArray(),
+            $subject->sorted(self::comparator(...), reverse: true)->getValuesArray(),
         );
     }
 

@@ -33,7 +33,7 @@ final class FilteringTest extends TestCase
             ->filter(self::even(...))
         ;
 
-        self::assertSame([2, 4], $result->toArray());
+        self::assertSame([2, 4], $result->getValuesArray());
     }
 
     #[Test]

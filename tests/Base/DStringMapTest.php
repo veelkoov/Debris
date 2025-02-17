@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DMap;
+use Veelkoov\Debris\Base\DScalarMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\DStringMap;
 use Veelkoov\Debris\Base\Internal\Freezer;
@@ -21,6 +22,7 @@ use Veelkoov\Debris\StringSet;
  */
 #[CoversClass(DStringMap::class)]
 #[UsesClass(DMap::class)]
+#[UsesClass(DScalarMap::class)]
 #[UsesClass(DSet::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKey::class)]

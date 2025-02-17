@@ -36,8 +36,8 @@ final class MinusAllTest extends TestCase
         $result = $subject->minusAll([2, 2, 4, 5]);
 
         self::assertNotSame($subject, $result, 'Result should be a new, different instance');
-        self::assertSame([1, 2, 2, 3, 2, 4], $subject->toArray(), 'Original object should remain unchanged');
-        self::assertSame([1, 3, 2], $result->toArray());
+        self::assertSame([1, 2, 2, 3, 2, 4], $subject->getValuesArray(), 'Original object should remain unchanged');
+        self::assertSame([1, 3, 2], $result->getValuesArray());
     }
 
     #[Test]

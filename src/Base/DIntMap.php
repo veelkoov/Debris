@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
+use Veelkoov\Debris\Base\DScalarMap;
+use Veelkoov\Debris\Base\Internal\EnforceIntKeysTrait;
+
 /**
  * @template V of object|scalar|null
  *
- * @extends DMap<int, V>
+ * @extends DScalarMap<int, V>
  */
-class DIntMap extends DMap
+class DIntMap extends DScalarMap
 {
-    /**
-     * @return array<int, V>
-     */
-    public function toArray(): array
-    {
-        return array_combine($this->getKeysArray(), $this->getValuesArray());
-    }
+    use EnforceIntKeysTrait;
 }

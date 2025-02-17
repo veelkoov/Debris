@@ -34,7 +34,7 @@ final class RemoveUnsetTest extends TestCase
         $result = $subject->remove(2)->remove(2)->remove(4)->remove(5);
 
         self::assertSame($subject, $result, 'Result should be the modified, original instance');
-        self::assertSame([1, 3, 2], $result->toArray());
+        self::assertSame([1, 3, 2], $result->getValuesArray());
     }
 
     #[Test]
