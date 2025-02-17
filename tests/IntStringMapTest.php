@@ -9,23 +9,24 @@ use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\Internal\EnforceIntValuesTrait;
-use Veelkoov\Debris\Base\Internal\EnforceStringKeysTrait;
+use Veelkoov\Debris\Base\Internal\EnforceIntKeysTrait;
+use Veelkoov\Debris\Base\Internal\EnforceStringValuesTrait;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Base\Internal\Pair;
+use Veelkoov\Debris\IntStringMap;
 use Veelkoov\Debris\StringIntMap;
 
 /**
  * @internal
  */
 #[CoversClass(StringIntMap::class)]
-#[CoversTrait(EnforceIntValuesTrait::class)]
-#[CoversTrait(EnforceStringKeysTrait::class)]
+#[CoversTrait(EnforceIntKeysTrait::class)]
+#[CoversTrait(EnforceStringValuesTrait::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 #[UsesClass(Pair::class)]
-final class StringIntMapTest extends TestCase
+final class IntStringMapTest extends TestCase
 {
     #[Test]
     public function fromRows_blocksWrongKeyType(): void
@@ -33,8 +34,8 @@ final class StringIntMapTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         try {
-            StringIntMap::fromRows(
-                [['key' => 1, 'value' => 1]],
+            IntStringMap::fromRows(
+                [['key' => 'a', 'value' => 'a']],
                 'key',
                 'value',
             );
@@ -51,8 +52,8 @@ final class StringIntMapTest extends TestCase
         $this->expectNotToPerformAssertions();
 
         try {
-            StringIntMap::fromRows(
-                [['key' => 'a', 'value' => 'a']],
+            IntStringMap::fromRows(
+                [['key' => 1, 'value' => 1]],
                 'key',
                 'value',
             );
