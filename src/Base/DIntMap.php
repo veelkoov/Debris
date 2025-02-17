@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
-use Veelkoov\Debris\Base\DScalarMap;
 use Veelkoov\Debris\Base\Internal\EnforceIntKeysTrait;
 
 /**

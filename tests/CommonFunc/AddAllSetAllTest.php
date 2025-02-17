@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Tests;
+namespace Veelkoov\Debris\Tests\CommonFunc;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -24,36 +24,36 @@ use Veelkoov\Debris\Exception\ChangingImmutableException;
 #[UsesClass(ChangingImmutableException::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
-final class AddSetTest extends TestCase
+final class AddAllSetAllTest extends TestCase
 {
     #[Test]
-    public function DList_add(): void
+    public function DList_addAll(): void
     {
         $subject = new DList([1]);
 
-        $result = $subject->add(2)->add(1);
+        $result = $subject->addAll([2, 1]);
 
         self::assertSame($subject, $result, 'Result should be the modified, original instance');
         self::assertSame([1, 2, 1], $result->getValuesArray());
     }
 
     #[Test]
-    public function DSet_add(): void
+    public function DSet_addAll(): void
     {
         $subject = new DSet([1]);
 
-        $result = $subject->add(2)->add(1);
+        $result = $subject->addAll([2, 1]);
 
         self::assertSame($subject, $result, 'Result should be the modified, original instance');
         self::assertSame([1, 2], $result->getValuesArray());
     }
 
     #[Test]
-    public function DMap_set(): void
+    public function DMap_setAll(): void
     {
         $subject = new DMap(['a' => 1]);
 
-        $result = $subject->set('b', 2)->set('a', 3);
+        $result = $subject->setAll(['b' => 2, 'a' => 3]);
 
         self::assertSame($subject, $result, 'Result should be the modified, original instance');
         self::assertSame(['a', 'b'], $result->getKeysArray());
@@ -61,14 +61,14 @@ final class AddSetTest extends TestCase
     }
 
     #[Test]
-    public function DList_add_onFrozen(): void
+    public function DList_addAll_onFrozen(): void
     {
         $subject = new DList([1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
         try {
-            $subject->add(2);
+            $subject->addAll([2, 1]);
             self::fail('Exception was excepted on the line above.');
         } catch (ChangingImmutableException) {
             // Expected
@@ -76,14 +76,14 @@ final class AddSetTest extends TestCase
     }
 
     #[Test]
-    public function DSet_add_onFrozen(): void
+    public function DSet_addAll_onFrozen(): void
     {
         $subject = new DSet([1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
         try {
-            $subject->add(2);
+            $subject->addAll([2, 1]);
             self::fail('Exception was excepted on the line above.');
         } catch (ChangingImmutableException) {
             // Expected
@@ -91,14 +91,14 @@ final class AddSetTest extends TestCase
     }
 
     #[Test]
-    public function DMap_set_onFrozen(): void
+    public function DMap_setAll_onFrozen(): void
     {
         $subject = new DMap(['a' => 1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
         try {
-            $subject->set('b', 2);
+            $subject->setAll(['b' => 2, 'a' => 3]);
             self::fail('Exception was excepted on the line above.');
         } catch (ChangingImmutableException) {
             // Expected

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Tests;
+namespace Veelkoov\Debris\Tests\CommonFunc;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -26,14 +26,14 @@ use Veelkoov\Debris\Exception\ChangingImmutableException;
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 #[UsesClass(Pair::class)]
-final class MinusAllTest extends TestCase
+final class MinusTest extends TestCase
 {
     #[Test]
-    public function DList_minusAll(): void
+    public function DList_minus(): void
     {
         $subject = new DList([1, 2, 2, 3, 2, 4]);
 
-        $result = $subject->minusAll([2, 2, 4, 5]);
+        $result = $subject->minus(2)->minus(2)->minus(4)->minus(5);
 
         self::assertNotSame($subject, $result, 'Result should be a new, different instance');
         self::assertSame([1, 2, 2, 3, 2, 4], $subject->getValuesArray(), 'Original object should remain unchanged');
@@ -41,11 +41,11 @@ final class MinusAllTest extends TestCase
     }
 
     #[Test]
-    public function DSet_minusAll(): void
+    public function DSet_minus(): void
     {
         $subject = new DSet([1, 2, 3]);
 
-        $result = $subject->minusAll([2, 3, 3, 4]);
+        $result = $subject->minus(2)->minus(3)->minus(3)->minus(4);
 
         self::assertNotSame($subject, $result, 'Result should be a new, different instance');
         self::assertSame([1, 2, 3], $subject->getValuesArray(), 'Original object should remain unchanged');
@@ -53,11 +53,11 @@ final class MinusAllTest extends TestCase
     }
 
     #[Test]
-    public function DMap_minusAll(): void
+    public function DMap_minus(): void
     {
         $subject = new DMap(['a' => 1, 'b' => 2, 'c' => 2, 'd' => 4]);
 
-        $result = $subject->minusAll([2, 4, 5]);
+        $result = $subject->minus(2)->minus(4)->minus(5);
 
         self::assertNotSame($subject, $result, 'Result should be a new, different instance');
         self::assertSame(['a', 'b', 'c', 'd'], $subject->getKeysArray(), 'Original object should remain unchanged');

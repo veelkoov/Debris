@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Tests;
+namespace Veelkoov\Debris\Tests\CommonFunc;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;

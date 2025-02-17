@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
-use Veelkoov\Debris\Base\DMap;
-
 /**
  * @template K of string|int
  * @template V of object|scalar|null
