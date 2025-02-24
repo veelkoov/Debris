@@ -262,7 +262,7 @@ class DMap implements \Iterator, \JsonSerializable
      *
      * @return V
      */
-    public function getOrSet(mixed $key, callable|\Closure $newValueFunction): mixed
+    public function getOrSet(mixed $key, callable $newValueFunction): mixed
     {
         if (!$this->hasKey($key)) {
             $this->set($key, $newValueFunction());
@@ -275,17 +275,17 @@ class DMap implements \Iterator, \JsonSerializable
      * @template T
      *
      * @param K                 $key
-     * @param (callable(): T)|T $default
+     * @param callable(): (T|V) $defaultValueFunction
      *
      * @return T|V
      */
-    public function getOrDefault(mixed $key, mixed $default): mixed
+    public function getOrDefault(mixed $key, callable $defaultValueFunction): mixed
     {
         if (!$this->hasKey($key)) {
-            return $this->get($key);
+            return $defaultValueFunction();
         }
 
-        return \is_callable($default) ? $default() : $default;
+        return $this->get($key);
     }
 
     /**

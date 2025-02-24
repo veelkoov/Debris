@@ -118,4 +118,38 @@ final class DMapTest extends TestCase
         self::assertSame([0, 8, 6, 3, 4, 5, 7], $result->getValuesArray());
         self::assertSame([10, -2, 'abc', $object, 0.123, false, null], $result->getKeysArray());
     }
+
+    #[Test]
+    public function getOrSet_returnsExisting(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertSame('existingValue', $subject->getOrSet('existingKey', static fn () => 'newValue'), 'Existing value should be returned');
+    }
+
+    #[Test]
+    public function getOrSet_returnsMissing(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertSame('newValue_1', $subject->getOrSet('missingKey', static fn () => 'newValue_1'), 'Default value should be returned');
+        self::assertSame('newValue_1', $subject->getOrSet('missingKey', static fn () => 'newValue_2'), 'Map should have been updated');
+    }
+
+    #[Test]
+    public function getOrDefault_returnsExisting(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertSame('existingValue', $subject->getOrSet('existingKey', static fn () => 'newValue'), 'Existing value should be returned');
+    }
+
+    #[Test]
+    public function getOrDefault_returnsMissing(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertSame('newValue_1', $subject->getOrDefault('missingKey', static fn () => 'newValue_1'), 'Default value should be returned');
+        self::assertSame('newValue_2', $subject->getOrSet('missingKey', static fn () => 'newValue_2'), 'Map should not have been updated');
+    }
 }
