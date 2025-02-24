@@ -5,12 +5,9 @@ declare(strict_types=1);
 namespace Veelkoov\Debris\Tests;
 
 use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\Internal\EnforceIntValuesTrait;
-use Veelkoov\Debris\Base\Internal\EnforceStringKeysTrait;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Base\Internal\Pair;
@@ -20,8 +17,6 @@ use Veelkoov\Debris\StringIntMap;
  * @internal
  */
 #[CoversClass(StringIntMap::class)]
-#[CoversTrait(EnforceIntValuesTrait::class)]
-#[CoversTrait(EnforceStringKeysTrait::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 #[UsesClass(Pair::class)]
