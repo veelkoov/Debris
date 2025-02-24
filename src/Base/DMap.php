@@ -315,6 +315,14 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
+     * @param callable(K): bool $function
+     */
+    public function filterKeys(callable $function): static
+    {
+        return $this->filter(static fn (mixed $key, mixed $value) => $function($key));
+    }
+
+    /**
      * @template NewV of object|scalar|null
      * @template NewK of object|scalar|null
      *

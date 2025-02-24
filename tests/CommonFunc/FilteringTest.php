@@ -68,6 +68,17 @@ final class FilteringTest extends TestCase
         self::assertSame(['b', 'd'], $result->getKeysArray());
     }
 
+    #[Test]
+    public function DMap_filterKeys(): void
+    {
+        $result = (new DMap([1 => 'a', 2 => 'b', 3 => 'c', 4 => 'd']))
+            ->filterKeys(self::even(...))
+        ;
+
+        self::assertSame(['b', 'd'], $result->getValuesArray());
+        self::assertSame([2, 4], $result->getKeysArray());
+    }
+
     private static function even(int $value): bool
     {
         return 0 === $value % 2;
