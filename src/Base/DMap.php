@@ -524,6 +524,66 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
+     * @param (callable(K $key, V $value): bool)|\Closure(K $key, V $value): bool $testFunction
+     */
+    public function any(callable|\Closure $testFunction): bool
+    {
+        foreach ($this as $key => $value) {
+            if ($testFunction($key, $value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param (callable(K $key, V $value): bool)|\Closure(K $key, V $value): bool $testFunction
+     */
+    public function all(callable|\Closure $testFunction): bool
+    {
+        foreach ($this as $key => $value) {
+            if (!$testFunction($key, $value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     */
+    public function anyValue(callable|\Closure $testFunction): bool
+    {
+        return $this->any(static fn (mixed $key, mixed $value) => $testFunction($value));
+    }
+
+    /**
+     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     */
+    public function allValues(callable|\Closure $testFunction): bool
+    {
+        return $this->all(static fn (mixed $key, mixed $value) => $testFunction($value));
+    }
+
+    /**
+     * @param (callable(K $key): bool)|\Closure(K $key): bool $testFunction
+     */
+    public function anyKey(callable|\Closure $testFunction): bool
+    {
+        return $this->any(static fn (mixed $key, mixed $value) => $testFunction($key));
+    }
+
+    /**
+     * @param (callable(K $key): bool)|\Closure(K $key): bool $testFunction
+     */
+    public function allKeys(callable|\Closure $testFunction): bool
+    {
+        return $this->all(static fn (mixed $key, mixed $value) => $testFunction($key));
+    }
+
+    /**
      * @param K $key
      *
      * @return K

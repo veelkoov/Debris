@@ -222,4 +222,20 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return new \ArrayIterator($this->getValuesArray());
     }
+
+    /**
+     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     */
+    public function any(callable|\Closure $testFunction): bool
+    {
+        return $this->items->anyKey($testFunction);
+    }
+
+    /**
+     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     */
+    public function all(callable|\Closure $testFunction): bool
+    {
+        return $this->items->allKeys($testFunction);
+    }
 }

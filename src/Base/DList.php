@@ -301,4 +301,32 @@ class DList implements \IteratorAggregate, \JsonSerializable
     {
         return new static(array_unique($this->items, SORT_REGULAR));
     }
+
+    /**
+     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     */
+    public function any(callable|\Closure $testFunction): bool
+    {
+        foreach ($this->items as $value) {
+            if ($testFunction($value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     */
+    public function all(callable|\Closure $testFunction): bool
+    {
+        foreach ($this->items as $value) {
+            if (!$testFunction($value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }
