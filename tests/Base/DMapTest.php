@@ -12,6 +12,7 @@ use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKey;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Exception\MissingKeyException;
 
 /**
  * @internal
@@ -117,6 +118,34 @@ final class DMapTest extends TestCase
 
         self::assertSame([0, 8, 6, 3, 4, 5, 7], $result->getValuesArray());
         self::assertSame([10, -2, 'abc', $object, 0.123, false, null], $result->getKeysArray());
+    }
+
+    #[Test]
+    public function get_returnsExisting(): void
+    {
+        $subject = new DMap(['aKey' => 'aValue']);
+
+        self::assertSame('aValue', $subject->get('aKey'));
+    }
+
+    #[Test]
+    public function get_throwsOnMissingScalarKey(): void
+    {
+        $subject = new DMap(['aKey' => 'aValue']);
+
+        self::expectException(MissingKeyException::class);
+        self::expectExceptionMessage("Missing string key: 'missingKey'");
+        $subject->get('missingKey');
+    }
+
+    #[Test]
+    public function get_throwsOnMissingObjectKey(): void
+    {
+        $subject = new DMap(['aKey' => 'aValue']);
+
+        self::expectException(MissingKeyException::class);
+        self::expectExceptionMessage('Missing stdClass key');
+        $subject->get(new \stdClass()); // @phpstan-ignore argument.type (Cannot construct with object keys)
     }
 
     #[Test]

@@ -8,6 +8,7 @@ use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKey;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Base\Internal\Pair;
+use Veelkoov\Debris\Exception\MissingKeyException;
 
 /**
  * @template K of object|scalar|null
@@ -253,7 +254,17 @@ class DMap implements \Iterator, \JsonSerializable
      */
     public function get(mixed $key): mixed
     {
-        return $this->items[$this->mappedKeys->get($key)];
+        try {
+            return $this->items[$this->mappedKeys->get($key)];
+        } catch (\UnexpectedValueException $exception) {
+            $message = 'Missing '.get_debug_type($key).' key';
+
+            if (!\is_object($key)) {
+                $message .= ': '.var_export($key, return: true);
+            }
+
+            throw new MissingKeyException($message, previous: $exception);
+        }
     }
 
     /**
