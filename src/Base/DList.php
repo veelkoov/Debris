@@ -214,23 +214,6 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @template InV
-     *
-     * @param iterable<InV>                         $source
-     * @param (callable(InV): V)|(\Closure(InV): V) $mapFunction
-     */
-    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static
-    {
-        $result = [];
-
-        foreach ($source as $value) {
-            $result[] = $mapFunction($value);
-        }
-
-        return new static($result);
-    }
-
-    /**
      * @param (callable(V): V)|(\Closure(V): V) $function
      */
     public function map(callable|\Closure $function): static
@@ -239,18 +222,21 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @template InK
      * @template InV
+     * @template InK
+     * @template OutV of object|scalar|null
      *
-     * @param iterable<InK, InV>                              $source
-     * @param (callable(InK, InV): V)|(\Closure(InK, InV): V) $mapFunction
+     * @param iterable<InK, InV>                                    $source
+     * @param (callable(InV, InK): OutV)|(\Closure(InV, InK): OutV) $mapFunction
+     *
+     * @return static<OutV>
      */
-    public static function mapWithKey(iterable $source, callable|\Closure $mapFunction): static
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self
     {
         $result = [];
 
         foreach ($source as $key => $value) {
-            $result[] = $mapFunction($key, $value);
+            $result[] = $mapFunction($value, $key);
         }
 
         return new static($result);

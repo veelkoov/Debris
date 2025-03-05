@@ -214,6 +214,27 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
+     * @template InV
+     * @template InK
+     * @template OutV of object|scalar|null
+     *
+     * @param iterable<InK, InV>                                    $source
+     * @param (callable(InV, InK): OutV)|(\Closure(InV, InK): OutV) $mapFunction
+     *
+     * @return static<OutV>
+     */
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self
+    {
+        $result = [];
+
+        foreach ($source as $key => $value) {
+            $result[] = $mapFunction($value, $key);
+        }
+
+        return new static($result);
+    }
+
+    /**
      * @return list<V>
      */
     public function getValuesArray(): array
