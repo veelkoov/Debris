@@ -6,8 +6,11 @@ namespace Veelkoov\Debris\Tests\Typehinting;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DMap;
+use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\StringIntMap;
 
@@ -15,6 +18,9 @@ use Veelkoov\Debris\StringIntMap;
  * @internal
  */
 #[CoversClass(DMap::class)]
+#[CoversClass(StringIntMap::class)]
+#[UsesClass(Freezer::class)]
+#[UsesClass(MapKeyMapper::class)]
 final class MapFromValuesTest extends TestCase
 {
     #[Test]
