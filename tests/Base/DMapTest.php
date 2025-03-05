@@ -23,20 +23,6 @@ use Veelkoov\Debris\Exception\MissingKeyException;
 #[UsesClass(MapKeyMapper::class)]
 final class DMapTest extends TestCase
 {
-    // #[Test] FIXME
-    public function __construct_preservesKeysAndValues(): void
-    {
-        $input = [
-            'a' => 1,
-            'b' => 2,
-        ];
-
-        /** @var DMap<string, int> $subject */
-        $subject = new DMap($input);
-
-        self::assertEqualsCanonicalizing($input, $subject->get()); // @phpstan-ignore arguments.count (FIXME)
-    }
-
     #[Test]
     public function properlyHandlesMultipleTypes(): void
     {
@@ -82,29 +68,6 @@ final class DMapTest extends TestCase
             self::assertSame($key, $keys[$value]);
             self::assertSame($value, $subject->get($key));
         }
-    }
-
-    // #[Test] FIXME
-    public function fromRows_works(): void
-    {
-        $input = [
-            [1 => 'abc', 'def' => 2, 'ghi' => 'jkl', 3 => 4],
-            [1 => 'ABC', 'def' => 5, 'ghi' => 'JKL', 3 => 6],
-        ];
-
-        /** @var DMap<string, string> $subject */
-        $subject = DMap::fromRows($input, 1, 'ghi');
-        self::assertEqualsCanonicalizing([
-            'abc' => 'jkl',
-            'ABC' => 'JKL',
-        ], $subject->toArray()); /** @phpstan-ignore method.notFound (FIXME) */
-
-        /** @var DMap<string, int> $subject */
-        $subject = DMap::fromRows($input, 'ghi', 3);
-        self::assertEqualsCanonicalizing([
-            'jkl' => 4,
-            'JKL' => 6,
-        ], $subject->toArray()); // @phpstan-ignore method.notFound (FIXME)
     }
 
     #[Test]
