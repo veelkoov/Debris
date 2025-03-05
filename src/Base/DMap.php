@@ -47,6 +47,24 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
+     * @param K $key
+     *
+     * @return V
+     */
+    public function __get(mixed $key): mixed
+    {
+        return $this->get($key);
+    }
+
+    /**
+     * @param K $key
+     */
+    public function __isset(mixed $key): bool
+    {
+        return $this->hasKey($key);
+    }
+
+    /**
      * @return $this
      */
     public function freeze(): static

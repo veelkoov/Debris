@@ -24,6 +24,15 @@ use Veelkoov\Debris\Exception\MissingKeyException;
 final class DMapTest extends TestCase
 {
     #[Test]
+    public function __isset__get(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertTrue(isset($subject->existingKey)); // @phpstan-ignore property.notFound (For Twig, etc., no support in code yet)
+        self::assertSame('existingValue', $subject->existingKey);
+    }
+
+    #[Test]
     public function properlyHandlesMultipleTypes(): void
     {
         /**
