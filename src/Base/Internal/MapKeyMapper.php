@@ -17,9 +17,14 @@ final class MapKeyMapper
     private \SplObjectStorage $wrappedObjectKeys;
 
     /**
-     * @var array<int|string, MapKey<int|string>>
+     * @var array<int, MapKey<covariant int>>
      */
-    private array $wrappedArrayKeys = [];
+    private array $wrappedIntKeys = [];
+
+    /**
+     * @var array<string, MapKey<covariant string>>
+     */
+    private array $wrappedStringKeys = [];
 
     /**
      * @var array<int, list<MapKey<null|bool|float>>>
@@ -40,20 +45,26 @@ final class MapKeyMapper
     {
         if (\is_object($key)) {
             return $this->wrappedObjectKeys[$key] ??= new MapKey($key); // @phpstan-ignore return.type (FIXME)
-        } if (\is_string($key) || \is_int($key)) {
-            return $this->wrappedArrayKeys[$key] ??= new MapKey($key); // @phpstan-ignore return.type (FIXME)
         }
 
-        $intKey = (int) $key;
+        if (\is_int($key)) {
+            return $this->wrappedIntKeys[$key] ??= new MapKey($key); // @phpstan-ignore return.type (FIXME)
+        }
 
-        foreach (($this->wrappedScalarKeys[$intKey] ??= []) as $wrappedKey) {
+        if (\is_string($key)) {
+            return $this->wrappedStringKeys[$key] ??= new MapKey($key); // @phpstan-ignore return.type (FIXME)
+        }
+
+        $keyIntRepr = (int) $key;
+
+        foreach (($this->wrappedScalarKeys[$keyIntRepr] ??= []) as $wrappedKey) {
             if ($wrappedKey->key === $key) {
                 return $wrappedKey; // @phpstan-ignore return.type (FIXME)
             }
         }
 
         $wrappedKey = new MapKey($key);
-        $this->wrappedScalarKeys[$intKey][] = $wrappedKey;
+        $this->wrappedScalarKeys[$keyIntRepr][] = $wrappedKey;
 
         return $wrappedKey; // @phpstan-ignore return.type (FIXME)
     }
