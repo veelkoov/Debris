@@ -432,7 +432,7 @@ class DMap implements \Iterator, \JsonSerializable
      *
      * @return static<NewK, NewV>
      */
-    public static function fromValues(iterable $input, callable|\Closure $valueToKeyFunction): static
+    public static function fromValues(iterable $input, callable|\Closure $valueToKeyFunction): self
     {
         $result = new static();
 
