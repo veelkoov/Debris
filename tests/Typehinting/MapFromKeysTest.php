@@ -21,12 +21,12 @@ use Veelkoov\Debris\StringIntMap;
 #[CoversClass(StringIntMap::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
-final class MapFromValuesTest extends TestCase
+final class MapFromKeysTest extends TestCase
 {
     #[Test]
-    public function DMap_fromValues(): void
+    public function DMap_fromKeys(): void
     {
-        $subject = DMap::fromValues([1, 2, 3, 4, 5], static fn (int $value) => (string) $value);
+        $subject = DMap::fromKeys(['1', '2', '3', '4', '5'], static fn (string $value) => (int) $value);
 
         self::assertInstanceOf(DMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
 
@@ -49,9 +49,9 @@ final class MapFromValuesTest extends TestCase
     }
 
     #[Test]
-    public function StringIntMap_fromValues(): void
+    public function StringIntMap_fromKeys(): void
     {
-        $subject = StringIntMap::fromValues([1, 2, 3, 4, 5], static fn (int $value) => (string) $value);
+        $subject = StringIntMap::fromKeys(['1', '2', '3', '4', '5'], static fn (string $value) => (int) $value);
 
         self::assertInstanceOf(StringIntMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
 

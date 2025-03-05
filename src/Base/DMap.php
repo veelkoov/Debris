@@ -452,6 +452,34 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
+     * @template OutV of object|scalar|null
+     * @template OutK of object|scalar|null
+     *
+     * @param iterable<OutK>                                $input
+     * @param (callable(OutK): OutV)|(\Closure(OutK): OutV) $keyToValueFunction
+     *
+     * @return static<OutK, OutV>
+     */
+    public static function fromKeys(iterable $input, callable|\Closure $keyToValueFunction): self
+    {
+        $result = new static();
+
+        foreach ($input as $key) {
+            $value = $keyToValueFunction($key);
+
+            /** @phpstan-ignore argument.type (Part of validation) */
+            $key = static::enforceKeyType($key);
+
+            /** @phpstan-ignore argument.type (Part of validation) */
+            $value = static::enforceValueType($value);
+
+            $result->set($key, $value);
+        }
+
+        return $result;
+    }
+
+    /**
      * @param iterable<mixed>    $input
      * @param int|literal-string $keyKey
      * @param int|literal-string $valueKey
