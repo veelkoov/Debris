@@ -53,7 +53,7 @@ final class MapFromValuesTest extends TestCase
     {
         $subject = StringIntMap::fromValues([1, 2, 3, 4, 5], static fn (int $value) => (string) $value);
 
-        self::assertInstanceOf(StringIntMap::class, $subject);
+        self::assertInstanceOf(StringIntMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
 
         // Tests stuff "works as expected"
         self::assertSame(1, $subject->get('1'));
