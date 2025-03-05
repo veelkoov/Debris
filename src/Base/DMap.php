@@ -334,12 +334,12 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @template NewV of object|scalar|null
-     * @template NewK of object|scalar|null
+     * @template OutV of object|scalar|null
+     * @template OutK of object|scalar|null
      *
-     * @param (callable(K, V): Pair<NewK, NewV>)|(\Closure(K, V): Pair<NewK, NewV>) $function
+     * @param (callable(K, V): Pair<OutK, OutV>)|(\Closure(K, V): Pair<OutK, OutV>) $function
      *
-     * @return self<NewK, NewV>
+     * @return self<OutK, OutV>
      */
     public function map(callable|\Closure $function): self
     {
@@ -354,11 +354,11 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @template NewV of object|scalar|null
+     * @template OutV of object|scalar|null
      *
-     * @param (callable(V): NewV)|(\Closure(V): NewV) $function
+     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
      *
-     * @return self<K, NewV>
+     * @return self<K, OutV>
      */
     public function mapValues(callable|\Closure $function): self
     {
@@ -424,13 +424,13 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @template NewV of object|scalar|null
-     * @template NewK of object|scalar|null
+     * @template OutV of object|scalar|null
+     * @template OutK of object|scalar|null
      *
-     * @param iterable<NewV>                                $input
-     * @param (callable(NewV): NewK)|(\Closure(NewV): NewK) $valueToKeyFunction
+     * @param iterable<OutV>                                $input
+     * @param (callable(OutV): OutK)|(\Closure(OutV): OutK) $valueToKeyFunction
      *
-     * @return static<NewK, NewV>
+     * @return static<OutK, OutV>
      */
     public static function fromValues(iterable $input, callable|\Closure $valueToKeyFunction): self
     {
@@ -524,7 +524,7 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param (callable(K $key, V $value): bool)|\Closure(K $key, V $value): bool $testFunction
+     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $testFunction
      */
     public function any(callable|\Closure $testFunction): bool
     {
@@ -538,7 +538,7 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param (callable(K $key, V $value): bool)|\Closure(K $key, V $value): bool $testFunction
+     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $testFunction
      */
     public function all(callable|\Closure $testFunction): bool
     {
@@ -552,7 +552,7 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
      */
     public function anyValue(callable|\Closure $testFunction): bool
     {
@@ -560,7 +560,7 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
      */
     public function allValues(callable|\Closure $testFunction): bool
     {
@@ -568,7 +568,7 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param (callable(K $key): bool)|\Closure(K $key): bool $testFunction
+     * @param (callable(K): bool)|(\Closure(K): bool) $testFunction
      */
     public function anyKey(callable|\Closure $testFunction): bool
     {
@@ -576,7 +576,7 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param (callable(K $key): bool)|\Closure(K $key): bool $testFunction
+     * @param (callable(K): bool)|(\Closure(K): bool) $testFunction
      */
     public function allKeys(callable|\Closure $testFunction): bool
     {

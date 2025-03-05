@@ -167,9 +167,9 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param ?callable(V, V): int $comparator
+     * @param null|(callable(V, V): int)|(\Closure(V, V): int) $comparator
      */
-    public function sorted(?callable $comparator = null, bool $reverse = false): static
+    public function sorted(null|callable|\Closure $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
         $comparator ??= static fn (mixed $a, mixed $b): int => $a <=> $b;
@@ -214,12 +214,12 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @template SourceT
+     * @template InV
      *
-     * @param iterable<SourceT>    $source
-     * @param callable(SourceT): V $mapFunction
+     * @param iterable<InV>                         $source
+     * @param (callable(InV): V)|(\Closure(InV): V) $mapFunction
      */
-    public static function mapFrom(iterable $source, callable $mapFunction): static
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static
     {
         $result = [];
 
@@ -231,21 +231,21 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param callable(V): V $mapFunction
+     * @param (callable(V): V)|(\Closure(V): V) $function
      */
-    public function map(callable $mapFunction): static
+    public function map(callable|\Closure $function): static
     {
-        return new static(array_map($mapFunction, $this->items));
+        return new static(array_map($function, $this->items));
     }
 
     /**
-     * @template SourceK
-     * @template SourceV
+     * @template InK
+     * @template InV
      *
-     * @param iterable<SourceK, SourceV>    $source
-     * @param callable(SourceK, SourceV): V $mapFunction
+     * @param iterable<InK, InV>                              $source
+     * @param (callable(InK, InV): V)|(\Closure(InK, InV): V) $mapFunction
      */
-    public static function mapWithKey(iterable $source, callable $mapFunction): static
+    public static function mapWithKey(iterable $source, callable|\Closure $mapFunction): static
     {
         $result = [];
 
@@ -257,13 +257,13 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @template TResult
+     * @template OutV
      *
-     * @param ?callable(V): TResult $callable
+     * @param null|(callable(V): OutV)|(\Closure(V): OutV) $callable
      *
-     * @return ($callable is null ? V : TResult)
+     * @return ($callable is null ? V : OutV)
      */
-    public function max(?callable $callable = null): mixed
+    public function max(null|callable|\Closure $callable = null): mixed
     {
         if ([] === $this->items) {
             throw new EmptyCollectionException('Cannot find max() of an empty list.');
@@ -272,7 +272,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return max(null === $callable ? $this->items : array_map($callable, $this->items));
     }
 
-    public function filter(callable $filterFunction): static
+    /**
+     * @param (callable(V): bool)|(\Closure(V): bool) $filterFunction
+     */
+    public function filter(callable|\Closure $filterFunction): static
     {
         return new static(array_filter($this->items, $filterFunction));
     }
@@ -303,7 +306,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
      */
     public function any(callable|\Closure $testFunction): bool
     {
@@ -317,7 +320,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
      */
     public function all(callable|\Closure $testFunction): bool
     {

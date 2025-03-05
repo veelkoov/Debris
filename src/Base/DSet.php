@@ -162,9 +162,9 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param ?callable(V, V): int $comparator
+     * @param null|(callable(V, V): int)|(\Closure(V, V): int) $comparator
      */
-    public function sorted(?callable $comparator = null, bool $reverse = false): static
+    public function sorted(null|callable|\Closure $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
         $comparator ??= static fn (mixed $a, mixed $b): int => $a <=> $b;
@@ -184,11 +184,11 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     /**
      * @template TResult
      *
-     * @param ?callable(V): TResult $callable
+     * @param null|(callable(V): TResult)|(\Closure(V): TResult) $callable
      *
      * @return ($callable is null ? V : TResult)
      */
-    public function max(?callable $callable = null): mixed
+    public function max(null|callable|\Closure $callable = null): mixed
     {
         if ($this->isEmpty()) {
             throw new EmptyCollectionException('Cannot find max() of an empty set.');
@@ -197,15 +197,18 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return max(null === $callable ? $this->getValuesArray() : array_map($callable, $this->getValuesArray())); // @phpstan-ignore argument.type (FIXME)
     }
 
-    public function filter(callable $filterFunction): static
+    /**
+     * @param (callable(V): bool)|(\Closure(V): bool) $filterFunction
+     */
+    public function filter(callable|\Closure $filterFunction): static
     {
         return new static(array_filter($this->getValuesArray(), $filterFunction));
     }
 
     /**
-     * @param callable(V): V $mapFunction
+     * @param (callable(V): V)|(\Closure(V): V) $mapFunction
      */
-    public function map(callable $mapFunction): static
+    public function map(callable|\Closure $mapFunction): static
     {
         return new static(array_map($mapFunction, $this->getValuesArray()));
     }
@@ -224,7 +227,7 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
      */
     public function any(callable|\Closure $testFunction): bool
     {
@@ -232,7 +235,7 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
-     * @param (callable(V $value): bool)|\Closure(V $value): bool $testFunction
+     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
      */
     public function all(callable|\Closure $testFunction): bool
     {
