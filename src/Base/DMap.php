@@ -222,9 +222,9 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param ?callable(Pair<K, V>, Pair<K, V>): int $comparator
+     * @param null|(callable(Pair<K, V>, Pair<K, V>): int)|(\Closure(Pair<K, V>, Pair<K, V>): int) $comparator
      */
-    public function sorted(?callable $comparator = null, bool $reverse = false): static
+    public function sorted(null|callable|\Closure $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
         $comparator ??= static fn (Pair $a, Pair $b): int => $a->value <=> $b->value;
@@ -268,12 +268,12 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param K             $key
-     * @param callable(): V $newValueFunction
+     * @param K                               $key
+     * @param (callable(): V)|(\Closure(): V) $newValueFunction
      *
      * @return V
      */
-    public function getOrSet(mixed $key, callable $newValueFunction): mixed
+    public function getOrSet(mixed $key, callable|\Closure $newValueFunction): mixed
     {
         if (!$this->hasKey($key)) {
             $this->set($key, $newValueFunction());
@@ -285,12 +285,12 @@ class DMap implements \Iterator, \JsonSerializable
     /**
      * @template T
      *
-     * @param K                 $key
-     * @param callable(): (T|V) $defaultValueFunction
+     * @param K                                       $key
+     * @param (callable(): (T|V))|(\Closure(): (T|V)) $defaultValueFunction
      *
      * @return T|V
      */
-    public function getOrDefault(mixed $key, callable $defaultValueFunction): mixed
+    public function getOrDefault(mixed $key, callable|\Closure $defaultValueFunction): mixed
     {
         if (!$this->hasKey($key)) {
             return $defaultValueFunction();
@@ -300,9 +300,9 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param callable(K, V): bool $function
+     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $function
      */
-    public function filter(callable $function): static
+    public function filter(callable|\Closure $function): static
     {
         $result = new static();
 
@@ -318,17 +318,17 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param callable(V): bool $function
+     * @param (callable(V): bool)|(\Closure(V): bool) $function
      */
-    public function filterValues(callable $function): static
+    public function filterValues(callable|\Closure $function): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => $function($value));
     }
 
     /**
-     * @param callable(K): bool $function
+     * @param (callable(K): bool)|(\Closure(K): bool) $function
      */
-    public function filterKeys(callable $function): static
+    public function filterKeys(callable|\Closure $function): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => $function($key));
     }
@@ -337,11 +337,11 @@ class DMap implements \Iterator, \JsonSerializable
      * @template NewV of object|scalar|null
      * @template NewK of object|scalar|null
      *
-     * @param callable(K, V): Pair<NewK, NewV> $function
+     * @param (callable(K, V): Pair<NewK, NewV>)|(\Closure(K, V): Pair<NewK, NewV>) $function
      *
      * @return self<NewK, NewV>
      */
-    public function map(callable $function): self
+    public function map(callable|\Closure $function): self
     {
         $result = new self();
 
@@ -356,11 +356,11 @@ class DMap implements \Iterator, \JsonSerializable
     /**
      * @template NewV of object|scalar|null
      *
-     * @param callable(V): NewV $function
+     * @param (callable(V): NewV)|(\Closure(V): NewV) $function
      *
      * @return self<K, NewV>
      */
-    public function mapValues(callable $function): self
+    public function mapValues(callable|\Closure $function): self
     {
         return $this->map(static fn (mixed $key, mixed $value) => new Pair($key, $function($value)));
     }
@@ -424,15 +424,25 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param iterable<V>    $input
-     * @param callable(V): K $valueToKeyFunction
+     * @template NewV of object|scalar|null
+     * @template NewK of object|scalar|null
+     *
+     * @param iterable<NewV>                                $input
+     * @param (callable(NewV): NewK)|(\Closure(NewV): NewK) $valueToKeyFunction
+     *
+     * @return static<NewK, NewV>
      */
-    public static function fromValues(iterable $input, callable $valueToKeyFunction): static
+    public static function fromValues(iterable $input, callable|\Closure $valueToKeyFunction): static
     {
         $result = new static();
 
         foreach ($input as $value) {
-            $key = static::enforceKeyType($valueToKeyFunction($value));
+            $key = $valueToKeyFunction($value);
+
+            /** @phpstan-ignore argument.type (Part of validation) */
+            $key = static::enforceKeyType($key);
+
+            /** @phpstan-ignore argument.type (Part of validation) */
             $value = static::enforceValueType($value);
 
             $result->set($key, $value);
