@@ -9,6 +9,7 @@ use Veelkoov\Debris\Base\Internal\MapKey;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Base\Internal\Pair;
 use Veelkoov\Debris\Exception\MissingKeyException;
+use Veelkoov\Debris\Exception\NoSingleElementException;
 
 /**
  * @template K of object|scalar|null
@@ -349,6 +350,40 @@ class DMap implements \Iterator, \JsonSerializable
     public function filterKeys(callable|\Closure $function): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => $function($key));
+    }
+
+    /**
+     * @return Pair<K, V>
+     */
+    public function single(): Pair
+    {
+        $key = $this->singleKey();
+
+        return new Pair($key, $this->get($key));
+    }
+
+    /**
+     * @return V
+     */
+    public function singleValue(): mixed
+    {
+        $key = $this->singleKey();
+
+        return $this->get($key);
+    }
+
+    /**
+     * @return K
+     */
+    public function singleKey(): mixed
+    {
+        if (1 !== $this->count()) {
+            throw new NoSingleElementException('The map has '.$this->count().' items instead of exactly one.');
+        }
+
+        $this->items->rewind();
+
+        return $this->items->current()->key;
     }
 
     /**

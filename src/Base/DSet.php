@@ -6,6 +6,7 @@ namespace Veelkoov\Debris\Base;
 
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
+use Veelkoov\Debris\Exception\NoSingleElementException;
 
 /**
  * @template V of object|scalar|null
@@ -203,6 +204,18 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     public function filter(callable|\Closure $filterFunction): static
     {
         return new static(array_filter($this->getValuesArray(), $filterFunction));
+    }
+
+    /**
+     * @return V
+     */
+    public function single(): mixed
+    {
+        try {
+            return $this->items->singleKey();
+        } catch (NoSingleElementException) {
+            throw new NoSingleElementException('The set has '.$this->count().' items instead of exactly one.');
+        }
     }
 
     /**

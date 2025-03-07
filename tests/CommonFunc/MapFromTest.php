@@ -25,6 +25,7 @@ use Veelkoov\Debris\StringStringMap;
 #[CoversClass(DSet::class)]
 #[CoversClass(StringList::class)]
 #[CoversClass(StringSet::class)]
+#[CoversClass(StringStringMap::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 final class MapFromTest extends TestCase
