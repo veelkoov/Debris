@@ -15,6 +15,7 @@ use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\StringStringMap;
 
 /**
  * @internal
@@ -98,5 +99,50 @@ final class MapFromTest extends TestCase
 
         self::assertFalse($subject->contains('C'));
         self::assertFalse($subject->contains(1)); // @phpstan-ignore argument.type (TESTING EXPECTATIONS)
+    }
+
+    #[Test]
+    public function DMap_mapFrom_withKeys(): void
+    {
+        $subject = DMap::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value, string $key) => ["{$key}", "{$value}"]);
+
+        self::assertInstanceOf(DMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
+        self::assertSame(['a', 'b'], $subject->getKeysArray());
+        self::assertSame(['A', 'B'], $subject->getValuesArray());
+
+        self::assertFalse($subject->contains('C'));
+        self::assertFalse($subject->contains(1)); // @phpstan-ignore argument.type (TESTING EXPECTATIONS)
+        self::assertFalse($subject->hasKey('C'));
+        self::assertFalse($subject->hasKey(1)); // @phpstan-ignore argument.type (TESTING EXPECTATIONS)
+    }
+
+    #[Test]
+    public function DMap_mapFrom_noKeys(): void
+    {
+        $subject = DMap::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value) => ["{$value}", "{$value}"]);
+
+        self::assertInstanceOf(DMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
+        self::assertSame(['A', 'B'], $subject->getKeysArray());
+        self::assertSame(['A', 'B'], $subject->getValuesArray());
+
+        self::assertFalse($subject->contains('C'));
+        self::assertFalse($subject->contains(1)); // @phpstan-ignore argument.type (TESTING EXPECTATIONS)
+        self::assertFalse($subject->hasKey('C'));
+        self::assertFalse($subject->hasKey(1)); // @phpstan-ignore argument.type (TESTING EXPECTATIONS)
+    }
+
+    #[Test]
+    public function StringStringMap_mapFrom_noKeys(): void
+    {
+        $subject = StringStringMap::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value) => ["{$value}", "{$value}"]);
+
+        self::assertInstanceOf(DMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
+        self::assertSame(['A', 'B'], $subject->getKeysArray());
+        self::assertSame(['A', 'B'], $subject->getValuesArray());
+
+        self::assertFalse($subject->contains('C'));
+        self::assertFalse($subject->contains(1)); // @phpstan-ignore argument.type (TESTING EXPECTATIONS)
+        self::assertFalse($subject->hasKey('C'));
+        self::assertFalse($subject->hasKey(1)); // @phpstan-ignore argument.type (TESTING EXPECTATIONS)
     }
 }

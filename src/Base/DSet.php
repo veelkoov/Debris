@@ -225,13 +225,11 @@ class DSet implements \IteratorAggregate, \JsonSerializable
      */
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self
     {
-        $result = [];
-
-        foreach ($source as $key => $value) {
-            $result[] = $mapFunction($value, $key);
-        }
-
-        return new static($result);
+        return new static((static function () use ($source, $mapFunction) {
+            foreach ($source as $key => $value) {
+                yield $mapFunction($value, $key);
+            }
+        })());
     }
 
     /**

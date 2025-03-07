@@ -51,7 +51,7 @@ final class MapTest extends TestCase
     public function DMap_map(): void
     {
         $result = (new DMap(['a' => 1, 'b' => 2, 'c' => 3]))
-            ->map(static fn (string $key, int $value) => new Pair($key, $value * 2))
+            ->map(static fn (string $key, int $value) => [$key, $value * 2])
         ;
 
         self::assertSame(['a', 'b', 'c'], $result->getKeysArray());

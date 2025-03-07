@@ -355,32 +355,53 @@ class DMap implements \Iterator, \JsonSerializable
      * @template OutV of object|scalar|null
      * @template OutK of object|scalar|null
      *
-     * @param (callable(K, V): Pair<OutK, OutV>)|(\Closure(K, V): Pair<OutK, OutV>) $function
+     * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $mapFunction
      *
      * @return self<OutK, OutV>
      */
-    public function map(callable|\Closure $function): self
+    public function map(callable|\Closure $mapFunction): self
     {
-        $result = new self();
+        return new self((function () use ($mapFunction) {
+            foreach ($this as $key => $value) {
+                $pair = $mapFunction($key, $value);
 
-        foreach ($this->getPairsArray() as $pair) {
-            $pair = $function($pair->key, $pair->value);
-            $result->set($pair->key, $pair->value);
-        }
-
-        return $result;
+                yield $pair[0] => $pair[1];
+            }
+        })());
     }
 
     /**
      * @template OutV of object|scalar|null
      *
-     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
+     * @param (callable(V): OutV)|(\Closure(V): OutV) $mapFunction
      *
      * @return self<K, OutV>
      */
-    public function mapValues(callable|\Closure $function): self
+    public function mapValues(callable|\Closure $mapFunction): self
     {
-        return $this->map(static fn (mixed $key, mixed $value) => new Pair($key, $function($value)));
+        return $this->map(static fn (mixed $key, mixed $value) => [$key, $mapFunction($value)]);
+    }
+
+    /**
+     * @template InV
+     * @template InK
+     * @template OutK of object|scalar|null
+     * @template OutV of object|scalar|null
+     *
+     * @param iterable<InK, InV>                                                              $source
+     * @param (callable(InV, InK): array{OutK, OutV})|(\Closure(InV, InK): array{OutK, OutV}) $mapFunction
+     *
+     * @return static<OutK, OutV>
+     */
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self
+    {
+        return new static((static function () use ($source, $mapFunction) {
+            foreach ($source as $key => $value) {
+                $pair = $mapFunction($value, $key);
+
+                yield $pair[0] => $pair[1];
+            }
+        })());
     }
 
     /**
