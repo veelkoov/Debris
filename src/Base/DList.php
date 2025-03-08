@@ -191,7 +191,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
      */
     public function intersect(iterable $other): static
     {
-        $otherValues = [...$other];
+        $otherValues = [...$other]; // TODO: Optimize for Debris collections
 
         return self::filter(static fn (mixed $item) => \in_array($item, $otherValues, true));
     }

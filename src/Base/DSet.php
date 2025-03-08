@@ -183,6 +183,16 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     /**
+     * @param iterable<V> $other
+     */
+    public function intersect(iterable $other): static
+    {
+        $otherValues = [...$other]; // TODO: Optimize for Debris collections
+
+        return self::filter(static fn (mixed $item) => \in_array($item, $otherValues, true));
+    }
+
+    /**
      * @template TResult
      *
      * @param null|(callable(V): TResult)|(\Closure(V): TResult) $callable
