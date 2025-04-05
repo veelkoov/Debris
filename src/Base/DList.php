@@ -316,4 +316,17 @@ class DList implements \IteratorAggregate, \JsonSerializable
 
         return true;
     }
+
+    public function shuffle(): static
+    {
+        $result = new static($this->items);
+        shuffle($result->items);
+
+        return $result;
+    }
+
+    public function slice(int $offset, ?int $length = null): static
+    {
+        return new static(\array_slice($this->items, $offset, $length));
+    }
 }

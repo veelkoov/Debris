@@ -283,4 +283,17 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return $this->items->allKeys($testFunction);
     }
+
+    public function shuffle(): static
+    {
+        $items = $this->getValuesArray();
+        shuffle($items);
+
+        return new static($items);
+    }
+
+    public function slice(int $offset, ?int $length = null): static
+    {
+        return new static(\array_slice($this->getValuesArray(), $offset, $length));
+    }
 }

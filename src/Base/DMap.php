@@ -685,6 +685,29 @@ class DMap implements \Iterator, \JsonSerializable
         return $this->all(static fn (mixed $key, mixed $value) => $testFunction($key));
     }
 
+    public function shuffle(): static
+    {
+        $keys = $this->getKeys()->getValuesArray();
+        shuffle($keys);
+
+        return new static((function () use ($keys) {
+            foreach ($keys as $key) {
+                yield $key => $this->get($key);
+            }
+        })());
+    }
+
+    public function slice(int $offset, ?int $length = null): static
+    {
+        $keys = \array_slice($this->getKeys()->getValuesArray(), $offset, $length);
+
+        return new static((function () use ($keys) {
+            foreach ($keys as $key) {
+                yield $key => $this->get($key);
+            }
+        })());
+    }
+
     /**
      * @param K $key
      *
