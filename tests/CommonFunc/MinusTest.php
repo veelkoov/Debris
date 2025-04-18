@@ -53,11 +53,11 @@ final class MinusTest extends TestCase
     }
 
     #[Test]
-    public function DMap_minus(): void
+    public function DMap_minusValue(): void
     {
         $subject = new DMap(['a' => 1, 'b' => 2, 'c' => 2, 'd' => 4]);
 
-        $result = $subject->minus(2)->minus(4)->minus(5);
+        $result = $subject->minusValue(2)->minusValue(4)->minusValue(5);
 
         self::assertNotSame($subject, $result, 'Result should be a new, different instance');
         self::assertSame(['a', 'b', 'c', 'd'], $subject->getKeysArray(), 'Original object should remain unchanged');
@@ -66,5 +66,17 @@ final class MinusTest extends TestCase
         self::assertSame([1, 2], $result->getValuesArray());
     }
 
-    // TODO: There is no method for substracting key(s)
+    #[Test]
+    public function DMap_minusKey(): void
+    {
+        $subject = new DMap(['a' => 1, 'b' => 2, 'c' => 2, 'd' => 4]);
+
+        $result = $subject->minusKey('b')->minusKey('d')->minusKey('e');
+
+        self::assertNotSame($subject, $result, 'Result should be a new, different instance');
+        self::assertSame(['a', 'b', 'c', 'd'], $subject->getKeysArray(), 'Original object should remain unchanged');
+        self::assertSame([1, 2, 2, 4], $subject->getValuesArray(), 'Original object should remain unchanged');
+        self::assertSame(['a', 'c'], $result->getKeysArray());
+        self::assertSame([1, 2], $result->getValuesArray());
+    }
 }

@@ -24,7 +24,7 @@ use Veelkoov\Debris\Exception\ChangingImmutableException;
 #[UsesClass(ChangingImmutableException::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
-final class RemoveUnsetTest extends TestCase
+final class RemoveTest extends TestCase
 {
     #[Test]
     public function DList_remove(): void
@@ -53,7 +53,7 @@ final class RemoveUnsetTest extends TestCase
     {
         $subject = new DMap(['a' => 1, 'b' => 2, 'c' => 2, 'd' => 4]);
 
-        $result = $subject->remove(2)->remove(4)->remove(5);
+        $result = $subject->removeValue(2)->removeValue(4)->removeValue(5);
 
         self::assertSame($subject, $result, 'Result should be the modified, original instance');
         self::assertSame(['a', 'c'], $result->getKeysArray());
@@ -61,11 +61,11 @@ final class RemoveUnsetTest extends TestCase
     }
 
     #[Test]
-    public function DMap_unset(): void
+    public function DMap_removeKey(): void
     {
         $subject = new DMap(['a' => 1, 'b' => 2]);
 
-        $result = $subject->unset('a')->unset('a')->unset('c');
+        $result = $subject->removeKey('a')->removeKey('a')->removeKey('c');
 
         self::assertSame($subject, $result, 'Result should be the modified, original instance');
         self::assertSame(['b'], $result->getKeysArray());
@@ -110,7 +110,7 @@ final class RemoveUnsetTest extends TestCase
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
         try {
-            $subject->remove(1);
+            $subject->removeValue(1);
             self::fail('Exception was excepted on the line above.');
         } catch (ChangingImmutableException) {
             // Expected
@@ -118,14 +118,14 @@ final class RemoveUnsetTest extends TestCase
     }
 
     #[Test]
-    public function DMap_unset_onFrozen(): void
+    public function DMap_removeKey_onFrozen(): void
     {
         $subject = new DMap(['a' => 1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 
         try {
-            $subject->unset('a');
+            $subject->removeKey('a');
             self::fail('Exception was excepted on the line above.');
         } catch (ChangingImmutableException) {
             // Expected

@@ -156,9 +156,7 @@ class DMap implements \Iterator, \JsonSerializable
      */
     public function plus(mixed $key, mixed $value): static
     {
-        return (new static($this))
-            ->set($key, $value)
-        ;
+        return (new static($this))->set($key, $value);
     }
 
     /**
@@ -168,9 +166,7 @@ class DMap implements \Iterator, \JsonSerializable
      */
     public function plusAll(iterable $items): static
     {
-        return (new static($this))
-            ->setAll($items)
-        ;
+        return (new static($this))->setAll($items);
     }
 
     //
@@ -182,9 +178,9 @@ class DMap implements \Iterator, \JsonSerializable
      *
      * @return $this
      */
-    public function remove(mixed ...$value): static
+    public function removeValue(mixed ...$value): static
     {
-        return $this->removeAll($value);
+        return $this->removeAllValues($value);
     }
 
     /**
@@ -192,7 +188,7 @@ class DMap implements \Iterator, \JsonSerializable
      *
      * @return $this
      */
-    public function removeAll(iterable $values): static
+    public function removeAllValues(iterable $values): static
     {
         $this->freezer->protect();
 
@@ -214,9 +210,9 @@ class DMap implements \Iterator, \JsonSerializable
      *
      * @return $this
      */
-    public function unset(mixed ...$key): static
+    public function removeKey(mixed ...$key): static
     {
-        return $this->unsetAll($key);
+        return $this->removeAllKeys($key);
     }
 
     /**
@@ -224,7 +220,7 @@ class DMap implements \Iterator, \JsonSerializable
      *
      * @return $this
      */
-    public function unsetAll(iterable $keys): static
+    public function removeAllKeys(iterable $keys): static
     {
         $this->freezer->protect();
 
@@ -242,19 +238,33 @@ class DMap implements \Iterator, \JsonSerializable
     /**
      * @param V ...$value
      */
-    public function minus(mixed ...$value): static
+    public function minusValue(mixed ...$value): static
     {
-        return $this->minusAll($value);
+        return $this->minusAllValues($value);
     }
 
     /**
      * @param iterable<V> $values
      */
-    public function minusAll(iterable $values): static
+    public function minusAllValues(iterable $values): static
     {
-        return (new static($this))
-            ->removeAll($values)
-        ;
+        return (new static($this))->removeAllValues($values);
+    }
+
+    /**
+     * @param K ...$key
+     */
+    public function minusKey(mixed ...$key): static
+    {
+        return $this->minusAllKeys($key);
+    }
+
+    /**
+     * @param iterable<K> $keys
+     */
+    public function minusAllKeys(iterable $keys): static
+    {
+        return (new static($this))->removeAllKeys($keys);
     }
 
     //

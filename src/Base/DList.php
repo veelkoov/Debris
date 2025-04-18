@@ -191,9 +191,7 @@ class DList implements \IteratorAggregate, \JsonSerializable
      */
     public function minusAll(iterable $values): static
     {
-        return (new static($this))
-            ->removeAll($values)
-        ;
+        return (new static($this))->removeAll($values);
     }
 
     //
