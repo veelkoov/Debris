@@ -324,6 +324,22 @@ class DList implements \IteratorAggregate, \JsonSerializable
     }
 
     //
+    // ===== RANDOM ============================================
+    //
+
+    /**
+     * @return V
+     */
+    public function random(): mixed
+    {
+        if ($this->isEmpty()) {
+            throw new EmptyCollectionException('The list is empty.');
+        }
+
+        return $this->at(array_rand($this->items));
+    }
+
+    //
     // ===== MAP ===============================================
     //
 

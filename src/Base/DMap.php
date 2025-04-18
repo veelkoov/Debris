@@ -8,6 +8,7 @@ use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKey;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Base\Internal\Pair;
+use Veelkoov\Debris\Exception\EmptyCollectionException;
 use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
 
@@ -492,6 +493,43 @@ class DMap implements \Iterator, \JsonSerializable
         $this->items->rewind();
 
         return $this->items->current()->key;
+    }
+
+    //
+    // ===== RANDOM ============================================
+    //
+
+    /**
+     * @return Pair<K, V>
+     */
+    public function random(): Pair
+    {
+        $key = $this->randomKey();
+        $value = $this->get($key);
+
+        return new Pair($key, $value);
+    }
+
+    /**
+     * @return V
+     */
+    public function randomValue(): mixed
+    {
+        return $this->get($this->randomKey());
+    }
+
+    /**
+     * @return K
+     */
+    public function randomKey(): mixed
+    {
+        if ($this->isEmpty()) {
+            throw new EmptyCollectionException('The map is empty.');
+        }
+
+        $keys = $this->getKeysArray();
+
+        return $keys[array_rand($keys)];
     }
 
     //

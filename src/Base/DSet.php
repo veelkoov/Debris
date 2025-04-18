@@ -310,6 +310,22 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     }
 
     //
+    // ===== RANDOM ============================================
+    //
+
+    /**
+     * @return V
+     */
+    public function random(): mixed
+    {
+        if ($this->isEmpty()) {
+            throw new EmptyCollectionException('The set is empty.');
+        }
+
+        return $this->items->randomKey();
+    }
+
+    //
     // ===== MAP ===============================================
     //
 
