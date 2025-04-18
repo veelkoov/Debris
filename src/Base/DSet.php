@@ -22,6 +22,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
      */
     private DMap $items;
 
+    //
+    // ===== CONSTRUCTOR =======================================
+    //
+
     /**
      * @param iterable<V> $items
      */
@@ -37,6 +41,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         }
     }
 
+    //
+    // ===== OF ================================================
+    //
+
     /**
      * @param V ...$items
      */
@@ -44,6 +52,16 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return new static($items);
     }
+
+    //
+    // ===== MAGIC METHODS =====================================
+    //
+
+    // None
+
+    //
+    // ===== FREEZE ============================================
+    //
 
     /**
      * @return $this
@@ -54,6 +72,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
 
         return $this;
     }
+
+    //
+    // ===== EMPTY AND COUNT ===================================
+    //
 
     public function isEmpty(): bool
     {
@@ -69,6 +91,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return $this->items->count();
     }
+
+    //
+    // ===== ADD ===============================================
+    //
 
     /**
      * @param V ...$value
@@ -96,6 +122,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return $this;
     }
 
+    //
+    // ===== PLUS ==============================================
+    //
+
     /**
      * @param V ...$value
      */
@@ -111,6 +141,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return new static([...$this, ...$values]);
     }
+
+    //
+    // ===== REMOVE ============================================
+    //
 
     /**
      * @param V ...$value
@@ -136,6 +170,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return $this;
     }
 
+    //
+    // ===== MINUS =============================================
+    //
+
     /**
      * @param V ...$value
      */
@@ -154,6 +192,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         ;
     }
 
+    //
+    // ===== CONTAINS ==========================================
+    //
+
     /**
      * @param V $value
      */
@@ -161,6 +203,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return $this->items->hasKey($value);
     }
+
+    //
+    // ===== SORTED ============================================
+    //
 
     /**
      * @param null|(callable(V, V): int)|(\Closure(V, V): int) $comparator
@@ -176,11 +222,28 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return new static($values);
     }
 
+    //
+    // ===== JSON SERIALIZE ====================================
+    //
+
     #[\Override]
     public function jsonSerialize(): mixed
     {
         return $this->getValuesArray();
     }
+
+    //
+    // ===== ITERATION =========================================
+    //
+
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->getValuesArray());
+    }
+
+    //
+    // ===== INTERSECT =========================================
+    //
 
     /**
      * @param iterable<V> $other
@@ -191,6 +254,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
 
         return self::filter(static fn (mixed $item) => \in_array($item, $otherValues, true));
     }
+
+    //
+    // ===== MAX ===============================================
+    //
 
     /**
      * @template TResult
@@ -208,6 +275,16 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return max(null === $callable ? $this->getValuesArray() : array_map($callable, $this->getValuesArray())); // @phpstan-ignore argument.type (FIXME)
     }
 
+    //
+    // ===== ACCESSORS =========================================
+    //
+
+    // None
+
+    //
+    // ===== FILTER ============================================
+    //
+
     /**
      * @param (callable(V): bool)|(\Closure(V): bool) $filterFunction
      */
@@ -215,6 +292,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return new static(array_filter($this->getValuesArray(), $filterFunction));
     }
+
+    //
+    // ===== SINGLE ============================================
+    //
 
     /**
      * @return V
@@ -228,6 +309,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         }
     }
 
+    //
+    // ===== MAP ===============================================
+    //
+
     /**
      * @param (callable(V): V)|(\Closure(V): V) $mapFunction
      */
@@ -235,6 +320,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return new static(array_map($mapFunction, $this->getValuesArray()));
     }
+
+    //
+    // ===== MAP FROM ==========================================
+    //
 
     /**
      * @template InV
@@ -255,6 +344,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         })());
     }
 
+    //
+    // ===== GET ARRAY =========================================
+    //
+
     /**
      * @return list<V>
      */
@@ -263,10 +356,9 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return $this->items->getKeysArray();
     }
 
-    public function getIterator(): \Traversable
-    {
-        return new \ArrayIterator($this->getValuesArray());
-    }
+    //
+    // ===== ANY ===============================================
+    //
 
     /**
      * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
@@ -276,6 +368,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return $this->items->anyKey($testFunction);
     }
 
+    //
+    // ===== ALL ===============================================
+    //
+
     /**
      * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
      */
@@ -283,6 +379,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     {
         return $this->items->allKeys($testFunction);
     }
+
+    //
+    // ===== SHUFFLE ===========================================
+    //
 
     public function shuffle(): static
     {
@@ -292,8 +392,18 @@ class DSet implements \IteratorAggregate, \JsonSerializable
         return new static($items);
     }
 
+    //
+    // ===== SLICE =============================================
+    //
+
     public function slice(int $offset, ?int $length = null): static
     {
         return new static(\array_slice($this->getValuesArray(), $offset, $length));
     }
+
+    //
+    // ===== UNIQUE ============================================
+    //
+
+    // Not applicable
 }

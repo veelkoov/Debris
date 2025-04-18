@@ -22,6 +22,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
 
     protected readonly Freezer $freezer;
 
+    //
+    // ===== CONSTRUCTOR =======================================
+    //
+
     /**
      * @param iterable<V> $items
      */
@@ -31,6 +35,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
         $this->freezer = new Freezer($this, $frozen);
     }
 
+    //
+    // ===== OF ================================================
+    //
+
     /**
      * @param V ...$items
      */
@@ -38,6 +46,16 @@ class DList implements \IteratorAggregate, \JsonSerializable
     {
         return new static($items);
     }
+
+    //
+    // ===== MAGIC METHODS =====================================
+    //
+
+    // None
+
+    //
+    // ===== FREEZE ============================================
+    //
 
     /**
      * @return $this
@@ -48,6 +66,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
 
         return $this;
     }
+
+    //
+    // ===== EMPTY AND COUNT ===================================
+    //
 
     public function isEmpty(): bool
     {
@@ -63,6 +85,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
     {
         return \count($this->items);
     }
+
+    //
+    // ===== ADD ===============================================
+    //
 
     /**
      * @param V ...$value
@@ -88,6 +114,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return $this;
     }
 
+    //
+    // ===== PLUS ==============================================
+    //
+
     /**
      * @param V ...$value
      */
@@ -103,6 +133,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
     {
         return new static([...$this->items, ...$values]);
     }
+
+    //
+    // ===== REMOVE ============================================
+    //
 
     /**
      * @param V ...$value
@@ -140,6 +174,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return $this;
     }
 
+    //
+    // ===== MINUS =============================================
+    //
+
     /**
      * @param V ...$value
      */
@@ -158,6 +196,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
         ;
     }
 
+    //
+    // ===== CONTAINS ==========================================
+    //
+
     /**
      * @param V $value
      */
@@ -165,6 +207,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
     {
         return \in_array($value, $this->items, true);
     }
+
+    //
+    // ===== SORTED ============================================
+    //
 
     /**
      * @param null|(callable(V, V): int)|(\Closure(V, V): int) $comparator
@@ -180,11 +226,32 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return new static($values);
     }
 
+    //
+    // ===== JSON SERIALIZE ====================================
+    //
+
     #[\Override]
     public function jsonSerialize(): mixed
     {
         return $this->items;
     }
+
+    //
+    // ===== ITERATION =========================================
+    //
+
+    /**
+     * @return \Traversable<int, V>
+     */
+    #[\Override]
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->items);
+    }
+
+    //
+    // ===== INTERSECT =========================================
+    //
 
     /**
      * @param iterable<V> $other
@@ -196,22 +263,69 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return self::filter(static fn (mixed $item) => \in_array($item, $otherValues, true));
     }
 
-    /**
-     * @return \Traversable<int, V>
-     */
-    #[\Override]
-    public function getIterator(): \Traversable
-    {
-        return new \ArrayIterator($this->items);
-    }
+    //
+    // ===== MAX ===============================================
+    //
 
     /**
-     * @return list<V>
+     * @template OutV
+     *
+     * @param null|(callable(V): OutV)|(\Closure(V): OutV) $callable
+     *
+     * @return ($callable is null ? V : OutV)
      */
-    public function getValuesArray(): array
+    public function max(null|callable|\Closure $callable = null): mixed
     {
-        return $this->items;
+        if ([] === $this->items) {
+            throw new EmptyCollectionException('Cannot find max() of an empty list.');
+        }
+
+        return max(null === $callable ? $this->items : array_map($callable, $this->items));
     }
+
+    //
+    // ===== ACCESSORS =========================================
+    //
+
+    /**
+     * @return V
+     */
+    public function at(int $index): mixed // FIXME: Somehow by key?
+    {
+        return $this->items[$index];
+    }
+
+    //
+    // ===== FILTER ============================================
+    //
+
+    /**
+     * @param (callable(V): bool)|(\Closure(V): bool) $filterFunction
+     */
+    public function filter(callable|\Closure $filterFunction): static
+    {
+        return new static(array_filter($this->items, $filterFunction));
+    }
+
+    //
+    // ===== SINGLE ============================================
+    //
+
+    /**
+     * @return V
+     */
+    public function single(): mixed
+    {
+        if (1 !== $this->count()) {
+            throw new NoSingleElementException('The list has '.$this->count().' items instead of exactly one.');
+        }
+
+        return $this->items[0];
+    }
+
+    //
+    // ===== MAP ===============================================
+    //
 
     /**
      * @param (callable(V): V)|(\Closure(V): V) $function
@@ -220,6 +334,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
     {
         return new static(array_map($function, $this->items));
     }
+
+    //
+    // ===== MAP FROM ==========================================
+    //
 
     /**
      * @template InV
@@ -240,54 +358,21 @@ class DList implements \IteratorAggregate, \JsonSerializable
         })());
     }
 
-    /**
-     * @template OutV
-     *
-     * @param null|(callable(V): OutV)|(\Closure(V): OutV) $callable
-     *
-     * @return ($callable is null ? V : OutV)
-     */
-    public function max(null|callable|\Closure $callable = null): mixed
-    {
-        if ([] === $this->items) {
-            throw new EmptyCollectionException('Cannot find max() of an empty list.');
-        }
-
-        return max(null === $callable ? $this->items : array_map($callable, $this->items));
-    }
+    //
+    // ===== GET ARRAY =========================================
+    //
 
     /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $filterFunction
+     * @return list<V>
      */
-    public function filter(callable|\Closure $filterFunction): static
+    public function getValuesArray(): array
     {
-        return new static(array_filter($this->items, $filterFunction));
+        return $this->items;
     }
 
-    /**
-     * @return V
-     */
-    public function single(): mixed
-    {
-        if (1 !== $this->count()) {
-            throw new NoSingleElementException('The list has '.$this->count().' items instead of exactly one.');
-        }
-
-        return $this->items[0];
-    }
-
-    /**
-     * @return V
-     */
-    public function at(int $index): mixed
-    {
-        return $this->items[$index];
-    }
-
-    public function unique(): static
-    {
-        return new static(array_unique($this->items, SORT_REGULAR));
-    }
+    //
+    // ===== ANY ===============================================
+    //
 
     /**
      * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
@@ -303,6 +388,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return false;
     }
 
+    //
+    // ===== ALL ===============================================
+    //
+
     /**
      * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
      */
@@ -317,6 +406,10 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return true;
     }
 
+    //
+    // ===== SHUFFLE ===========================================
+    //
+
     public function shuffle(): static
     {
         $result = new static($this->items);
@@ -325,8 +418,21 @@ class DList implements \IteratorAggregate, \JsonSerializable
         return $result;
     }
 
+    //
+    // ===== SLICE =============================================
+    //
+
     public function slice(int $offset, ?int $length = null): static
     {
         return new static(\array_slice($this->items, $offset, $length));
+    }
+
+    //
+    // ===== UNIQUE ============================================
+    //
+
+    public function unique(): static
+    {
+        return new static(array_unique($this->items, SORT_REGULAR));
     }
 }

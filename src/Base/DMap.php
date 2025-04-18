@@ -31,6 +31,10 @@ class DMap implements \Iterator, \JsonSerializable
      */
     protected readonly MapKeyMapper $mappedKeys;
 
+    //
+    // ===== CONSTRUCTOR =======================================
+    //
+
     /**
      * @param iterable<K, V> $items
      */
@@ -46,6 +50,16 @@ class DMap implements \Iterator, \JsonSerializable
             $this->freezer->freeze();
         }
     }
+
+    //
+    // ===== OF ================================================
+    //
+
+    // Not implemented
+
+    //
+    // ===== MAGIC METHODS =====================================
+    //
 
     /**
      * @param K $key
@@ -65,6 +79,10 @@ class DMap implements \Iterator, \JsonSerializable
         return $this->hasKey($key);
     }
 
+    //
+    // ===== FREEZE ============================================
+    //
+
     /**
      * @return $this
      */
@@ -74,6 +92,10 @@ class DMap implements \Iterator, \JsonSerializable
 
         return $this;
     }
+
+    //
+    // ===== EMPTY AND COUNT ===================================
+    //
 
     public function isEmpty(): bool
     {
@@ -89,6 +111,10 @@ class DMap implements \Iterator, \JsonSerializable
     {
         return $this->items->count();
     }
+
+    //
+    // ===== ADD ===============================================
+    //
 
     /**
      * @param K $key
@@ -119,6 +145,10 @@ class DMap implements \Iterator, \JsonSerializable
         return $this;
     }
 
+    //
+    // ===== PLUS ==============================================
+    //
+
     /**
      * @param K $key
      * @param V $value
@@ -141,6 +171,10 @@ class DMap implements \Iterator, \JsonSerializable
             ->setAll($items)
         ;
     }
+
+    //
+    // ===== REMOVE ============================================
+    //
 
     /**
      * @param V ...$value
@@ -200,6 +234,10 @@ class DMap implements \Iterator, \JsonSerializable
         return $this;
     }
 
+    //
+    // ===== MINUS =============================================
+    //
+
     /**
      * @param V ...$value
      */
@@ -217,6 +255,10 @@ class DMap implements \Iterator, \JsonSerializable
             ->removeAll($values)
         ;
     }
+
+    //
+    // ===== CONTAINS ==========================================
+    //
 
     /**
      * @param V $value
@@ -240,6 +282,10 @@ class DMap implements \Iterator, \JsonSerializable
         return $this->items->contains($this->mappedKeys->get($key));
     }
 
+    //
+    // ===== SORTED ============================================
+    //
+
     /**
      * @param null|(callable(Pair<K, V>, Pair<K, V>): int)|(\Closure(Pair<K, V>, Pair<K, V>): int) $comparator
      */
@@ -260,11 +306,65 @@ class DMap implements \Iterator, \JsonSerializable
         return $result;
     }
 
+    //
+    // ===== JSON SERIALIZE ====================================
+    //
+
     #[\Override]
     public function jsonSerialize(): mixed
     {
         return $this->getPairsArray();
     }
+
+    //
+    // ===== ITERATION =========================================
+    //
+
+    #[\Override]
+    public function current(): mixed
+    {
+        return $this->items[$this->items->current()];
+    }
+
+    #[\Override]
+    public function next(): void
+    {
+        $this->items->next();
+    }
+
+    #[\Override]
+    public function key(): mixed
+    {
+        return $this->items->current()->key;
+    }
+
+    #[\Override]
+    public function valid(): bool
+    {
+        return $this->items->valid();
+    }
+
+    #[\Override]
+    public function rewind(): void
+    {
+        $this->items->rewind();
+    }
+
+    //
+    // ===== INTERSECT =========================================
+    //
+
+    // Not implemented
+
+    //
+    // ===== MAX ===============================================
+    //
+
+    // Not implemented
+
+    //
+    // ===== ACCESSORS =========================================
+    //
 
     /**
      * @param K $key
@@ -318,6 +418,10 @@ class DMap implements \Iterator, \JsonSerializable
         return $this->get($key);
     }
 
+    //
+    // ===== FILTER ============================================
+    //
+
     /**
      * @param (callable(K, V): bool)|(\Closure(K, V): bool) $function
      */
@@ -351,6 +455,10 @@ class DMap implements \Iterator, \JsonSerializable
     {
         return $this->filter(static fn (mixed $key, mixed $value) => $function($key));
     }
+
+    //
+    // ===== SINGLE ============================================
+    //
 
     /**
      * @return Pair<K, V>
@@ -386,6 +494,10 @@ class DMap implements \Iterator, \JsonSerializable
         return $this->items->current()->key;
     }
 
+    //
+    // ===== MAP ===============================================
+    //
+
     /**
      * @template OutV of object|scalar|null
      * @template OutK of object|scalar|null
@@ -417,6 +529,10 @@ class DMap implements \Iterator, \JsonSerializable
         return $this->map(static fn (mixed $key, mixed $value) => [$key, $mapFunction($value)]);
     }
 
+    //
+    // ===== MAP FROM ==========================================
+    //
+
     /**
      * @template InV
      * @template InK
@@ -438,6 +554,10 @@ class DMap implements \Iterator, \JsonSerializable
             }
         })());
     }
+
+    //
+    // ===== GET ARRAY =========================================
+    //
 
     /**
      * @return list<K>
@@ -496,6 +616,111 @@ class DMap implements \Iterator, \JsonSerializable
 
         return $result;
     }
+
+    //
+    // ===== ANY ===============================================
+    //
+
+    /**
+     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $testFunction
+     */
+    public function any(callable|\Closure $testFunction): bool
+    {
+        foreach ($this as $key => $value) {
+            if ($testFunction($key, $value)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
+     */
+    public function anyValue(callable|\Closure $testFunction): bool
+    {
+        return $this->any(static fn (mixed $key, mixed $value) => $testFunction($value));
+    }
+
+    /**
+     * @param (callable(K): bool)|(\Closure(K): bool) $testFunction
+     */
+    public function anyKey(callable|\Closure $testFunction): bool
+    {
+        return $this->any(static fn (mixed $key, mixed $value) => $testFunction($key));
+    }
+
+    //
+    // ===== ALL ===============================================
+    //
+
+    /**
+     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $testFunction
+     */
+    public function all(callable|\Closure $testFunction): bool
+    {
+        foreach ($this as $key => $value) {
+            if (!$testFunction($key, $value)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
+     */
+    public function allValues(callable|\Closure $testFunction): bool
+    {
+        return $this->all(static fn (mixed $key, mixed $value) => $testFunction($value));
+    }
+
+    /**
+     * @param (callable(K): bool)|(\Closure(K): bool) $testFunction
+     */
+    public function allKeys(callable|\Closure $testFunction): bool
+    {
+        return $this->all(static fn (mixed $key, mixed $value) => $testFunction($key));
+    }
+
+    //
+    // ===== SHUFFLE ===========================================
+    //
+
+    public function shuffle(): static
+    {
+        $keys = $this->getKeys()->getValuesArray();
+        shuffle($keys);
+
+        return new static((function () use ($keys) {
+            foreach ($keys as $key) {
+                yield $key => $this->get($key);
+            }
+        })());
+    }
+
+    //
+    // ===== SLICE =============================================
+    //
+
+    public function slice(int $offset, ?int $length = null): static
+    {
+        $keys = \array_slice($this->getKeys()->getValuesArray(), $offset, $length);
+
+        return new static((function () use ($keys) {
+            foreach ($keys as $key) {
+                yield $key => $this->get($key);
+            }
+        })());
+    }
+
+    //
+    // ===== UNIQUE ============================================
+    //
+
+    // Not implemented
 
     /**
      * @template OutV of object|scalar|null
@@ -593,119 +818,6 @@ class DMap implements \Iterator, \JsonSerializable
         }
 
         return $result;
-    }
-
-    #[\Override]
-    public function current(): mixed
-    {
-        return $this->items[$this->items->current()];
-    }
-
-    #[\Override]
-    public function next(): void
-    {
-        $this->items->next();
-    }
-
-    #[\Override]
-    public function key(): mixed
-    {
-        return $this->items->current()->key;
-    }
-
-    #[\Override]
-    public function valid(): bool
-    {
-        return $this->items->valid();
-    }
-
-    #[\Override]
-    public function rewind(): void
-    {
-        $this->items->rewind();
-    }
-
-    /**
-     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $testFunction
-     */
-    public function any(callable|\Closure $testFunction): bool
-    {
-        foreach ($this as $key => $value) {
-            if ($testFunction($key, $value)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $testFunction
-     */
-    public function all(callable|\Closure $testFunction): bool
-    {
-        foreach ($this as $key => $value) {
-            if (!$testFunction($key, $value)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
-     */
-    public function anyValue(callable|\Closure $testFunction): bool
-    {
-        return $this->any(static fn (mixed $key, mixed $value) => $testFunction($value));
-    }
-
-    /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
-     */
-    public function allValues(callable|\Closure $testFunction): bool
-    {
-        return $this->all(static fn (mixed $key, mixed $value) => $testFunction($value));
-    }
-
-    /**
-     * @param (callable(K): bool)|(\Closure(K): bool) $testFunction
-     */
-    public function anyKey(callable|\Closure $testFunction): bool
-    {
-        return $this->any(static fn (mixed $key, mixed $value) => $testFunction($key));
-    }
-
-    /**
-     * @param (callable(K): bool)|(\Closure(K): bool) $testFunction
-     */
-    public function allKeys(callable|\Closure $testFunction): bool
-    {
-        return $this->all(static fn (mixed $key, mixed $value) => $testFunction($key));
-    }
-
-    public function shuffle(): static
-    {
-        $keys = $this->getKeys()->getValuesArray();
-        shuffle($keys);
-
-        return new static((function () use ($keys) {
-            foreach ($keys as $key) {
-                yield $key => $this->get($key);
-            }
-        })());
-    }
-
-    public function slice(int $offset, ?int $length = null): static
-    {
-        $keys = \array_slice($this->getKeys()->getValuesArray(), $offset, $length);
-
-        return new static((function () use ($keys) {
-            foreach ($keys as $key) {
-                yield $key => $this->get($key);
-            }
-        })());
     }
 
     /**
