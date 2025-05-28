@@ -566,6 +566,18 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
+     * @template OutK of object|scalar|null
+     *
+     * @param (callable(K): OutK)|(\Closure(K): OutK) $mapFunction
+     *
+     * @return self<OutK, V>
+     */
+    public function mapKeys(callable|\Closure $mapFunction): self
+    {
+        return $this->map(static fn (mixed $key, mixed $value) => [$mapFunction($key), $value]);
+    }
+
+    /**
      * @template OutV of object|scalar|null
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $mapFunction
