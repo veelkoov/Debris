@@ -284,11 +284,19 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     //
 
     /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $filterFunction
+     * @param (callable(V): bool)|(\Closure(V): bool) $filter
      */
-    public function filter(callable|\Closure $filterFunction): static
+    public function filter(callable|\Closure $filter): static
     {
-        return new static(array_filter($this->getValuesArray(), $filterFunction));
+        return new static(array_filter($this->getValuesArray(), $filter));
+    }
+
+    /**
+     * @param (callable(V): bool)|(\Closure(V): bool) $filter
+     */
+    public function filterNot(callable|\Closure $filter): static
+    {
+        return $this->filter(static fn (mixed $item) => !$filter($item));
     }
 
     //
@@ -328,11 +336,24 @@ class DSet implements \IteratorAggregate, \JsonSerializable
     //
 
     /**
-     * @param (callable(V): V)|(\Closure(V): V) $mapFunction
+     * @param (callable(V): V)|(\Closure(V): V) $function
      */
-    public function map(callable|\Closure $mapFunction): static
+    public function map(callable|\Closure $function): static
     {
-        return new static(array_map($mapFunction, $this->getValuesArray()));
+        return new static(array_map($function, $this->getValuesArray()));
+    }
+
+    /**
+     * @template OutV of object|scalar|null
+     *
+     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
+     * @param self<OutV>                              $target
+     *
+     * @return self<OutV>
+     */
+    public function mapInto(callable|\Closure $function, self $target): self
+    {
+        return $target->addAll(array_map($function, $this->getValuesArray()));
     }
 
     //

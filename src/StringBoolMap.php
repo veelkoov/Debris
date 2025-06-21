@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\Base\Internal\EnforceBoolValuesTrait;
+use Veelkoov\Debris\Maps\StringToBool;
 
 /**
- * @extends DStringMap<bool>
+ * @deprecated Use StringToBool
  */
-class StringBoolMap extends DStringMap
+class StringBoolMap extends StringToBool
 {
-    use EnforceBoolValuesTrait;
 }

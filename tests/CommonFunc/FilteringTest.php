@@ -37,6 +37,16 @@ final class FilteringTest extends TestCase
     }
 
     #[Test]
+    public function DList_filterNot(): void
+    {
+        $result = (new DList([1, 2, 3, 4]))
+            ->filterNot(self::even(...))
+        ;
+
+        self::assertSame([1, 3], $result->getValuesArray());
+    }
+
+    #[Test]
     public function DSet_filter(): void
     {
         $result = (new DSet([1, 2, 3, 4]))
@@ -44,6 +54,16 @@ final class FilteringTest extends TestCase
         ;
 
         self::assertSame([2, 4], $result->getValuesArray());
+    }
+
+    #[Test]
+    public function DSet_filterNot(): void
+    {
+        $result = (new DSet([1, 2, 3, 4]))
+            ->filterNot(self::even(...))
+        ;
+
+        self::assertSame([1, 3], $result->getValuesArray());
     }
 
     #[Test]
@@ -58,6 +78,17 @@ final class FilteringTest extends TestCase
     }
 
     #[Test]
+    public function DMap_filterNot(): void
+    {
+        $result = (new DMap(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]))
+            ->filterNot(static fn (string $key, int $value) => self::even($value))
+        ;
+
+        self::assertSame([1, 3], $result->getValuesArray());
+        self::assertSame(['a', 'c'], $result->getKeysArray());
+    }
+
+    #[Test]
     public function DMap_filterValues(): void
     {
         $result = (new DMap(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]))
@@ -69,6 +100,17 @@ final class FilteringTest extends TestCase
     }
 
     #[Test]
+    public function DMap_filterValuesNot(): void
+    {
+        $result = (new DMap(['a' => 1, 'b' => 2, 'c' => 3, 'd' => 4]))
+            ->filterValuesNot(self::even(...))
+        ;
+
+        self::assertSame([1, 3], $result->getValuesArray());
+        self::assertSame(['a', 'c'], $result->getKeysArray());
+    }
+
+    #[Test]
     public function DMap_filterKeys(): void
     {
         $result = (new DMap([1 => 'a', 2 => 'b', 3 => 'c', 4 => 'd']))
@@ -77,6 +119,17 @@ final class FilteringTest extends TestCase
 
         self::assertSame(['b', 'd'], $result->getValuesArray());
         self::assertSame([2, 4], $result->getKeysArray());
+    }
+
+    #[Test]
+    public function DMap_filterKeysNot(): void
+    {
+        $result = (new DMap([1 => 'a', 2 => 'b', 3 => 'c', 4 => 'd']))
+            ->filterKeysNot(self::even(...))
+        ;
+
+        self::assertSame(['a', 'c'], $result->getValuesArray());
+        self::assertSame([1, 3], $result->getKeysArray());
     }
 
     private static function even(int $value): bool

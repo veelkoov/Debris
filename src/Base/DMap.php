@@ -434,16 +434,16 @@ class DMap implements \Iterator, \JsonSerializable
     //
 
     /**
-     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $function
+     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $filter
      */
-    public function filter(callable|\Closure $function): static
+    public function filter(callable|\Closure $filter): static
     {
         $result = new static();
 
         foreach ($this->getKeysArray() as $key) {
             $value = $this->get($key);
 
-            if ($function($key, $value)) {
+            if ($filter($key, $value)) {
                 $result->set($key, $value);
             }
         }
@@ -452,19 +452,43 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $function
+     * @param (callable(K, V): bool)|(\Closure(K, V): bool) $filter
      */
-    public function filterValues(callable|\Closure $function): static
+    public function filterNot(callable|\Closure $filter): static
     {
-        return $this->filter(static fn (mixed $key, mixed $value) => $function($value));
+        return $this->filter(static fn (mixed $key, mixed $value) => !$filter($key, $value));
     }
 
     /**
-     * @param (callable(K): bool)|(\Closure(K): bool) $function
+     * @param (callable(V): bool)|(\Closure(V): bool) $filter
      */
-    public function filterKeys(callable|\Closure $function): static
+    public function filterValues(callable|\Closure $filter): static
     {
-        return $this->filter(static fn (mixed $key, mixed $value) => $function($key));
+        return $this->filter(static fn (mixed $key, mixed $value) => $filter($value));
+    }
+
+    /**
+     * @param (callable(V): bool)|(\Closure(V): bool) $filter
+     */
+    public function filterValuesNot(callable|\Closure $filter): static
+    {
+        return $this->filter(static fn (mixed $key, mixed $value) => !$filter($value));
+    }
+
+    /**
+     * @param (callable(K): bool)|(\Closure(K): bool) $filter
+     */
+    public function filterKeys(callable|\Closure $filter): static
+    {
+        return $this->filter(static fn (mixed $key, mixed $value) => $filter($key));
+    }
+
+    /**
+     * @param (callable(K): bool)|(\Closure(K): bool) $filter
+     */
+    public function filterKeysNot(callable|\Closure $filter): static
+    {
+        return $this->filter(static fn (mixed $key, mixed $value) => !$filter($key));
     }
 
     //
@@ -550,15 +574,15 @@ class DMap implements \Iterator, \JsonSerializable
      * @template OutV of object|scalar|null
      * @template OutK of object|scalar|null
      *
-     * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $mapFunction
+     * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
      *
      * @return self<OutK, OutV>
      */
-    public function map(callable|\Closure $mapFunction): self
+    public function map(callable|\Closure $function): self
     {
-        return new self((function () use ($mapFunction) {
+        return new self((function () use ($function) {
             foreach ($this as $key => $value) {
-                $pair = $mapFunction($key, $value);
+                $pair = $function($key, $value);
 
                 yield $pair[0] => $pair[1];
             }
@@ -566,27 +590,73 @@ class DMap implements \Iterator, \JsonSerializable
     }
 
     /**
+     * @template OutV of object|scalar|null
      * @template OutK of object|scalar|null
      *
-     * @param (callable(K): OutK)|(\Closure(K): OutK) $mapFunction
+     * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
+     * @param self<OutK, OutV>                                                        $target
+     *
+     * @return self<OutK, OutV>
+     */
+    public function mapInto(callable|\Closure $function, self $target): self
+    {
+        foreach ($this as $key => $value) {
+            $pair = $function($key, $value);
+
+            $target->set($pair[0], $pair[1]);
+        }
+
+        return $target;
+    }
+
+    /**
+     * @template OutK of object|scalar|null
+     *
+     * @param (callable(K): OutK)|(\Closure(K): OutK) $function
      *
      * @return self<OutK, V>
      */
-    public function mapKeys(callable|\Closure $mapFunction): self
+    public function mapKeys(callable|\Closure $function): self
     {
-        return $this->map(static fn (mixed $key, mixed $value) => [$mapFunction($key), $value]);
+        return $this->map(static fn (mixed $key, mixed $value) => [$function($key), $value]);
+    }
+
+    /**
+     * @template OutK of object|scalar|null
+     *
+     * @param (callable(K): OutK)|(\Closure(K): OutK) $function
+     * @param self<OutK, V>                           $target
+     *
+     * @return self<OutK, V>
+     */
+    public function mapKeysInto(callable|\Closure $function, self $target): self
+    {
+        return $this->mapInto(static fn (mixed $key, mixed $value) => [$function($key), $value], $target);
     }
 
     /**
      * @template OutV of object|scalar|null
      *
-     * @param (callable(V): OutV)|(\Closure(V): OutV) $mapFunction
+     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
      *
      * @return self<K, OutV>
      */
-    public function mapValues(callable|\Closure $mapFunction): self
+    public function mapValues(callable|\Closure $function): self
     {
-        return $this->map(static fn (mixed $key, mixed $value) => [$key, $mapFunction($value)]);
+        return $this->map(static fn (mixed $key, mixed $value) => [$key, $function($value)]);
+    }
+
+    /**
+     * @template OutV of object|scalar|null
+     *
+     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
+     * @param self<K, OutV>                           $target
+     *
+     * @return self<K, OutV>
+     */
+    public function mapValuesInto(callable|\Closure $function, self $target): self
+    {
+        return $this->mapInto(static fn (mixed $key, mixed $value) => [$key, $function($value)], $target);
     }
 
     //

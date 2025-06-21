@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\Base\Internal\EnforceIntValuesTrait;
+use Veelkoov\Debris\Maps\StringToInt;
 
 /**
- * @extends DStringMap<int>
+ * @deprecated Use StringToInt
  */
-class StringIntMap extends DStringMap
+class StringIntMap extends StringToInt
 {
-    use EnforceIntValuesTrait;
 }

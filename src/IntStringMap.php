@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris;
 
-use Veelkoov\Debris\Base\DIntMap;
-use Veelkoov\Debris\Base\Internal\EnforceStringValuesTrait;
+use Veelkoov\Debris\Maps\IntToString;
 
 /**
- * @extends DIntMap<string>
+ * @deprecated Use IntToString
  */
-class IntStringMap extends DIntMap
+class IntStringMap extends IntToString
 {
-    use EnforceStringValuesTrait;
 }
