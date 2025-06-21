@@ -9,6 +9,4 @@ use Veelkoov\Debris\Maps\IntToInt;
 /**
  * @deprecated Use IntToInt
  */
-class IntIntMap extends IntToInt
-{
-}
+class IntIntMap extends IntToInt {}

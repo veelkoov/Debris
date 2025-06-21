@@ -359,11 +359,12 @@ class DList implements \IteratorAggregate, \JsonSerializable
 
     /**
      * @template OutV of object|scalar|null
+     * @template Out of self<OutV>
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param self<OutV>                              $target
+     * @param Out                                     $target
      *
-     * @return self<OutV>
+     * @return Out
      */
     public function mapInto(callable|\Closure $function, self $target): self
     {

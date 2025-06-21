@@ -592,11 +592,12 @@ class DMap implements \Iterator, \JsonSerializable
     /**
      * @template OutV of object|scalar|null
      * @template OutK of object|scalar|null
+     * @template Out of self<OutK, OutV>
      *
      * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
-     * @param self<OutK, OutV>                                                        $target
+     * @param Out                                                                     $target
      *
-     * @return self<OutK, OutV>
+     * @return Out
      */
     public function mapInto(callable|\Closure $function, self $target): self
     {
@@ -623,11 +624,12 @@ class DMap implements \Iterator, \JsonSerializable
 
     /**
      * @template OutK of object|scalar|null
+     * @template Out of self<OutK, V>
      *
      * @param (callable(K): OutK)|(\Closure(K): OutK) $function
-     * @param self<OutK, V>                           $target
+     * @param Out                                     $target
      *
-     * @return self<OutK, V>
+     * @return Out
      */
     public function mapKeysInto(callable|\Closure $function, self $target): self
     {
@@ -648,11 +650,12 @@ class DMap implements \Iterator, \JsonSerializable
 
     /**
      * @template OutV of object|scalar|null
+     * @template Out of self<K, OutV>
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param self<K, OutV>                           $target
+     * @param Out                                     $target
      *
-     * @return self<K, OutV>
+     * @return Out
      */
     public function mapValuesInto(callable|\Closure $function, self $target): self
     {

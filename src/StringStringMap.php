@@ -9,6 +9,4 @@ use Veelkoov\Debris\Maps\StringToString;
 /**
  * @deprecated Use StringToString
  */
-class StringStringMap extends StringToString
-{
-}
+class StringStringMap extends StringToString {}

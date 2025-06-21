@@ -9,6 +9,4 @@ use Veelkoov\Debris\Maps\IntToString;
 /**
  * @deprecated Use IntToString
  */
-class IntStringMap extends IntToString
-{
-}
+class IntStringMap extends IntToString {}

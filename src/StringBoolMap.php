@@ -9,6 +9,4 @@ use Veelkoov\Debris\Maps\StringToBool;
 /**
  * @deprecated Use StringToBool
  */
-class StringBoolMap extends StringToBool
-{
-}
+class StringBoolMap extends StringToBool {}
