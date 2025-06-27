@@ -18,7 +18,7 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
  *
  * @implements \Iterator<K, V>
  */
-class DMap implements \Iterator, \JsonSerializable
+class DMap implements \Iterator, \JsonSerializable, \Countable
 {
     /**
      * @var \SplObjectStorage<MapKey<K>, V>

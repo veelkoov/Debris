@@ -13,7 +13,7 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
  *
  * @implements \IteratorAggregate<int, V>
  */
-class DList implements \IteratorAggregate, \JsonSerializable
+class DList implements \IteratorAggregate, \JsonSerializable, \Countable
 {
     /**
      * @var list<V>

@@ -69,21 +69,21 @@ final class EmptyAndSizeTest extends TestCase
     #[Test]
     public function DList_count(): void
     {
-        self::assertSame(0, (new DList())->count());
-        self::assertSame(2, (new DList([1, 2]))->count());
+        self::assertCount(0, new DList());
+        self::assertCount(2, new DList([1, 2]));
     }
 
     #[Test]
     public function DSet_count(): void
     {
-        self::assertSame(0, (new DSet())->count());
-        self::assertSame(2, (new DSet([1, 2]))->count());
+        self::assertCount(0, new DSet());
+        self::assertCount(2, new DSet([1, 2]));
     }
 
     #[Test]
     public function DMap_count(): void
     {
-        self::assertSame(0, (new DMap())->count());
-        self::assertSame(2, (new DMap([1 => 'a', 2 => 'b']))->count());
+        self::assertCount(0, new DMap());
+        self::assertCount(2, new DMap([1 => 'a', 2 => 'b']));
     }
 }

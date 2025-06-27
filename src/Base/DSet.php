@@ -13,7 +13,7 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
  *
  * @implements \IteratorAggregate<int, V>
  */
-class DSet implements \IteratorAggregate, \JsonSerializable
+class DSet implements \IteratorAggregate, \JsonSerializable, \Countable
 {
     protected readonly Freezer $freezer;
 
