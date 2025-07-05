@@ -11,4 +11,5 @@ return (new PhpCsFixer\Config())
         'php_unit_method_casing' => false, // These are supposed to be descriptive, not pretty.
     ])
     ->setFinder($finder)
+    ->setUnsupportedPhpVersionAllowed(true)
 ;

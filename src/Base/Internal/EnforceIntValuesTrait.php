@@ -11,4 +11,10 @@ trait EnforceIntValuesTrait
     {
         return $value;
     }
+
+    #[\Override]
+    protected static function isValidValue(mixed $value): bool
+    {
+        return \is_int($value);
+    }
 }

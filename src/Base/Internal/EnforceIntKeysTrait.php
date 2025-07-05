@@ -11,4 +11,10 @@ trait EnforceIntKeysTrait
     {
         return $key;
     }
+
+    #[\Override]
+    protected static function isValidKey(mixed $value): bool
+    {
+        return \is_int($value);
+    }
 }

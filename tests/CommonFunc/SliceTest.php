@@ -14,7 +14,7 @@ use Veelkoov\Debris\Base\DScalarMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\IntStringMap;
+use Veelkoov\Debris\Maps\IntToString;
 
 /**
  * @internal
@@ -48,7 +48,7 @@ final class SliceTest extends TestCase
     #[Test]
     public function DMap_slice(): void
     {
-        $subject = new IntStringMap([1 => 'a', 2 => 'b', 3 => 'c', 4 => 'd', 5 => 'e', 6 => 'f', 7 => 'g', 8 => 'h', 9 => 'i', 10 => 'j']);
+        $subject = new IntToString([1 => 'a', 2 => 'b', 3 => 'c', 4 => 'd', 5 => 'e', 6 => 'f', 7 => 'g', 8 => 'h', 9 => 'i', 10 => 'j']);
 
         self::assertSame([3 => 'c', 4 => 'd', 5 => 'e', 6 => 'f'], $subject->slice(2, 4)->toArray());
         self::assertSame([6 => 'f', 7 => 'g', 8 => 'h'], $subject->slice(-5, -2)->toArray());

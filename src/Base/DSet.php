@@ -42,6 +42,12 @@ class DSet implements \IteratorAggregate, \JsonSerializable, \Countable
     }
 
     //
+    // ===== MAGIC METHODS =====================================
+    //
+
+    // None
+
+    //
     // ===== OF ================================================
     //
 
@@ -54,10 +60,30 @@ class DSet implements \IteratorAggregate, \JsonSerializable, \Countable
     }
 
     //
-    // ===== MAGIC METHODS =====================================
+    // ===== FROM UNSAFE =======================================
     //
 
-    // None
+    /**
+     * To be used on unverified sources. Returns instance guaranteed to have values of the desired type.
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function fromUnsafe(mixed $iterable): static
+    {
+        if (!is_iterable($iterable)) {
+            throw new \InvalidArgumentException('Expected an iterable.');
+        }
+
+        return new static((static function () use ($iterable) {
+            foreach ($iterable as $value) {
+                if (!static::isValidValue($value)) {
+                    throw new \InvalidArgumentException('Illegal key type.');
+                }
+
+                yield $value;
+            }
+        })());
+    }
 
     //
     // ===== FREEZE ============================================
@@ -234,6 +260,10 @@ class DSet implements \IteratorAggregate, \JsonSerializable, \Countable
     // ===== ITERATION =========================================
     //
 
+    /**
+     * @return \Traversable<int, V>
+     */
+    #[\Override]
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->getValuesArray());
@@ -258,11 +288,11 @@ class DSet implements \IteratorAggregate, \JsonSerializable, \Countable
     //
 
     /**
-     * @template TResult
+     * @template OutV
      *
-     * @param null|(callable(V): TResult)|(\Closure(V): TResult) $callable
+     * @param null|(callable(V): OutV)|(\Closure(V): OutV) $callable
      *
-     * @return ($callable is null ? V : TResult)
+     * @return ($callable is null ? V : OutV)
      */
     public function max(null|callable|\Closure $callable = null): mixed
     {
@@ -442,4 +472,32 @@ class DSet implements \IteratorAggregate, \JsonSerializable, \Countable
     //
 
     // Not applicable
+
+    //
+    // ===== OTHER ============================================
+    //
+
+    // None currently
+
+    //
+    // ===== VALIDATION ========================================
+    //
+
+    /**
+     * @param V $value
+     *
+     * @return V
+     */
+    protected static function enforceValueType(mixed $value): mixed
+    {
+        throw new \LogicException('Not implemented. '.__METHOD__.' needs to be overridden.');
+    }
+
+    /**
+     * @phpstan-assert-if-true V $value
+     */
+    protected static function isValidValue(mixed $value): bool
+    {
+        throw new \LogicException('Not implemented. '.__METHOD__.' needs to be overridden.');
+    }
 }

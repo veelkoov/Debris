@@ -20,12 +20,12 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
  */
 class DMap implements \Iterator, \JsonSerializable, \Countable
 {
+    protected readonly Freezer $freezer;
+
     /**
      * @var \SplObjectStorage<MapKey<K>, V>
      */
     protected \SplObjectStorage $items;
-
-    protected readonly Freezer $freezer;
 
     /**
      * @var MapKeyMapper<K>
@@ -53,12 +53,6 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
     }
 
     //
-    // ===== OF ================================================
-    //
-
-    // Not implemented
-
-    //
     // ===== MAGIC METHODS =====================================
     //
 
@@ -78,6 +72,42 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
     public function __isset(mixed $key): bool
     {
         return $this->hasKey($key);
+    }
+
+    //
+    // ===== OF ================================================
+    //
+
+    // Not implemented
+
+    //
+    // ===== FROM UNSAFE =======================================
+    //
+
+    /**
+     * To be used on unverified sources. Returns instance guaranteed to have values of the desired type.
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function fromUnsafe(mixed $iterable): static
+    {
+        if (!is_iterable($iterable)) {
+            throw new \InvalidArgumentException('Expected an iterable.');
+        }
+
+        return new static((static function () use ($iterable) {
+            foreach ($iterable as $key => $value) {
+                if (!static::isValidKey($key)) {
+                    throw new \InvalidArgumentException('Illegal key type.');
+                }
+
+                if (!static::isValidValue($value)) {
+                    throw new \InvalidArgumentException('Illegal key type.');
+                }
+
+                yield $key => $value;
+            }
+        })());
     }
 
     //
@@ -855,6 +885,24 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
 
     // Not implemented
 
+    //
+    // ===== OTHER ============================================
+    //
+
+    /**
+     * @return self<V, K>
+     */
+    public function flip(): self
+    {
+        $result = new self();
+
+        foreach ($this as $key => $value) {
+            $result->set($value, $key);
+        }
+
+        return $result;
+    }
+
     /**
      * @template OutV of object|scalar|null
      * @template OutK of object|scalar|null
@@ -939,18 +987,16 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
         return $result;
     }
 
+    //
+    // ===== VALIDATION ========================================
+    //
+
     /**
-     * @return self<V, K>
+     * @param array<mixed>|\ArrayAccess<mixed, mixed> $input
      */
-    public function flip(): self
+    protected static function enforceIsArrayAndKeyExistsGetKey(array|\ArrayAccess $input, int|string $key): mixed
     {
-        $result = new self();
-
-        foreach ($this as $key => $value) {
-            $result->set($value, $key);
-        }
-
-        return $result;
+        return $input[$key];
     }
 
     /**
@@ -960,7 +1006,15 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
      */
     protected static function enforceKeyType(mixed $key): mixed
     {
-        return $key;
+        throw new \LogicException('Not implemented. '.__METHOD__.' needs to be overridden.');
+    }
+
+    /**
+     * @phpstan-assert-if-true K $key
+     */
+    protected static function isValidKey(mixed $key): bool
+    {
+        throw new \LogicException('Not implemented. '.__METHOD__.' needs to be overridden.');
     }
 
     /**
@@ -970,14 +1024,14 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
      */
     protected static function enforceValueType(mixed $value): mixed
     {
-        return $value;
+        throw new \LogicException('Not implemented. '.__METHOD__.' needs to be overridden.');
     }
 
     /**
-     * @param array<mixed>|\ArrayAccess<mixed, mixed> $input
+     * @phpstan-assert-if-true V $value
      */
-    protected static function enforceIsArrayAndKeyExistsGetKey(array|\ArrayAccess $input, int|string $key): mixed
+    protected static function isValidValue(mixed $value): bool
     {
-        return $input[$key];
+        throw new \LogicException('Not implemented. '.__METHOD__.' needs to be overridden.');
     }
 }

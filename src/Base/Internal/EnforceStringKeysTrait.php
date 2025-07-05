@@ -11,4 +11,10 @@ trait EnforceStringKeysTrait
     {
         return $key;
     }
+
+    #[\Override]
+    protected static function isValidKey(mixed $value): bool
+    {
+        return \is_string($value);
+    }
 }

@@ -15,12 +15,12 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
  */
 class DList implements \IteratorAggregate, \JsonSerializable, \Countable
 {
+    protected readonly Freezer $freezer;
+
     /**
      * @var list<V>
      */
     protected array $items;
-
-    protected readonly Freezer $freezer;
 
     //
     // ===== CONSTRUCTOR =======================================
@@ -36,6 +36,12 @@ class DList implements \IteratorAggregate, \JsonSerializable, \Countable
     }
 
     //
+    // ===== MAGIC METHODS =====================================
+    //
+
+    // None
+
+    //
     // ===== OF ================================================
     //
 
@@ -48,10 +54,30 @@ class DList implements \IteratorAggregate, \JsonSerializable, \Countable
     }
 
     //
-    // ===== MAGIC METHODS =====================================
+    // ===== FROM UNSAFE =======================================
     //
 
-    // None
+    /**
+     * To be used on unverified sources. Returns instance guaranteed to have values of the desired type.
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function fromUnsafe(mixed $iterable): static
+    {
+        if (!is_iterable($iterable)) {
+            throw new \InvalidArgumentException('Expected an iterable.');
+        }
+
+        return new static((static function () use ($iterable) {
+            foreach ($iterable as $value) {
+                if (!static::isValidValue($value)) {
+                    throw new \InvalidArgumentException('Illegal key type.');
+                }
+
+                yield $value;
+            }
+        })());
+    }
 
     //
     // ===== FREEZE ============================================
@@ -470,5 +496,33 @@ class DList implements \IteratorAggregate, \JsonSerializable, \Countable
     public function unique(): static
     {
         return new static(array_unique($this->items, SORT_REGULAR));
+    }
+
+    //
+    // ===== OTHER ============================================
+    //
+
+    // None currently
+
+    //
+    // ===== VALIDATION ========================================
+    //
+
+    /**
+     * @param V $value
+     *
+     * @return V
+     */
+    protected static function enforceValueType(mixed $value): mixed
+    {
+        throw new \LogicException('Not implemented. '.__METHOD__.' needs to be overridden.');
+    }
+
+    /**
+     * @phpstan-assert-if-true V $value
+     */
+    protected static function isValidValue(mixed $value): bool
+    {
+        throw new \LogicException('Not implemented. '.__METHOD__.' needs to be overridden.');
     }
 }

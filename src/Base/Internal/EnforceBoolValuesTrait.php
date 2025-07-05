@@ -11,4 +11,10 @@ trait EnforceBoolValuesTrait
     {
         return $value;
     }
+
+    #[\Override]
+    protected static function isValidValue(mixed $value): bool
+    {
+        return \is_bool($value);
+    }
 }

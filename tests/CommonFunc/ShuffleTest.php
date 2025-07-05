@@ -14,7 +14,7 @@ use Veelkoov\Debris\Base\DScalarMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\IntIntMap;
+use Veelkoov\Debris\Maps\IntToInt;
 
 /**
  * @internal
@@ -49,7 +49,7 @@ final class ShuffleTest extends TestCase
     public function DMap_shuffle(): void
     {
         $input = self::getTestIntIntArray();
-        $subject = (new IntIntMap($input))->shuffle();
+        $subject = (new IntToInt($input))->shuffle();
 
         self::assertIntIntArrayIsShuffledOriginal($input, $subject->toArray());
     }

@@ -5,12 +5,15 @@ declare(strict_types=1);
 namespace Veelkoov\Debris;
 
 use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\Internal\EnforceStringValuesTrait;
 
 /**
  * @extends DList<string>
  */
 class StringList extends DList
 {
+    use EnforceStringValuesTrait;
+
     public function join(string $separator): string
     {
         return implode($separator, $this->items);

@@ -13,9 +13,9 @@ use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\StringList;
 use Veelkoov\Debris\StringSet;
-use Veelkoov\Debris\StringStringMap;
 
 /**
  * @internal
@@ -25,7 +25,7 @@ use Veelkoov\Debris\StringStringMap;
 #[CoversClass(DSet::class)]
 #[CoversClass(StringList::class)]
 #[CoversClass(StringSet::class)]
-#[CoversClass(StringStringMap::class)]
+#[CoversClass(StringToString::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 final class MapFromTest extends TestCase
@@ -135,7 +135,7 @@ final class MapFromTest extends TestCase
     #[Test]
     public function StringStringMap_mapFrom_noKeys(): void
     {
-        $subject = StringStringMap::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value) => ["{$value}", "{$value}"]);
+        $subject = StringToString::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value) => ["{$value}", "{$value}"]);
 
         self::assertInstanceOf(DMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
         self::assertSame(['A', 'B'], $subject->getKeysArray());
