@@ -33,13 +33,32 @@ use Veelkoov\Debris\Maps\StringToString;
 final class DMapFromRowsTest extends TestCase
 {
     /**
+     * @param DMap<null|object|scalar, null|object|scalar> $intance
+     * @param array<string, mixed>                         $input
+     * @param literal-string                               $keyKey
+     * @param literal-string                               $valueKey
+     */
+    #[Test]
+    #[DataProvider('provideFromRowsCases')]
+    public function fromRows(DMap $intance, array $input, string $keyKey, string $valueKey, bool $allowed): void
+    {
+        try {
+            $intance::fromRows($input, $keyKey, $valueKey);
+
+            self::assertTrue($allowed, 'Should not have been allowed.');
+        } catch (\TypeError) {
+            self::assertFalse($allowed, 'Should have been allowed.');
+        }
+    }
+
+    /**
      * @return list<array{
      *           DMap<covariant scalar|object|null, covariant scalar|object|null>,
      *           list<array<string, mixed>>,
      *           string, string, bool,
      *         }>
      */
-    public static function fromRowsDataProvider(): array
+    public static function provideFromRowsCases(): iterable
     {
         $testRow = [
             'int' => 1,
@@ -68,24 +87,5 @@ final class DMapFromRowsTest extends TestCase
             [new StringToString(), [$testRow], 'string', 'int', false],
             [new StringToString(), [$testRow], 'string', 'string', true],
         ];
-    }
-
-    /**
-     * @param DMap<null|object|scalar, null|object|scalar> $intance
-     * @param array<string, mixed>                         $input
-     * @param literal-string                               $keyKey
-     * @param literal-string                               $valueKey
-     */
-    #[Test]
-    #[DataProvider('fromRowsDataProvider')]
-    public function fromRows(DMap $intance, array $input, string $keyKey, string $valueKey, bool $allowed): void
-    {
-        try {
-            $intance::fromRows($input, $keyKey, $valueKey);
-
-            self::assertTrue($allowed, 'Should not have been allowed.');
-        } catch (\TypeError) {
-            self::assertFalse($allowed, 'Should have been allowed.');
-        }
     }
 }

@@ -6,7 +6,6 @@ namespace Veelkoov\Debris\Maps;
 
 use Veelkoov\Debris\Base\DStringMap;
 use Veelkoov\Debris\Base\Internal\EnforceStringListValuesTrait;
-use Veelkoov\Debris\Base\Internal\EnforceStringValuesTrait;
 use Veelkoov\Debris\StringList;
 
 /**
