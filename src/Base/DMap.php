@@ -475,10 +475,12 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
-     * @param K $key
-     * @param V $defaultValue
+     * @template T
      *
-     * @return V
+     * @param K   $key
+     * @param T|V $defaultValue
+     *
+     * @return T|V
      */
     public function getOrDefaultOf(mixed $key, mixed $defaultValue): mixed
     {
