@@ -138,11 +138,28 @@ final class DMapTest extends TestCase
     }
 
     #[Test]
+    public function getOrSetAs_returnsExisting(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertSame('existingValue', $subject->getOrSetAs('existingKey', 'newValue'), 'Existing value should be returned');
+    }
+
+    #[Test]
+    public function getOrSetAs_returnsMissing(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertSame('newValue_1', $subject->getOrSetAs('missingKey', 'newValue_1'), 'Default value should be returned');
+        self::assertSame('newValue_1', $subject->getOrSetAs('missingKey', 'newValue_2'), 'Map should have been updated');
+    }
+
+    #[Test]
     public function getOrDefault_returnsExisting(): void
     {
         $subject = new DMap(['existingKey' => 'existingValue']);
 
-        self::assertSame('existingValue', $subject->getOrSet('existingKey', static fn () => 'newValue'), 'Existing value should be returned');
+        self::assertSame('existingValue', $subject->getOrDefault('existingKey', static fn () => 'newValue'), 'Existing value should be returned');
     }
 
     #[Test]
@@ -152,5 +169,22 @@ final class DMapTest extends TestCase
 
         self::assertSame('newValue_1', $subject->getOrDefault('missingKey', static fn () => 'newValue_1'), 'Default value should be returned');
         self::assertSame('newValue_2', $subject->getOrSet('missingKey', static fn () => 'newValue_2'), 'Map should not have been updated');
+    }
+
+    #[Test]
+    public function getOrDefaultOf_returnsExisting(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertSame('existingValue', $subject->getOrDefaultOf('existingKey', 'newValue'), 'Existing value should be returned');
+    }
+
+    #[Test]
+    public function getOrDefaultOf_returnsMissing(): void
+    {
+        $subject = new DMap(['existingKey' => 'existingValue']);
+
+        self::assertSame('newValue_1', $subject->getOrDefaultOf('missingKey', 'newValue_1'), 'Default value should be returned');
+        self::assertSame('newValue_2', $subject->getOrSetAs('missingKey', 'newValue_2'), 'Map should not have been updated');
     }
 }

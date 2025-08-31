@@ -443,6 +443,21 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
     }
 
     /**
+     * @param K $key
+     * @param V $newValue
+     *
+     * @return V
+     */
+    public function getOrSetAs(mixed $key, mixed $newValue): mixed
+    {
+        if (!$this->hasKey($key)) {
+            $this->set($key, $newValue);
+        }
+
+        return $this->get($key);
+    }
+
+    /**
      * @template T
      *
      * @param K                                       $key
@@ -457,6 +472,17 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
         }
 
         return $this->get($key);
+    }
+
+    /**
+     * @param K $key
+     * @param V $defaultValue
+     *
+     * @return V
+     */
+    public function getOrDefaultOf(mixed $key, mixed $defaultValue): mixed
+    {
+        return $this->hasKey($key) ? $this->get($key) : $defaultValue;
     }
 
     //
