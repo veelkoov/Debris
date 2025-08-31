@@ -2,17 +2,18 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris;
+namespace Veelkoov\Debris\Lists;
 
 use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\Internal\EnforceStringValuesTrait;
+use Veelkoov\Debris\Base\Enforce;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @extends DList<string>
  */
 class StringList extends DList
 {
-    use EnforceStringValuesTrait;
+    use Enforce\StringValuesTrait;
 
     public function join(string $separator): string
     {

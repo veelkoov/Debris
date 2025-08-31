@@ -15,7 +15,7 @@ use Veelkoov\Debris\Base\DStringMap;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKey;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @internal

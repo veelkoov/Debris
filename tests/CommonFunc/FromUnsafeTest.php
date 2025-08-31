@@ -11,10 +11,10 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\IntList;
-use Veelkoov\Debris\IntSet;
+use Veelkoov\Debris\Lists\IntList;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\StringToBool;
+use Veelkoov\Debris\Sets\IntSet;
 
 /**
  * @internal

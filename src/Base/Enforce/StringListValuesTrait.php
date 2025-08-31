@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base\Internal;
+namespace Veelkoov\Debris\Base\Enforce;
 
-use Veelkoov\Debris\StringList;
+use Veelkoov\Debris\Lists\StringList;
 
-trait EnforceStringListValuesTrait
+trait StringListValuesTrait
 {
     #[\Override]
     protected static function enforceValueType(mixed $value): StringList

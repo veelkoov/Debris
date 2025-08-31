@@ -7,10 +7,10 @@ namespace Veelkoov\Debris\Base;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKey;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\Base\Internal\Pair;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
+use Veelkoov\Debris\Maps\Pair;
 
 /**
  * @template K of object|scalar|null
@@ -606,11 +606,11 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
      *
      * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
      *
-     * @return self<OutK, OutV>
+     * @return static<OutK, OutV>
      */
-    public function map(callable|\Closure $function): self
+    public function map(callable|\Closure $function): static
     {
-        return new self((function () use ($function) {
+        return new static((function () use ($function) {
             foreach ($this as $key => $value) {
                 $pair = $function($key, $value);
 
@@ -890,11 +890,11 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
     //
 
     /**
-     * @return self<V, K>
+     * @return static<V, K>
      */
-    public function flip(): self
+    public function flip(): static
     {
-        $result = new self();
+        $result = new static();
 
         foreach ($this as $key => $value) {
             $result->set($value, $key);
@@ -912,7 +912,7 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
      *
      * @return static<OutK, OutV>
      */
-    public static function fromValues(iterable $input, callable|\Closure $valueToKeyFunction): self
+    public static function fromValues(iterable $input, callable|\Closure $valueToKeyFunction): static
     {
         $result = new static();
 

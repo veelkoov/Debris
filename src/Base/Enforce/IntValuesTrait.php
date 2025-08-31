@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base\Internal;
+namespace Veelkoov\Debris\Base\Enforce;
 
-trait EnforceIntValuesTrait
+trait IntValuesTrait
 {
     #[\Override]
     protected static function enforceValueType(mixed $value): int

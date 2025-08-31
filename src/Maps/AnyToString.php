@@ -8,10 +8,10 @@ use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\Enforce;
 
 /**
- * @extends DMap<?bool, int>
+ * @extends DMap<null|object|scalar, string>
  */
-class NullBoolToInt extends DMap
+class AnyToString extends DMap
 {
-    use Enforce\IntValuesTrait;
-    use Enforce\NullBoolKeysTrait;
+    use Enforce\AnyKeysTrait;
+    use Enforce\StringValuesTrait;
 }

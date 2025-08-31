@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base\Internal;
+namespace Veelkoov\Debris\Base\Enforce;
 
-trait EnforceStringKeysTrait
+trait StringKeysTrait
 {
     #[\Override]
     protected static function enforceKeyType(mixed $key): string

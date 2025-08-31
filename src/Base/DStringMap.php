@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
-use Veelkoov\Debris\Base\Internal\EnforceStringKeysTrait;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @template V of object|scalar|null
@@ -14,7 +13,7 @@ use Veelkoov\Debris\StringSet;
  */
 class DStringMap extends DScalarMap
 {
-    use EnforceStringKeysTrait;
+    use Enforce\StringKeysTrait;
 
     #[\Override]
     public function getKeys(): StringSet

@@ -14,8 +14,8 @@ use Veelkoov\Debris\Base\DScalarMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\Base\Internal\Pair;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
+use Veelkoov\Debris\Maps\Pair;
 
 /**
  * @internal

@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base\Internal;
+namespace Veelkoov\Debris\Base\Enforce;
 
-trait EnforceStringValuesTrait
+trait AnyValuesTrait
 {
     #[\Override]
-    protected static function enforceValueType(mixed $value): string
+    protected static function enforceValueType(mixed $value): mixed
     {
         return $value;
     }
@@ -15,6 +15,6 @@ trait EnforceStringValuesTrait
     #[\Override]
     protected static function isValidValue(mixed $value): bool
     {
-        return \is_string($value);
+        return true;
     }
 }

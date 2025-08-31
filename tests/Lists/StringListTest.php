@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Tests;
+namespace Veelkoov\Debris\Tests\Lists;
 
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
@@ -14,8 +14,8 @@ use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKey;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\StringList;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @internal

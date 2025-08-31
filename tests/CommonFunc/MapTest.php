@@ -13,11 +13,11 @@ use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\Base\Internal\Pair;
+use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\IntToString;
+use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
-use Veelkoov\Debris\StringList;
-use Veelkoov\Debris\StringSet;
+use Veelkoov\Debris\Sets\StringSet;
 
 /**
  * @internal

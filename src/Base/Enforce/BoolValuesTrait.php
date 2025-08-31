@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base\Internal;
+namespace Veelkoov\Debris\Base\Enforce;
 
-trait EnforceBoolValuesTrait
+trait BoolValuesTrait
 {
     #[\Override]
     protected static function enforceValueType(mixed $value): bool

@@ -6,6 +6,9 @@ namespace Veelkoov\Debris\Base\Internal;
 
 use Veelkoov\Debris\Exception\ChangingImmutableException;
 
+/**
+ * @internal
+ */
 final class Freezer
 {
     public function __construct(
