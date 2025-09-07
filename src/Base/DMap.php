@@ -330,7 +330,7 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
     /**
      * @param null|(callable(Pair<K, V>, Pair<K, V>): int)|(\Closure(Pair<K, V>, Pair<K, V>): int) $comparator
      */
-    public function sorted(null|callable|\Closure $comparator = null, bool $reverse = false): static
+    public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
         $comparator ??= static fn (Pair $a, Pair $b): int => $a->value <=> $b->value;

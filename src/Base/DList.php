@@ -239,7 +239,7 @@ class DList implements \IteratorAggregate, \JsonSerializable, \Countable
     /**
      * @param null|(callable(V, V): int)|(\Closure(V, V): int) $comparator
      */
-    public function sorted(null|callable|\Closure $comparator = null, bool $reverse = false): static
+    public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
         $comparator ??= static fn (mixed $a, mixed $b): int => $a <=> $b;
@@ -298,7 +298,7 @@ class DList implements \IteratorAggregate, \JsonSerializable, \Countable
      *
      * @return ($callable is null ? V : OutV)
      */
-    public function max(null|callable|\Closure $callable = null): mixed
+    public function max(callable|\Closure|null $callable = null): mixed
     {
         if ([] === $this->items) {
             throw new EmptyCollectionException('Cannot find max() of an empty list.');
