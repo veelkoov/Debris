@@ -71,7 +71,7 @@ class DList implements \IteratorAggregate, \JsonSerializable, \Countable
         return new static((static function () use ($iterable) {
             foreach ($iterable as $value) {
                 if (!static::isValidValue($value)) {
-                    throw new \InvalidArgumentException('Illegal key type.');
+                    throw new \InvalidArgumentException('Illegal value type.');
                 }
 
                 yield $value;

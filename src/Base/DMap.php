@@ -102,7 +102,7 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
                 }
 
                 if (!static::isValidValue($value)) {
-                    throw new \InvalidArgumentException('Illegal key type.');
+                    throw new \InvalidArgumentException('Illegal value type.');
                 }
 
                 yield $key => $value;
