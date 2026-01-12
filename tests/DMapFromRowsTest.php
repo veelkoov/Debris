@@ -21,6 +21,8 @@ use Veelkoov\Debris\Maps\StringToString;
 
 /**
  * @internal
+ *
+ * @phpstan-type TTestMap DMap<covariant scalar|object|null, covariant scalar|object|null>
  */
 #[CoversClass(IntToInt::class)]
 #[CoversClass(IntToString::class)]
@@ -33,17 +35,17 @@ use Veelkoov\Debris\Maps\StringToString;
 final class DMapFromRowsTest extends TestCase
 {
     /**
-     * @param DMap<null|object|scalar, null|object|scalar> $intance
-     * @param array<string, mixed>                         $input
-     * @param literal-string                               $keyKey
-     * @param literal-string                               $valueKey
+     * @param TTestMap                   $instance
+     * @param list<array<string, mixed>> $input
+     * @param literal-string             $keyKey
+     * @param literal-string             $valueKey
      */
     #[Test]
     #[DataProvider('provideFromRowsCases')]
-    public function fromRows(DMap $intance, array $input, string $keyKey, string $valueKey, bool $allowed): void
+    public function fromRows(DMap $instance, array $input, string $keyKey, string $valueKey, bool $allowed): void
     {
         try {
-            $intance::fromRows($input, $keyKey, $valueKey);
+            $instance::fromRows($input, $keyKey, $valueKey);
 
             self::assertTrue($allowed, 'Should not have been allowed.');
         } catch (\TypeError) {
@@ -52,11 +54,7 @@ final class DMapFromRowsTest extends TestCase
     }
 
     /**
-     * @return list<array{
-     *           DMap<covariant scalar|object|null, covariant scalar|object|null>,
-     *           list<array<string, mixed>>,
-     *           string, string, bool,
-     *         }>
+     * @return list<array{TTestMap, list<array<string, mixed>>, string, string, bool}>
      */
     public static function provideFromRowsCases(): iterable
     {

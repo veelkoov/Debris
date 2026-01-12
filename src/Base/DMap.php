@@ -128,6 +128,9 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
     // ===== EMPTY AND COUNT ===================================
     //
 
+    /**
+     * @phpstan-assert-if-false non-empty-list<K> $this->getKeysArray()
+     */
     public function isEmpty(): bool
     {
         return 0 === $this->items->count();

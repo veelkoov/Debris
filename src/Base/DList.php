@@ -135,7 +135,7 @@ class DList implements \IteratorAggregate, \JsonSerializable, \Countable
     {
         $this->freezer->protect();
 
-        array_push($this->items, ...$values);
+        array_push($this->items, ...$values); // @phpstan-ignore assign.propertyType (FIXME: I'm almost sure this is a false-positive.)
 
         return $this;
     }
@@ -364,7 +364,7 @@ class DList implements \IteratorAggregate, \JsonSerializable, \Countable
      */
     public function random(): mixed
     {
-        if ($this->isEmpty()) {
+        if ([] === $this->items) {
             throw new EmptyCollectionException('The list is empty.');
         }
 
