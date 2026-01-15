@@ -4,14 +4,18 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Lists;
 
+use Veelkoov\Debris\Base\Collection;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\Enforce;
+use Veelkoov\Debris\Collections\Strings;
 use Veelkoov\Debris\Sets\StringSet;
 
 /**
+ * @implements Collection<int, string>
+ *
  * @extends DList<string>
  */
-class StringList extends DList
+class StringList extends DList implements Collection, Strings
 {
     use Enforce\StringValuesTrait;
 

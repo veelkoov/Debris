@@ -16,9 +16,10 @@ use Veelkoov\Debris\Maps\Pair;
  * @template K of object|scalar|null
  * @template V of object|scalar|null
  *
+ * @implements Collection<K, V>
  * @implements \Iterator<K, V>
  */
-class DMap implements \Iterator, \JsonSerializable, \Countable
+class DMap implements Collection, \Iterator
 {
     protected readonly Freezer $freezer;
 
@@ -131,16 +132,19 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
     /**
      * @phpstan-assert-if-false non-empty-list<K> $this->getKeysArray()
      */
+    #[\Override]
     public function isEmpty(): bool
     {
         return 0 === $this->items->count();
     }
 
+    #[\Override]
     public function isNotEmpty(): bool
     {
         return 0 !== $this->items->count();
     }
 
+    #[\Override]
     public function count(): int
     {
         return $this->items->count();
@@ -194,8 +198,6 @@ class DMap implements \Iterator, \JsonSerializable, \Countable
 
     /**
      * @param iterable<K, V> $items
-     *
-     * @return $this
      */
     public function plusAll(iterable $items): static
     {

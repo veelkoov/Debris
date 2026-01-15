@@ -19,6 +19,7 @@ final readonly class Pair implements \JsonSerializable
         public mixed $value,
     ) {}
 
+    #[\Override]
     public function jsonSerialize(): mixed
     {
         return [$this->key, $this->value];

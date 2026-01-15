@@ -11,9 +11,10 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
 /**
  * @template V of object|scalar|null
  *
+ * @implements Collection<int, V>
  * @implements \IteratorAggregate<int, V>
  */
-class DSet implements \IteratorAggregate, \JsonSerializable, \Countable
+class DSet implements Collection, \IteratorAggregate
 {
     protected readonly Freezer $freezer;
 
@@ -103,16 +104,19 @@ class DSet implements \IteratorAggregate, \JsonSerializable, \Countable
     // ===== EMPTY AND COUNT ===================================
     //
 
+    #[\Override]
     public function isEmpty(): bool
     {
         return $this->items->isEmpty();
     }
 
+    #[\Override]
     public function isNotEmpty(): bool
     {
         return $this->items->isNotEmpty();
     }
 
+    #[\Override]
     public function count(): int
     {
         return $this->items->count();

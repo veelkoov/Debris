@@ -6,11 +6,12 @@ namespace Veelkoov\Debris\Sets;
 
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Enforce;
+use Veelkoov\Debris\Collections\Strings;
 
 /**
  * @extends DSet<string>
  */
-class StringSet extends DSet
+class StringSet extends DSet implements Strings
 {
     use Enforce\StringValuesTrait;
 
