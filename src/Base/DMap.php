@@ -230,7 +230,7 @@ class DMap implements Collection, \Iterator
         foreach ($values as $removedValue) {
             foreach ($this->items as $wrappedKey) {
                 if ($this->items[$wrappedKey] === $removedValue) {
-                    $this->items->detach($wrappedKey);
+                    $this->items->offsetUnset($wrappedKey);
 
                     break;
                 }
@@ -260,7 +260,7 @@ class DMap implements Collection, \Iterator
         $this->freezer->protect();
 
         foreach ($keys as $key) {
-            $this->items->detach($this->mappedKeys->get($key));
+            $this->items->offsetUnset($this->mappedKeys->get($key));
         }
 
         return $this;
@@ -325,7 +325,7 @@ class DMap implements Collection, \Iterator
      */
     public function hasKey(mixed $key): bool
     {
-        return $this->items->contains($this->mappedKeys->get($key));
+        return $this->items->offsetExists($this->mappedKeys->get($key));
     }
 
     //
