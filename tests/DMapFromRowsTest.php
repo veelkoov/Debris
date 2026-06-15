@@ -9,7 +9,6 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Base\Map;
@@ -23,7 +22,7 @@ use Veelkoov\Debris\Maps\StringToString;
 /**
  * @internal
  *
- * @phpstan-type TTestMap DMap<covariant scalar|object|null, covariant scalar|object|null>
+ * @phpstan-type TTestMap Map<covariant scalar|object|null, covariant scalar|object|null>
  */
 #[CoversClass(IntToInt::class)]
 #[CoversClass(IntToString::class)]

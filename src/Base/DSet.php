@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
-use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
 
@@ -16,12 +15,10 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
  */
 class DSet implements Collection, \IteratorAggregate
 {
-    protected readonly Freezer $freezer;
-
     /**
-     * @var DMap<V, null>
+     * @var Map<V, null>
      */
-    private DMap $items;
+    private Map $items;
 
     //
     // ===== CONSTRUCTOR =======================================
@@ -32,13 +29,12 @@ class DSet implements Collection, \IteratorAggregate
      */
     final public function __construct(iterable $items = [], bool $frozen = false)
     {
-        $this->items = new DMap();
-        $this->freezer = new Freezer($this, false);
+        $this->items = self::getNewInternalContainer();
 
         $this->addAll($items);
 
         if ($frozen) {
-            $this->freezer->freeze();
+            $this->items->freeze();
         }
     }
 
@@ -95,7 +91,7 @@ class DSet implements Collection, \IteratorAggregate
      */
     public function freeze(): static
     {
-        $this->freezer->freeze();
+        $this->items->freeze();
 
         return $this;
     }
@@ -143,8 +139,6 @@ class DSet implements Collection, \IteratorAggregate
      */
     public function addAll(iterable $values): static
     {
-        $this->freezer->protect();
-
         foreach ($values as $item) {
             $this->items->set($item, null);
         }
@@ -193,8 +187,6 @@ class DSet implements Collection, \IteratorAggregate
      */
     public function removeAll(iterable $values): static
     {
-        $this->freezer->protect();
-
         $this->items->removeAllKeys($values);
 
         return $this;
@@ -469,6 +461,14 @@ class DSet implements Collection, \IteratorAggregate
     public function slice(int $offset, ?int $length = null): static
     {
         return new static(\array_slice($this->getValuesArray(), $offset, $length));
+    }
+
+    /**
+     * @return Map<V, null>
+     */
+    protected static function getNewInternalContainer(): Map
+    {
+        return new DMap();
     }
 
     //

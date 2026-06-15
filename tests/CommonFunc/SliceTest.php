@@ -10,7 +10,6 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DScalarMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
@@ -22,7 +21,6 @@ use Veelkoov\Debris\Maps\IntToString;
 #[CoversClass(DList::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
-#[UsesClass(DScalarMap::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 final class SliceTest extends TestCase
