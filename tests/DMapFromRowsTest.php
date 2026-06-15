@@ -12,6 +12,7 @@ use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\Map;
 use Veelkoov\Debris\Maps\IntToInt;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\Pair;
@@ -42,7 +43,7 @@ final class DMapFromRowsTest extends TestCase
      */
     #[Test]
     #[DataProvider('provideFromRowsCases')]
-    public function fromRows(DMap $instance, array $input, string $keyKey, string $valueKey, bool $allowed): void
+    public function fromRows(Map $instance, array $input, string $keyKey, string $valueKey, bool $allowed): void
     {
         try {
             $instance::fromRows($input, $keyKey, $valueKey);

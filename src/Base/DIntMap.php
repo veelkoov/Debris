@@ -4,12 +4,38 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
+use Veelkoov\Debris\Sets\IntSet;
+
 /**
  * @template V of object|scalar|null
  *
- * @extends DScalarMap<int, V>
+ * @implements Map<int, V>
  */
-class DIntMap extends DScalarMap
+class DIntMap implements Map
 {
-    use Enforce\IntKeysTrait;
+    /**
+     * @use SimpleKeyMapTrait<int, V>
+     */
+    use SimpleKeyMapTrait;
+
+    public function getKeys(): IntSet
+    {
+        return new IntSet(array_keys($this->items));
+    }
+
+    /**
+     * @param int $key
+     */
+    protected static function enforceKeyType(mixed $key): int
+    {
+        return $key;
+    }
+
+    /**
+     * @phpstan-assert-if-true int $key
+     */
+    protected static function isValidKey(mixed $key): bool
+    {
+        return \is_int($key);
+    }
 }

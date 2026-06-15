@@ -13,6 +13,7 @@ use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\Map;
 use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Maps\StringToString;
 use Veelkoov\Debris\Sets\StringSet;
@@ -137,7 +138,7 @@ final class MapFromTest extends TestCase
     {
         $subject = StringToString::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value) => ["{$value}", "{$value}"]);
 
-        self::assertInstanceOf(DMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
+        self::assertInstanceOf(Map::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
         self::assertSame(['A', 'B'], $subject->getKeysArray());
         self::assertSame(['A', 'B'], $subject->getValuesArray());
 

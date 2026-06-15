@@ -9,15 +9,37 @@ use Veelkoov\Debris\Sets\StringSet;
 /**
  * @template V of object|scalar|null
  *
- * @extends DScalarMap<string, V>
+ * @implements Map<string, V>
  */
-class DStringMap extends DScalarMap
+class DStringMap implements Map
 {
-    use Enforce\StringKeysTrait;
+    /**
+     * @use SimpleKeyMapTrait<string, V>
+     */
+    use SimpleKeyMapTrait;
 
-    #[\Override]
     public function getKeys(): StringSet
     {
-        return new StringSet(parent::getKeysArray());
+        return new StringSet(array_keys($this->items));
+    }
+
+    //
+    // ===== VALIDATION ========================================
+    //
+
+    /**
+     * @param string $key
+     */
+    protected static function enforceKeyType(mixed $key): string
+    {
+        return $key;
+    }
+
+    /**
+     * @phpstan-assert-if-true string $key
+     */
+    protected static function isValidKey(mixed $key): bool
+    {
+        return \is_string($key);
     }
 }

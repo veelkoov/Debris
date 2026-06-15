@@ -17,6 +17,13 @@ use Veelkoov\Debris\Maps\Pair;
 interface Map extends Collection, \Iterator
 {
     /**
+     * To be used on unverified sources. Returns instance guaranteed to have values of the desired type.
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function fromUnsafe(mixed $iterable): static;
+
+    /**
      * @return $this
      */
     public function freeze(): static;
@@ -121,10 +128,16 @@ interface Map extends Collection, \Iterator
 
     public function jsonSerialize(): mixed;
 
+    /**
+     * @return V
+     */
     public function current(): mixed;
 
     public function next(): void;
 
+    /**
+     * @return K
+     */
     public function key(): mixed;
 
     public function valid(): bool;
@@ -204,6 +217,10 @@ interface Map extends Collection, \Iterator
      */
     public function filterKeysNot(callable|\Closure $filter): static;
 
+    //
+    // ===== SINGLE ============================================
+    //
+
     /**
      * @return Pair<K, V>
      */
@@ -234,13 +251,25 @@ interface Map extends Collection, \Iterator
      */
     public function randomKey(): mixed;
 
+    //
+    // ===== MAP ===============================================
+    //
+
     /**
-     * @template OutV of object|scalar|null
-     * @template OutK of object|scalar|null
+     * @template InV
+     * @template InK
      *
-     * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
+     * @param iterable<InK, InV>                                                  $source
+     * @param (callable(InV, InK): array{K, V})|(\Closure(InV, InK): array{K, V}) $mapFunction
      *
-     * @return static<OutK, OutV>
+     * @return static<K, V>
+     */
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self;
+
+    /**
+     * @param (callable(K, V): array{K, V})|(\Closure(K, V): array{K, V}) $function
+     *
+     * @return static<K, V>
      */
     public function map(callable|\Closure $function): static;
 
@@ -257,13 +286,11 @@ interface Map extends Collection, \Iterator
     public function mapInto(callable|\Closure $function, self $target): self;
 
     /**
-     * @template OutK of object|scalar|null
+     * @param (callable(K): K)|(\Closure(K): K) $function
      *
-     * @param (callable(K): OutK)|(\Closure(K): OutK) $function
-     *
-     * @return Map<OutK, V>
+     * @return static<K, V>
      */
-    public function mapKeys(callable|\Closure $function): self;
+    public function mapKeys(callable|\Closure $function): static;
 
     /**
      * @template OutK of object|scalar|null
@@ -277,13 +304,11 @@ interface Map extends Collection, \Iterator
     public function mapKeysInto(callable|\Closure $function, self $target): self;
 
     /**
-     * @template OutV of object|scalar|null
+     * @param (callable(V): V)|(\Closure(V): V) $function
      *
-     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     *
-     * @return Map<K, OutV>
+     * @return static<K, V>
      */
-    public function mapValues(callable|\Closure $function): self;
+    public function mapValues(callable|\Closure $function): static;
 
     /**
      * @template OutV of object|scalar|null
@@ -355,8 +380,41 @@ interface Map extends Collection, \Iterator
 
     public function slice(int $offset, ?int $length = null): static;
 
+    //
+    // ===== OTHER ============================================
+    //
+
     /**
-     * @return static<V, K>
+     * @template OutV of object|scalar|null
+     * @template OutK of object|scalar|null
+     *
+     * @param iterable<OutV>                                $input
+     * @param (callable(OutV): OutK)|(\Closure(OutV): OutK) $valueToKeyFunction
+     *
+     * @return static<OutK, OutV>
      */
-    public function flip(): static;
+    public static function fromValues(iterable $input, callable|\Closure $valueToKeyFunction): static;
+
+    /**
+     * @template OutV of object|scalar|null
+     * @template OutK of object|scalar|null
+     *
+     * @param iterable<OutK>                                $input
+     * @param (callable(OutK): OutV)|(\Closure(OutK): OutV) $keyToValueFunction
+     *
+     * @return static<OutK, OutV>
+     */
+    public static function fromKeys(iterable $input, callable|\Closure $keyToValueFunction): static;
+
+    /**
+     * @param iterable<mixed>    $input
+     * @param int|literal-string $keyKey
+     * @param int|literal-string $valueKey
+     */
+    public static function fromRows(iterable $input, int|string $keyKey, int|string $valueKey): static;
+
+    /**
+     * @return Map<V, K>
+     */
+    public function flip(): self;
 }
