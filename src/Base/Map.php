@@ -373,7 +373,7 @@ interface Map extends Collection, \Iterator
      * @template OutK of object|scalar|null
      *
      * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
-     * @param Map<OutK, OutV> $target
+     * @param Map<OutK, OutV>                                                         $target
      *
      * @return Map<OutK, OutV>
      */
@@ -383,21 +383,21 @@ interface Map extends Collection, \Iterator
      * @template OutK of object|scalar|null
      *
      * @param (callable(K): OutK)|(\Closure(K): OutK) $function
-     * @param Map<OutK, V> $target
+     * @param Map<OutK, V>                            $target
      *
      * @return Map<OutK, V>
      */
-    public function mapKeysInto(callable|\Closure $function, self $target): Map;
+    public function mapKeysInto(callable|\Closure $function, self $target): self;
 
     /**
      * @template OutV of object|scalar|null
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param Map<K, OutV> $target
+     * @param Map<K, OutV>                            $target
      *
      * @return Map<K, OutV>
      */
-    public function mapValuesInto(callable|\Closure $function, self $target): Map;
+    public function mapValuesInto(callable|\Closure $function, self $target): self;
 
     //
     // ===== GET ARRAY =========================================

@@ -10,7 +10,7 @@ namespace Veelkoov\Debris\Base;
  * @extends Collection<int, V>
  * @extends \IteratorAggregate<int, V>
  */
-interface Set extends Collection, \IteratorAggregate
+interface Lis extends Collection, \IteratorAggregate // Because "List" is a reserved word; but hey, at least has same letter count as Set and Map
 {
     //
     // ===== OF ================================================
@@ -167,6 +167,11 @@ interface Set extends Collection, \IteratorAggregate
     // ===== ACCESSORS =========================================
     //
 
+    /**
+     * @return V
+     */
+    public function at(int $index): mixed;
+
     //
     // ===== MAX ===============================================
     //
@@ -245,9 +250,9 @@ interface Set extends Collection, \IteratorAggregate
      * @template OutV of object|scalar|null
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param Set<OutV>                               $target
+     * @param Lis<OutV>                               $target
      *
-     * @return Set<OutV>
+     * @return Lis<OutV>
      */
     public function mapInto(callable|\Closure $function, self $target): self;
 
@@ -287,6 +292,8 @@ interface Set extends Collection, \IteratorAggregate
     //
     // ===== UNIQUE ============================================
     //
+
+    public function unique(): static;
 
     //
     // ===== OTHER ============================================
