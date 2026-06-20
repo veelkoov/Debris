@@ -36,10 +36,6 @@ class DMap implements Map
      */
     protected readonly MapKeyMapper $mappedKeys;
 
-    //
-    // ===== CONSTRUCTOR =======================================
-    //
-
     /**
      * @param iterable<K, V> $items
      */
@@ -55,10 +51,6 @@ class DMap implements Map
             $this->freezer->freeze();
         }
     }
-
-    //
-    // ===== GET ARRAY =========================================
-    //
 
     #[\Override]
     public function getKeysArray(): array
@@ -108,10 +100,6 @@ class DMap implements Map
         return $result;
     }
 
-    //
-    // ===== ADD ===============================================
-    //
-
     #[\Override]
     public function set(mixed $key, mixed $value): static
     {
@@ -121,10 +109,6 @@ class DMap implements Map
 
         return $this;
     }
-
-    //
-    // ===== ITERATION =========================================
-    //
 
     #[\Override]
     public function current(): mixed
@@ -150,10 +134,6 @@ class DMap implements Map
         return $this->items->valid();
     }
 
-    //
-    // ===== ACCESSORS =========================================
-    //
-
     #[\Override]
     public function get(mixed $key): mixed
     {
@@ -169,10 +149,6 @@ class DMap implements Map
             throw new MissingKeyException($message, previous: $exception);
         }
     }
-
-    //
-    // ===== EMPTY AND COUNT ===================================
-    //
 
     #[\Override]
     public function isEmpty(): bool
@@ -191,10 +167,6 @@ class DMap implements Map
     {
         return $this->items->count();
     }
-
-    //
-    // ===== REMOVE ============================================
-    //
 
     #[\Override]
     public function removeAllValues(iterable $values): static
@@ -226,10 +198,6 @@ class DMap implements Map
         return $this;
     }
 
-    //
-    // ===== CONTAINS ==========================================
-    //
-
     #[\Override]
     public function contains(mixed $value): bool
     {
@@ -247,10 +215,6 @@ class DMap implements Map
     {
         return $this->items->offsetExists($this->mappedKeys->get($key));
     }
-
-    //
-    // ===== SINGLE ============================================
-    //
 
     #[\Override]
     public function single(): Pair
@@ -291,10 +255,6 @@ class DMap implements Map
 
         return $result;
     }
-
-    //
-    // ===== VALIDATION ========================================
-    //
 
     /**
      * @param K $key

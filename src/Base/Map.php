@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
-use Veelkoov\Debris\Base\DMap as Out;
 use Veelkoov\Debris\Maps\Pair;
 
 /**
@@ -16,6 +15,14 @@ use Veelkoov\Debris\Maps\Pair;
  */
 interface Map extends Collection, \Iterator
 {
+    //
+    // ===== OF ================================================
+    //
+
+    //
+    // ===== FROM UNSAFE =======================================
+    //
+
     /**
      * To be used on unverified sources. Returns instance guaranteed to have values of the desired type.
      *
@@ -23,10 +30,18 @@ interface Map extends Collection, \Iterator
      */
     public static function fromUnsafe(mixed $iterable): static;
 
+    //
+    // ===== FREEZE ============================================
+    //
+
     /**
      * @return $this
      */
     public function freeze(): static;
+
+    //
+    // ===== EMPTY AND COUNT ===================================
+    //
 
     /**
      * @phpstan-assert-if-false non-empty-list<K> $this->getKeysArray()
@@ -36,6 +51,10 @@ interface Map extends Collection, \Iterator
     public function isNotEmpty(): bool;
 
     public function count(): int;
+
+    //
+    // ===== ADD ===============================================
+    //
 
     /**
      * @param K $key
@@ -52,6 +71,10 @@ interface Map extends Collection, \Iterator
      */
     public function setAll(iterable $items): static;
 
+    //
+    // ===== PLUS ==============================================
+    //
+
     /**
      * @param K $key
      * @param V $value
@@ -62,6 +85,10 @@ interface Map extends Collection, \Iterator
      * @param iterable<K, V> $items
      */
     public function plusAll(iterable $items): static;
+
+    //
+    // ===== REMOVE ============================================
+    //
 
     /**
      * @param V ...$value
@@ -91,6 +118,10 @@ interface Map extends Collection, \Iterator
      */
     public function removeAllKeys(iterable $keys): static;
 
+    //
+    // ===== MINUS =============================================
+    //
+
     /**
      * @param V ...$value
      */
@@ -111,6 +142,10 @@ interface Map extends Collection, \Iterator
      */
     public function minusAllKeys(iterable $keys): static;
 
+    //
+    // ===== CONTAINS ==========================================
+    //
+
     /**
      * @param V $value
      */
@@ -121,12 +156,30 @@ interface Map extends Collection, \Iterator
      */
     public function hasKey(mixed $key): bool;
 
+    //
+    // ===== SHUFFLE ===========================================
+    //
+
+    public function shuffle(): static;
+
+    //
+    // ===== SORTED ============================================
+    //
+
     /**
      * @param null|(callable(Pair<K, V>, Pair<K, V>): int)|(\Closure(Pair<K, V>, Pair<K, V>): int) $comparator
      */
     public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static;
 
+    //
+    // ===== JSON SERIALIZE ====================================
+    //
+
     public function jsonSerialize(): mixed;
+
+    //
+    // ===== ITERATION =========================================
+    //
 
     /**
      * @return V
@@ -143,6 +196,14 @@ interface Map extends Collection, \Iterator
     public function valid(): bool;
 
     public function rewind(): void;
+
+    //
+    // ===== INTERSECT =========================================
+    //
+
+    //
+    // ===== ACCESSORS =========================================
+    //
 
     /**
      * @param K $key
@@ -186,6 +247,14 @@ interface Map extends Collection, \Iterator
      * @return T|V
      */
     public function getOrDefaultOf(mixed $key, mixed $defaultValue): mixed;
+
+    //
+    // ===== MAX ===============================================
+    //
+
+    //
+    // ===== FILTER ============================================
+    //
 
     /**
      * @param (callable(K, V): bool)|(\Closure(K, V): bool) $filter
@@ -236,6 +305,10 @@ interface Map extends Collection, \Iterator
      */
     public function singleKey(): mixed;
 
+    //
+    // ===== RANDOM ============================================
+    //
+
     /**
      * @return Pair<K, V>
      */
@@ -256,6 +329,31 @@ interface Map extends Collection, \Iterator
     //
 
     /**
+     * @param (callable(K, V): array{K, V})|(\Closure(K, V): array{K, V}) $function
+     *
+     * @return static<K, V>
+     */
+    public function map(callable|\Closure $function): static;
+
+    /**
+     * @param (callable(K): K)|(\Closure(K): K) $function
+     *
+     * @return static<K, V>
+     */
+    public function mapKeys(callable|\Closure $function): static;
+
+    /**
+     * @param (callable(V): V)|(\Closure(V): V) $function
+     *
+     * @return static<K, V>
+     */
+    public function mapValues(callable|\Closure $function): static;
+
+    //
+    // ===== MAP FROM ==========================================
+    //
+
+    /**
      * @template InV
      * @template InK
      *
@@ -266,60 +364,44 @@ interface Map extends Collection, \Iterator
      */
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self;
 
-    /**
-     * @param (callable(K, V): array{K, V})|(\Closure(K, V): array{K, V}) $function
-     *
-     * @return static<K, V>
-     */
-    public function map(callable|\Closure $function): static;
+    //
+    // ===== MAP INTO ==========================================
+    //
 
     /**
      * @template OutV of object|scalar|null
      * @template OutK of object|scalar|null
-     * @template Out of Map<OutK, OutV>
      *
      * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
-     * @param Out                                                                     $target
+     * @param Map<OutK, OutV> $target
      *
-     * @return Out
+     * @return Map<OutK, OutV>
      */
     public function mapInto(callable|\Closure $function, self $target): self;
 
     /**
-     * @param (callable(K): K)|(\Closure(K): K) $function
-     *
-     * @return static<K, V>
-     */
-    public function mapKeys(callable|\Closure $function): static;
-
-    /**
      * @template OutK of object|scalar|null
-     * @template Out of Map<OutK, V>
      *
      * @param (callable(K): OutK)|(\Closure(K): OutK) $function
-     * @param Out                                     $target
+     * @param Map<OutK, V> $target
      *
-     * @return Out
+     * @return Map<OutK, V>
      */
-    public function mapKeysInto(callable|\Closure $function, self $target): self;
-
-    /**
-     * @param (callable(V): V)|(\Closure(V): V) $function
-     *
-     * @return static<K, V>
-     */
-    public function mapValues(callable|\Closure $function): static;
+    public function mapKeysInto(callable|\Closure $function, self $target): Map;
 
     /**
      * @template OutV of object|scalar|null
-     * @template Out of Map<K, OutV>
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param Out                                     $target
+     * @param Map<K, OutV> $target
      *
-     * @return Out
+     * @return Map<K, OutV>
      */
-    public function mapValuesInto(callable|\Closure $function, self $target): self;
+    public function mapValuesInto(callable|\Closure $function, self $target): Map;
+
+    //
+    // ===== GET ARRAY =========================================
+    //
 
     /**
      * @return list<K>
@@ -346,6 +428,10 @@ interface Map extends Collection, \Iterator
      */
     public function getPairsArray(): array;
 
+    //
+    // ===== ANY ===============================================
+    //
+
     /**
      * @param (callable(K, V): bool)|(\Closure(K, V): bool) $testFunction
      */
@@ -360,6 +446,10 @@ interface Map extends Collection, \Iterator
      * @param (callable(K): bool)|(\Closure(K): bool) $testFunction
      */
     public function anyKey(callable|\Closure $testFunction): bool;
+
+    //
+    // ===== ALL ===============================================
+    //
 
     /**
      * @param (callable(K, V): bool)|(\Closure(K, V): bool) $testFunction
@@ -376,9 +466,15 @@ interface Map extends Collection, \Iterator
      */
     public function allKeys(callable|\Closure $testFunction): bool;
 
-    public function shuffle(): static;
+    //
+    // ===== SLICE =============================================
+    //
 
     public function slice(int $offset, ?int $length = null): static;
+
+    //
+    // ===== UNIQUE ============================================
+    //
 
     //
     // ===== OTHER ============================================

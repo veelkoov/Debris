@@ -10,19 +10,14 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
 /**
  * @template V of object|scalar|null
  *
- * @implements Collection<int, V>
- * @implements \IteratorAggregate<int, V>
+ * @implements Set<V>
  */
-class DSet implements Collection, \IteratorAggregate
+class DSet implements Set
 {
     /**
      * @var Map<V, null>
      */
     private Map $items;
-
-    //
-    // ===== CONSTRUCTOR =======================================
-    //
 
     /**
      * @param iterable<V> $items
@@ -38,33 +33,11 @@ class DSet implements Collection, \IteratorAggregate
         }
     }
 
-    //
-    // ===== MAGIC METHODS =====================================
-    //
-
-    // None
-
-    //
-    // ===== OF ================================================
-    //
-
-    /**
-     * @param V ...$items
-     */
     public static function of(mixed ...$items): static
     {
         return new static($items);
     }
 
-    //
-    // ===== FROM UNSAFE =======================================
-    //
-
-    /**
-     * To be used on unverified sources. Returns instance guaranteed to have values of the desired type.
-     *
-     * @throws \InvalidArgumentException
-     */
     public static function fromUnsafe(mixed $iterable): static
     {
         if (!is_iterable($iterable)) {
@@ -82,23 +55,12 @@ class DSet implements Collection, \IteratorAggregate
         })());
     }
 
-    //
-    // ===== FREEZE ============================================
-    //
-
-    /**
-     * @return $this
-     */
     public function freeze(): static
     {
         $this->items->freeze();
 
         return $this;
     }
-
-    //
-    // ===== EMPTY AND COUNT ===================================
-    //
 
     #[\Override]
     public function isEmpty(): bool
@@ -118,25 +80,11 @@ class DSet implements Collection, \IteratorAggregate
         return $this->items->count();
     }
 
-    //
-    // ===== ADD ===============================================
-    //
-
-    /**
-     * @param V ...$value
-     *
-     * @return $this
-     */
     public function add(mixed ...$value): static
     {
         return $this->addAll($value);
     }
 
-    /**
-     * @param iterable<V> $values
-     *
-     * @return $this
-     */
     public function addAll(iterable $values): static
     {
         foreach ($values as $item) {
@@ -146,45 +94,21 @@ class DSet implements Collection, \IteratorAggregate
         return $this;
     }
 
-    //
-    // ===== PLUS ==============================================
-    //
-
-    /**
-     * @param V ...$value
-     */
     public function plus(mixed ...$value): static
     {
         return $this->plusAll($value);
     }
 
-    /**
-     * @param iterable<V> $values
-     */
     public function plusAll(iterable $values): static
     {
         return new static([...$this, ...$values]);
     }
 
-    //
-    // ===== REMOVE ============================================
-    //
-
-    /**
-     * @param V ...$value
-     *
-     * @return $this
-     */
     public function remove(mixed ...$value): static
     {
         return $this->removeAll($value);
     }
 
-    /**
-     * @param iterable<V> $values
-     *
-     * @return $this
-     */
     public function removeAll(iterable $values): static
     {
         $this->items->removeAllKeys($values);
@@ -192,45 +116,21 @@ class DSet implements Collection, \IteratorAggregate
         return $this;
     }
 
-    //
-    // ===== MINUS =============================================
-    //
-
-    /**
-     * @param V ...$value
-     */
     public function minus(mixed ...$value): static
     {
         return $this->minusAll($value);
     }
 
-    /**
-     * @param iterable<V> $values
-     */
     public function minusAll(iterable $values): static
     {
         return (new static($this))->removeAll($values);
     }
 
-    //
-    // ===== CONTAINS ==========================================
-    //
-
-    /**
-     * @param V $value
-     */
     public function contains(mixed $value): bool
     {
         return $this->items->hasKey($value);
     }
 
-    //
-    // ===== SORTED ============================================
-    //
-
-    /**
-     * @param null|(callable(V, V): int)|(\Closure(V, V): int) $comparator
-     */
     public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
@@ -242,36 +142,18 @@ class DSet implements Collection, \IteratorAggregate
         return new static($values);
     }
 
-    //
-    // ===== JSON SERIALIZE ====================================
-    //
-
     #[\Override]
     public function jsonSerialize(): mixed
     {
         return $this->getValuesArray();
     }
 
-    //
-    // ===== ITERATION =========================================
-    //
-
-    /**
-     * @return \Traversable<int, V>
-     */
     #[\Override]
     public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->getValuesArray());
     }
 
-    //
-    // ===== INTERSECT =========================================
-    //
-
-    /**
-     * @param iterable<V> $other
-     */
     public function intersect(iterable $other): static
     {
         $otherValues = [...$other]; // TODO: Optimize for Debris collections
@@ -279,17 +161,6 @@ class DSet implements Collection, \IteratorAggregate
         return self::filter(static fn (mixed $item) => \in_array($item, $otherValues, true));
     }
 
-    //
-    // ===== MAX ===============================================
-    //
-
-    /**
-     * @template OutV
-     *
-     * @param null|(callable(V): OutV)|(\Closure(V): OutV) $callable
-     *
-     * @return ($callable is null ? V : OutV)
-     */
     public function max(callable|\Closure|null $callable = null): mixed
     {
         if ($this->isEmpty()) {
@@ -299,39 +170,16 @@ class DSet implements Collection, \IteratorAggregate
         return max(null === $callable ? $this->getValuesArray() : array_map($callable, $this->getValuesArray())); // @phpstan-ignore argument.type (FIXME)
     }
 
-    //
-    // ===== ACCESSORS =========================================
-    //
-
-    // None
-
-    //
-    // ===== FILTER ============================================
-    //
-
-    /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $filter
-     */
     public function filter(callable|\Closure $filter): static
     {
         return new static(array_filter($this->getValuesArray(), $filter));
     }
 
-    /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $filter
-     */
     public function filterNot(callable|\Closure $filter): static
     {
         return $this->filter(static fn (mixed $item) => !$filter($item));
     }
 
-    //
-    // ===== SINGLE ============================================
-    //
-
-    /**
-     * @return V
-     */
     public function single(): mixed
     {
         try {
@@ -341,13 +189,6 @@ class DSet implements Collection, \IteratorAggregate
         }
     }
 
-    //
-    // ===== RANDOM ============================================
-    //
-
-    /**
-     * @return V
-     */
     public function random(): mixed
     {
         if ($this->isEmpty()) {
@@ -357,46 +198,16 @@ class DSet implements Collection, \IteratorAggregate
         return $this->items->randomKey();
     }
 
-    //
-    // ===== MAP ===============================================
-    //
-
-    /**
-     * @param (callable(V): V)|(\Closure(V): V) $function
-     */
     public function map(callable|\Closure $function): static
     {
         return new static(array_map($function, $this->getValuesArray()));
     }
 
-    /**
-     * @template OutV of object|scalar|null
-     * @template Out of self<OutV>
-     *
-     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param Out                                     $target
-     *
-     * @return Out
-     */
-    public function mapInto(callable|\Closure $function, self $target): self
+    public function mapInto(callable|\Closure $function, Set $target): Set
     {
         return $target->addAll(array_map($function, $this->getValuesArray()));
     }
 
-    //
-    // ===== MAP FROM ==========================================
-    //
-
-    /**
-     * @template InV
-     * @template InK
-     * @template OutV of object|scalar|null
-     *
-     * @param iterable<InK, InV>                                    $source
-     * @param (callable(InV, InK): OutV)|(\Closure(InV, InK): OutV) $mapFunction
-     *
-     * @return static<OutV>
-     */
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self
     {
         return new static((static function () use ($source, $mapFunction) {
@@ -406,45 +217,20 @@ class DSet implements Collection, \IteratorAggregate
         })());
     }
 
-    //
-    // ===== GET ARRAY =========================================
-    //
-
-    /**
-     * @return list<V>
-     */
     public function getValuesArray(): array
     {
         return $this->items->getKeysArray();
     }
 
-    //
-    // ===== ANY ===============================================
-    //
-
-    /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
-     */
     public function any(callable|\Closure $testFunction): bool
     {
         return $this->items->anyKey($testFunction);
     }
 
-    //
-    // ===== ALL ===============================================
-    //
-
-    /**
-     * @param (callable(V): bool)|(\Closure(V): bool) $testFunction
-     */
     public function all(callable|\Closure $testFunction): bool
     {
         return $this->items->allKeys($testFunction);
     }
-
-    //
-    // ===== SHUFFLE ===========================================
-    //
 
     public function shuffle(): static
     {
@@ -453,10 +239,6 @@ class DSet implements Collection, \IteratorAggregate
 
         return new static($items);
     }
-
-    //
-    // ===== SLICE =============================================
-    //
 
     public function slice(int $offset, ?int $length = null): static
     {
@@ -470,22 +252,6 @@ class DSet implements Collection, \IteratorAggregate
     {
         return new DMap();
     }
-
-    //
-    // ===== UNIQUE ============================================
-    //
-
-    // Not applicable
-
-    //
-    // ===== OTHER ============================================
-    //
-
-    // None currently
-
-    //
-    // ===== VALIDATION ========================================
-    //
 
     /**
      * @param V $value
