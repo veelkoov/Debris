@@ -235,7 +235,7 @@ interface Set extends Collection, \IteratorAggregate
      *
      * @return static<OutV>
      */
-    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self;
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static;
 
     //
     // ===== MAP INTO ==========================================
@@ -243,11 +243,12 @@ interface Set extends Collection, \IteratorAggregate
 
     /**
      * @template OutV of object|scalar|null
+     * @template Out of Set<OutV>
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param Set<OutV>                               $target
+     * @param Out                                     $target
      *
-     * @return Set<OutV>
+     * @return Out
      */
     public function mapInto(callable|\Closure $function, self $target): self;
 

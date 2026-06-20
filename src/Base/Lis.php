@@ -233,7 +233,7 @@ interface Lis extends Collection, \IteratorAggregate // Because "List" is a rese
     /**
      * @template InV
      * @template InK
-     * @template OutV of object|scalar|null
+     * @template OutV of V
      *
      * @param iterable<InK, InV>                                    $source
      * @param (callable(InV, InK): OutV)|(\Closure(InV, InK): OutV) $mapFunction
@@ -248,11 +248,12 @@ interface Lis extends Collection, \IteratorAggregate // Because "List" is a rese
 
     /**
      * @template OutV of object|scalar|null
+     * @template Out of Lis<OutV>
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param Lis<OutV>                               $target
+     * @param Out                                     $target
      *
-     * @return Lis<OutV>
+     * @return Out
      */
     public function mapInto(callable|\Closure $function, self $target): self;
 

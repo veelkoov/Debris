@@ -208,7 +208,7 @@ class DSet implements Set
         return $target->addAll(array_map($function, $this->getValuesArray()));
     }
 
-    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static
     {
         return new static((static function () use ($source, $mapFunction) {
             foreach ($source as $key => $value) {

@@ -365,7 +365,7 @@ interface Map extends Collection, \Iterator
      *
      * @return static<K, V>
      */
-    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self;
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static;
 
     //
     // ===== MAP INTO ==========================================
@@ -374,31 +374,34 @@ interface Map extends Collection, \Iterator
     /**
      * @template OutV of object|scalar|null
      * @template OutK of object|scalar|null
+     * @template Out of Map<OutK, OutV>
      *
      * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
-     * @param Map<OutK, OutV>                                                         $target
+     * @param Out                                                                     $target
      *
-     * @return Map<OutK, OutV>
+     * @return Out
      */
     public function mapInto(callable|\Closure $function, self $target): self;
 
     /**
      * @template OutK of object|scalar|null
+     * @template Out of Map<OutK, V>
      *
      * @param (callable(K): OutK)|(\Closure(K): OutK) $function
-     * @param Map<OutK, V>                            $target
+     * @param Out                                     $target
      *
-     * @return Map<OutK, V>
+     * @return Out
      */
     public function mapKeysInto(callable|\Closure $function, self $target): self;
 
     /**
      * @template OutV of object|scalar|null
+     * @template Out of Map<K, OutV>
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
-     * @param Map<K, OutV>                            $target
+     * @param Out                                     $target
      *
-     * @return Map<K, OutV>
+     * @return Out
      */
     public function mapValuesInto(callable|\Closure $function, self $target): self;
 
