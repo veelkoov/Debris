@@ -250,12 +250,12 @@ interface Vec extends Collection, \IteratorAggregate
      * @template OutV of object|scalar|null
      * @template Out of Vec<OutV>
      *
-     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
      * @param Out                                     $target
+     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
      *
      * @return Out
      */
-    public function mapInto(callable|\Closure $function, self $target): self;
+    public function mapInto(self $target, callable|\Closure $function): self;
 
     //
     // ===== GET ARRAY =========================================

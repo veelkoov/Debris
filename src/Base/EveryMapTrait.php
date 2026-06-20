@@ -326,7 +326,7 @@ trait EveryMapTrait
         })());
     }
 
-    public function mapInto(callable|\Closure $function, Map $target): Map
+    public function mapInto(Map $target, callable|\Closure $function): Map
     {
         foreach ($this as $key => $value) {
             $pair = $function($key, $value);
@@ -342,9 +342,9 @@ trait EveryMapTrait
         return $this->map(static fn (mixed $key, mixed $value) => [$function($key), $value]);
     }
 
-    public function mapKeysInto(callable|\Closure $function, Map $target): Map
+    public function mapKeysInto(Map $target, callable|\Closure $function): Map
     {
-        return $this->mapInto(static fn (mixed $key, mixed $value) => [$function($key), $value], $target);
+        return $this->mapInto($target, static fn (mixed $key, mixed $value) => [$function($key), $value]);
     }
 
     public function mapValues(callable|\Closure $function): static
@@ -352,9 +352,9 @@ trait EveryMapTrait
         return $this->map(static fn (mixed $key, mixed $value) => [$key, $function($value)]);
     }
 
-    public function mapValuesInto(callable|\Closure $function, Map $target): Map
+    public function mapValuesInto(Map $target, callable|\Closure $function): Map
     {
-        return $this->mapInto(static fn (mixed $key, mixed $value) => [$key, $function($value)], $target);
+        return $this->mapInto($target, static fn (mixed $key, mixed $value) => [$key, $function($value)]);
     }
 
     //

@@ -378,34 +378,34 @@ interface Map extends Collection, \Iterator
      * @template OutK of object|scalar|null
      * @template Out of Map<OutK, OutV>
      *
-     * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
      * @param Out                                                                     $target
+     * @param (callable(K, V): array{OutK, OutV})|(\Closure(K, V): array{OutK, OutV}) $function
      *
      * @return Out
      */
-    public function mapInto(callable|\Closure $function, self $target): self;
+    public function mapInto(self $target, callable|\Closure $function): self;
 
     /**
      * @template OutK of object|scalar|null
      * @template Out of Map<OutK, V>
      *
-     * @param (callable(K): OutK)|(\Closure(K): OutK) $function
      * @param Out                                     $target
+     * @param (callable(K): OutK)|(\Closure(K): OutK) $function
      *
      * @return Out
      */
-    public function mapKeysInto(callable|\Closure $function, self $target): self;
+    public function mapKeysInto(self $target, callable|\Closure $function): self;
 
     /**
      * @template OutV of object|scalar|null
      * @template Out of Map<K, OutV>
      *
-     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
      * @param Out                                     $target
+     * @param (callable(V): OutV)|(\Closure(V): OutV) $function
      *
      * @return Out
      */
-    public function mapValuesInto(callable|\Closure $function, self $target): self;
+    public function mapValuesInto(self $target, callable|\Closure $function): self;
 
     //
     // ===== GET ARRAY =========================================

@@ -49,7 +49,7 @@ final class MapTest extends TestCase
         $target = new StringVec();
 
         $result = (new DVec([1, 2, 3]))
-            ->mapInto(static fn (int $value) => (string) ($value * 2), $target)
+            ->mapInto($target, static fn (int $value) => (string) ($value * 2))
         ;
 
         self::assertInstanceOf(StringVec::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
@@ -100,7 +100,7 @@ final class MapTest extends TestCase
         $target = new IntToString();
 
         $result = (new DMap(['a' => 1, 'b' => 2, 'c' => 3]))
-            ->mapInto(static fn (string $key, int $value) => [$value * 2, $key.$key], $target)
+            ->mapInto($target, static fn (string $key, int $value) => [$value * 2, $key.$key])
         ;
 
         self::assertInstanceOf(IntToString::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
@@ -126,7 +126,7 @@ final class MapTest extends TestCase
         $target = new IntToString();
 
         $result = (new DMap(['a' => 'aa', 'b' => 'bb', 'c' => 'cc']))
-            ->mapKeysInto(static fn (string $key) => 10 + (\ord($key) - \ord('a')), $target)
+            ->mapKeysInto($target, static fn (string $key) => 10 + (\ord($key) - \ord('a')))
         ;
 
         self::assertInstanceOf(IntToString::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
@@ -152,7 +152,7 @@ final class MapTest extends TestCase
         $target = new StringToInt();
 
         $result = (new DMap(['a' => '1', 'b' => '2', 'c' => '3']))
-            ->mapValuesInto(static fn (string $value) => 2 * (int) $value, $target)
+            ->mapValuesInto($target, static fn (string $value) => 2 * (int) $value)
         ;
 
         self::assertInstanceOf(StringToInt::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)

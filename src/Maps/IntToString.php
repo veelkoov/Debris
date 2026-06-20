@@ -6,7 +6,6 @@ namespace Veelkoov\Debris\Maps;
 
 use Veelkoov\Debris\Base\DIntMap;
 use Veelkoov\Debris\Base\Enforce;
-use Veelkoov\Debris\Base\Map;
 
 /**
  * @extends DIntMap<string>

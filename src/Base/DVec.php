@@ -220,7 +220,7 @@ class DVec implements Vec
         return new static(array_map($function, $this->items));
     }
 
-    public function mapInto(callable|\Closure $function, Vec $target): Vec
+    public function mapInto(Vec $target, callable|\Closure $function): Vec
     {
         return $target->addAll(array_map($function, $this->items));
     }
