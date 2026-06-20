@@ -148,13 +148,11 @@ trait SimpleKeyMapTrait
 
     public function get(mixed $key): mixed
     {
-        try {
-            return $this->items[$key];
-        } catch (\UnexpectedValueException $exception) {
-            $message = 'Missing '.get_debug_type($key).' key: '.var_export($key, return: true);
-
-            throw new MissingKeyException($message, previous: $exception);
+        if (!$this->hasKey($key)) {
+            throw new MissingKeyException('Missing '.get_debug_type($key).' key: '.var_export($key, return: true));
         }
+
+        return $this->items[$key];
     }
 
     //
@@ -226,7 +224,7 @@ trait SimpleKeyMapTrait
     #[\Override]
     public function hasKey(mixed $key): bool
     {
-        return \array_key_exists($key, $this->items);
+        return static::isValidKey($key) && \array_key_exists($key, $this->items);
     }
 
     //

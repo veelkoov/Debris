@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base;
 
+use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\Maps\Pair;
 
 /**
@@ -209,6 +210,8 @@ interface Map extends Collection, \Iterator
      * @param K $key
      *
      * @return V
+     *
+     * @throws MissingKeyException
      */
     public function get(mixed $key): mixed;
 

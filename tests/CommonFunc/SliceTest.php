@@ -5,22 +5,27 @@ declare(strict_types=1);
 namespace Veelkoov\Debris\Tests\CommonFunc;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Veelkoov\Debris\Base\DIntMap;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\IntToString;
 
 /**
  * @internal
  */
+#[CoversClass(DIntMap::class)]
 #[CoversClass(DList::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
+#[CoversTrait(SimpleKeyMapTrait::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 final class SliceTest extends TestCase

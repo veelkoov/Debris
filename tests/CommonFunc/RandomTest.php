@@ -83,7 +83,7 @@ final class RandomTest extends TestCase
         $subject = new DMap(self::getTestIntIntArray());
 
         $firstResult = $subject->random();
-        for ($i = 0; $i < 100; ++$i) {
+        for ($i = 0; $i < 1000; ++$i) {
             $nextResult = $subject->random();
             if ($firstResult !== $nextResult) {
                 break;

@@ -9,6 +9,7 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Lists\IntList;
@@ -20,6 +21,7 @@ use Veelkoov\Debris\Sets\IntSet;
  * @internal
  */
 #[CoversClass(DList::class)]
+#[CoversClass(DMap::class)]
 #[CoversClass(IntList::class)]
 #[CoversClass(IntSet::class)]
 #[CoversClass(IntToString::class)]

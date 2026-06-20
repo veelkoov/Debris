@@ -7,12 +7,15 @@ namespace Veelkoov\Debris\Tests\CommonFunc;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
+use Veelkoov\Debris\Base\DIntMap;
 use Veelkoov\Debris\Base\DList;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\IntToInt;
 
 /**
@@ -21,8 +24,10 @@ use Veelkoov\Debris\Maps\IntToInt;
 #[CoversClass(DList::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
+#[UsesClass(DIntMap::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
+#[UsesTrait(SimpleKeyMapTrait::class)]
 final class ShuffleTest extends TestCase
 {
     #[Test]
