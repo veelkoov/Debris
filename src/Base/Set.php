@@ -228,7 +228,7 @@ interface Set extends Collection, \IteratorAggregate
     /**
      * @template InV
      * @template InK
-     * @template OutV of object|scalar|null
+     * @template OutV of V
      *
      * @param iterable<InK, InV>                                    $source
      * @param (callable(InV, InK): OutV)|(\Closure(InV, InK): OutV) $mapFunction

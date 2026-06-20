@@ -359,11 +359,13 @@ interface Map extends Collection, \Iterator
     /**
      * @template InV
      * @template InK
+     * @template OutK of K
+     * @template OutV of V
      *
-     * @param iterable<InK, InV>                                                  $source
-     * @param (callable(InV, InK): array{K, V})|(\Closure(InV, InK): array{K, V}) $mapFunction
+     * @param iterable<InK, InV>                                                              $source
+     * @param (callable(InV, InK): array{OutK, OutV})|(\Closure(InV, InK): array{OutK, OutV}) $mapFunction
      *
-     * @return static<K, V>
+     * @return static<OutK, OutV>
      */
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static;
 
