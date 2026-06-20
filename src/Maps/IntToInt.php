@@ -6,6 +6,7 @@ namespace Veelkoov\Debris\Maps;
 
 use Veelkoov\Debris\Base\DIntMap;
 use Veelkoov\Debris\Base\Enforce;
+use Veelkoov\Debris\Base\Map;
 
 /**
  * @extends DIntMap<int>
@@ -13,4 +14,9 @@ use Veelkoov\Debris\Base\Enforce;
 class IntToInt extends DIntMap
 {
     use Enforce\IntValuesTrait;
+
+    public function flip(): Map
+    {
+        return new self(array_flip($this->items));
+    }
 }
