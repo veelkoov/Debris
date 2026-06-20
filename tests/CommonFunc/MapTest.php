@@ -9,13 +9,13 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Base\SimpleKeyMapTrait;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
@@ -24,7 +24,7 @@ use Veelkoov\Debris\Sets\StringSet;
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(Freezer::class)]
@@ -34,9 +34,9 @@ use Veelkoov\Debris\Sets\StringSet;
 final class MapTest extends TestCase
 {
     #[Test]
-    public function DList_map(): void
+    public function DVec_map(): void
     {
-        $result = (new DList([1, 2, 3]))
+        $result = (new DVec([1, 2, 3]))
             ->map(static fn (int $value) => $value * 2)
         ;
 
@@ -44,15 +44,15 @@ final class MapTest extends TestCase
     }
 
     #[Test]
-    public function DList_mapInto(): void
+    public function DVec_mapInto(): void
     {
-        $target = new StringList();
+        $target = new StringVec();
 
-        $result = (new DList([1, 2, 3]))
+        $result = (new DVec([1, 2, 3]))
             ->mapInto(static fn (int $value) => (string) ($value * 2), $target)
         ;
 
-        self::assertInstanceOf(StringList::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
+        self::assertInstanceOf(StringVec::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
         self::assertSame($target, $result);
         self::assertSame(['2', '4', '6'], $result->getValuesArray());
     }

@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
@@ -18,7 +18,7 @@ use Veelkoov\Debris\Maps\Pair;
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(Freezer::class)]
@@ -27,9 +27,9 @@ use Veelkoov\Debris\Maps\Pair;
 final class FilteringTest extends TestCase
 {
     #[Test]
-    public function DList_filter(): void
+    public function DVec_filter(): void
     {
-        $result = (new DList([1, 2, 3, 4]))
+        $result = (new DVec([1, 2, 3, 4]))
             ->filter(self::even(...))
         ;
 
@@ -37,9 +37,9 @@ final class FilteringTest extends TestCase
     }
 
     #[Test]
-    public function DList_filterNot(): void
+    public function DVec_filterNot(): void
     {
-        $result = (new DList([1, 2, 3, 4]))
+        $result = (new DVec([1, 2, 3, 4]))
             ->filterNot(self::even(...))
         ;
 

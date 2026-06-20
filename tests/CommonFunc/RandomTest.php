@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
@@ -19,7 +19,7 @@ use Veelkoov\Debris\Maps\Pair;
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(Freezer::class)]
@@ -28,9 +28,9 @@ use Veelkoov\Debris\Maps\Pair;
 final class RandomTest extends TestCase
 {
     #[Test]
-    public function DList_random(): void
+    public function DVec_random(): void
     {
-        $subject = new DList(self::getTestList());
+        $subject = new DVec(self::getTestList());
 
         $firstResult = $subject->random();
         for ($i = 0; $i < 100; ++$i) {
@@ -44,12 +44,12 @@ final class RandomTest extends TestCase
     }
 
     #[Test]
-    public function DList_random_empty(): void
+    public function DVec_random_empty(): void
     {
         self::expectException(EmptyCollectionException::class);
         self::expectExceptionMessage('The list is empty.');
 
-        (new DList())->random();
+        (new DVec())->random();
     }
 
     #[Test]

@@ -83,9 +83,9 @@ class DMap implements Map
     }
 
     #[\Override]
-    public function getValues(): DList
+    public function getValues(): DVec
     {
-        return new DList($this->getValuesArray());
+        return new DVec($this->getValuesArray());
     }
 
     #[\Override]

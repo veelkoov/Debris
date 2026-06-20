@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
@@ -17,7 +17,7 @@ use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(Freezer::class)]
@@ -25,18 +25,18 @@ use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 final class AnyAllTest extends TestCase
 {
     #[Test]
-    public function DList_any(): void
+    public function DVec_any(): void
     {
-        $subject = new DList([1, 2, 3]);
+        $subject = new DVec([1, 2, 3]);
 
         self::assertTrue($subject->any(static fn (int $value) => $value > 2));
         self::assertFalse($subject->any(static fn (int $value) => $value > 3));
     }
 
     #[Test]
-    public function DList_all(): void
+    public function DVec_all(): void
     {
-        $subject = new DList([1, 2, 3]);
+        $subject = new DVec([1, 2, 3]);
 
         self::assertTrue($subject->all(static fn (int $value) => $value > 0));
         self::assertFalse($subject->all(static fn (int $value) => $value > 1));

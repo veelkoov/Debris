@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Lists;
+namespace Veelkoov\Debris\Vecs;
 
 use Veelkoov\Debris\Base\Collection;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\Enforce;
 use Veelkoov\Debris\Collections\Strings;
 use Veelkoov\Debris\Sets\StringSet;
@@ -13,9 +13,9 @@ use Veelkoov\Debris\Sets\StringSet;
 /**
  * @implements Collection<int, string>
  *
- * @extends DList<string>
+ * @extends DVec<string>
  */
-class StringList extends DList implements Collection, Strings
+class StringVec extends DVec implements Collection, Strings
 {
     use Enforce\StringValuesTrait;
 

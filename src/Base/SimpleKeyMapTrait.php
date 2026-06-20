@@ -118,9 +118,9 @@ trait SimpleKeyMapTrait
         return array_values($this->items);
     }
 
-    public function getValues(): DList
+    public function getValues(): DVec
     {
-        return new DList(array_values($this->items));
+        return new DVec(array_values($this->items));
     }
 
     public function getPairsArray(): array

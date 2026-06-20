@@ -427,9 +427,9 @@ interface Map extends Collection, \Iterator
     public function getKeys(): DSet;
 
     /**
-     * @return DList<V>
+     * @return DVec<V>
      */
-    public function getValues(): DList;
+    public function getValues(): DVec;
 
     /**
      * @return list<Pair<K, V>>

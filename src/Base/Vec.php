@@ -10,7 +10,7 @@ namespace Veelkoov\Debris\Base;
  * @extends Collection<int, V>
  * @extends \IteratorAggregate<int, V>
  */
-interface Lis extends Collection, \IteratorAggregate // Because "List" is a reserved word; but hey, at least has same letter count as Set and Map
+interface Vec extends Collection, \IteratorAggregate
 {
     //
     // ===== OF ================================================
@@ -248,7 +248,7 @@ interface Lis extends Collection, \IteratorAggregate // Because "List" is a rese
 
     /**
      * @template OutV of object|scalar|null
-     * @template Out of Lis<OutV>
+     * @template Out of Vec<OutV>
      *
      * @param (callable(V): OutV)|(\Closure(V): OutV) $function
      * @param Out                                     $target

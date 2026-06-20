@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Base\Enforce;
 
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Vecs\StringVec;
 
-trait StringListValuesTrait
+trait StringVecValuesTrait
 {
     #[\Override]
-    protected static function enforceValueType(mixed $value): StringList
+    protected static function enforceValueType(mixed $value): StringVec
     {
         return $value;
     }
@@ -17,6 +17,6 @@ trait StringListValuesTrait
     #[\Override]
     protected static function isValidValue(mixed $value): bool
     {
-        return $value instanceof StringList;
+        return $value instanceof StringVec;
     }
 }

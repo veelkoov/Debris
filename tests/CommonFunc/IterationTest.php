@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
@@ -17,7 +17,7 @@ use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DSet::class)]
 #[CoversClass(DMap::class)]
 #[UsesClass(Freezer::class)]
@@ -25,10 +25,10 @@ use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 final class IterationTest extends TestCase
 {
     #[Test]
-    public function DList_foreachWorks(): void
+    public function DVec_foreachWorks(): void
     {
         $values = ['a', 1, new \stdClass(), false];
-        $subject = new DList($values);
+        $subject = new DVec($values);
 
         $resultValues = [];
         $resultKeys = [];

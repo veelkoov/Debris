@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
@@ -18,7 +18,7 @@ use Veelkoov\Debris\Exception\ChangingImmutableException;
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(ChangingImmutableException::class)]
@@ -27,9 +27,9 @@ use Veelkoov\Debris\Exception\ChangingImmutableException;
 final class RemoveAllTest extends TestCase
 {
     #[Test]
-    public function DList_removeAll(): void
+    public function DVec_removeAll(): void
     {
-        $subject = new DList([1, 2, 2, 3, 2, 4]);
+        $subject = new DVec([1, 2, 2, 3, 2, 4]);
 
         $result = $subject->removeAll([2, 2, 4, 5]);
 
@@ -73,9 +73,9 @@ final class RemoveAllTest extends TestCase
     }
 
     #[Test]
-    public function DList_removeAll_onFrozen(): void
+    public function DVec_removeAll_onFrozen(): void
     {
-        $subject = new DList([1]);
+        $subject = new DVec([1]);
 
         self::assertSame($subject, $subject->freeze(), 'Freeze should return the original instance');
 

@@ -8,20 +8,20 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\Internal\Freezer;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[UsesClass(Freezer::class)]
 final class UniqueTest extends TestCase
 {
     #[Test]
-    public function DList_unique(): void
+    public function DVec_unique(): void
     {
-        $subject = new DList([1, 2, 3, 2, 1, 3, 4, 3, 2]);
+        $subject = new DVec([1, 2, 3, 2, 1, 3, 4, 3, 2]);
 
         $result = $subject->unique();
 

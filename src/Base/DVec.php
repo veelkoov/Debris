@@ -11,9 +11,9 @@ use Veelkoov\Debris\Exception\NoSingleElementException;
 /**
  * @template V of object|scalar|null
  *
- * @implements Lis<V>
+ * @implements Vec<V>
  */
-class DList implements Lis
+class DVec implements Vec
 {
     protected readonly Freezer $freezer;
 
@@ -220,7 +220,7 @@ class DList implements Lis
         return new static(array_map($function, $this->items));
     }
 
-    public function mapInto(callable|\Closure $function, Lis $target): Lis
+    public function mapInto(callable|\Closure $function, Vec $target): Vec
     {
         return $target->addAll(array_map($function, $this->items));
     }

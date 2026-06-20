@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
 use Veelkoov\Debris\Base\DIntMap;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
@@ -21,7 +21,7 @@ use Veelkoov\Debris\Maps\IntToInt;
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(DIntMap::class)]
@@ -31,10 +31,10 @@ use Veelkoov\Debris\Maps\IntToInt;
 final class ShuffleTest extends TestCase
 {
     #[Test]
-    public function DList_shuffle(): void
+    public function DVec_shuffle(): void
     {
         $input = self::getTestList();
-        $subject = (new DList($input))->shuffle();
+        $subject = (new DVec($input))->shuffle();
 
         self::assertIntListIsShuffledOriginal($input, $subject->getValuesArray());
     }

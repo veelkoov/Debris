@@ -8,7 +8,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
 use Veelkoov\Debris\Base\Internal\Freezer;
@@ -19,7 +19,7 @@ use Veelkoov\Debris\Maps\Pair;
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(Freezer::class)]
@@ -28,9 +28,9 @@ use Veelkoov\Debris\Maps\Pair;
 final class SingleTest extends TestCase
 {
     #[Test]
-    public function DList_single_throwsOnEmpty(): void
+    public function DVec_single_throwsOnEmpty(): void
     {
-        $subject = new DList();
+        $subject = new DVec();
 
         self::expectException(NoSingleElementException::class);
         self::expectExceptionMessage('The list has 0 items instead of exactly one.');
@@ -39,9 +39,9 @@ final class SingleTest extends TestCase
     }
 
     #[Test]
-    public function DList_single_throwsOnMultiple(): void
+    public function DVec_single_throwsOnMultiple(): void
     {
-        $subject = new DList([1, 2]);
+        $subject = new DVec([1, 2]);
 
         self::expectException(NoSingleElementException::class);
         self::expectExceptionMessage('The list has 2 items instead of exactly one.');
@@ -50,9 +50,9 @@ final class SingleTest extends TestCase
     }
 
     #[Test]
-    public function DList_single_works(): void
+    public function DVec_single_works(): void
     {
-        $subject = new DList([10]);
+        $subject = new DVec([10]);
 
         self::assertSame(10, $subject->single());
     }
