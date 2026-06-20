@@ -422,14 +422,14 @@ interface Map extends Collection, \Iterator
     public function getValuesArray(): array;
 
     /**
-     * @return DSet<K>
+     * @return Set<K>
      */
-    public function getKeys(): DSet;
+    public function getKeys(): Set;
 
     /**
-     * @return DVec<V>
+     * @return Vec<V>
      */
-    public function getValues(): DVec;
+    public function getValues(): Vec;
 
     /**
      * @return list<Pair<K, V>>

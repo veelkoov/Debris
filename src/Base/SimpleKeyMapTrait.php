@@ -118,7 +118,7 @@ trait SimpleKeyMapTrait
         return array_values($this->items);
     }
 
-    public function getValues(): DVec
+    public function getValues(): Vec
     {
         return new DVec(array_values($this->items));
     }

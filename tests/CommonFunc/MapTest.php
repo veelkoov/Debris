@@ -9,17 +9,17 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\DMap;
 use Veelkoov\Debris\Base\DSet;
+use Veelkoov\Debris\Base\DVec;
 use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Base\SimpleKeyMapTrait;
-use Veelkoov\Debris\Vecs\StringVec;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\StringVec;
 
 /**
  * @internal

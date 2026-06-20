@@ -77,13 +77,13 @@ class DMap implements Map
     }
 
     #[\Override]
-    public function getKeys(): DSet
+    public function getKeys(): Set
     {
         return new DSet($this->getKeysArray());
     }
 
     #[\Override]
-    public function getValues(): DVec
+    public function getValues(): Vec
     {
         return new DVec($this->getValuesArray());
     }
