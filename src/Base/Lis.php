@@ -240,7 +240,7 @@ interface Lis extends Collection, \IteratorAggregate // Because "List" is a rese
      *
      * @return static<OutV>
      */
-    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): self;
+    public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static;
 
     //
     // ===== MAP INTO ==========================================
