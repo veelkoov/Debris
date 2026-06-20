@@ -15,7 +15,7 @@ class IntToInt extends DIntMap
 {
     use Enforce\IntValuesTrait;
 
-    public function flip(): Map
+    public function flip(): self
     {
         return new self(array_flip($this->items));
     }
