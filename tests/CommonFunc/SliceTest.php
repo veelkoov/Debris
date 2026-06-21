@@ -15,6 +15,7 @@ use Veelkoov\Debris\Maps\Base\DIntMap;
 use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\IntToString;
+use Veelkoov\Debris\Sets\Base\DIntOrStringSet;
 use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Vecs\Base\DVec;
 
@@ -28,6 +29,7 @@ use Veelkoov\Debris\Vecs\Base\DVec;
 #[CoversTrait(SimpleKeyMapTrait::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
+#[UsesClass(DIntOrStringSet::class)]
 final class SliceTest extends TestCase
 {
     #[Test]

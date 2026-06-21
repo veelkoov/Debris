@@ -15,6 +15,7 @@ use Veelkoov\Debris\Maps\Base\DIntMap;
 use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\IntToInt;
+use Veelkoov\Debris\Sets\Base\DIntOrStringSet;
 use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Vecs\Base\DVec;
 
@@ -28,6 +29,7 @@ use Veelkoov\Debris\Vecs\Base\DVec;
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 #[UsesTrait(SimpleKeyMapTrait::class)]
+#[UsesClass(DIntOrStringSet::class)]
 final class ShuffleTest extends TestCase
 {
     #[Test]

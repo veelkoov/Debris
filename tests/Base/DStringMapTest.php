@@ -13,6 +13,7 @@ use Veelkoov\Debris\Internal\MapKey;
 use Veelkoov\Debris\Internal\MapKeyMapper;
 use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\Base\DStringMap;
+use Veelkoov\Debris\Sets\Base\DIntOrStringSet;
 use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Sets\StringSet;
 
@@ -25,6 +26,7 @@ use Veelkoov\Debris\Sets\StringSet;
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKey::class)]
 #[UsesClass(MapKeyMapper::class)]
+#[UsesClass(DIntOrStringSet::class)]
 final class DStringMapTest extends TestCase
 {
     #[Test]

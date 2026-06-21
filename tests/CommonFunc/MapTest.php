@@ -16,6 +16,7 @@ use Veelkoov\Debris\Maps\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
+use Veelkoov\Debris\Sets\Base\DIntOrStringSet;
 use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Sets\StringSet;
 use Veelkoov\Debris\Vecs\Base\DVec;
@@ -30,6 +31,7 @@ use Veelkoov\Debris\Vecs\StringVec;
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 #[UsesClass(Pair::class)]
+#[UsesClass(DIntOrStringSet::class)]
 #[UsesTrait(SimpleKeyMapTrait::class)]
 final class MapTest extends TestCase
 {
