@@ -8,8 +8,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\ChangingImmutableException;
+use Veelkoov\Debris\Internal\Freezer;
 
 /**
  * @internal

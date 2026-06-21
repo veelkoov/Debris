@@ -8,10 +8,10 @@ use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\Base\EveryMapTrait;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\SimpleKeyMapTrait;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Maps\Base\DStringMap;
+use Veelkoov\Debris\Maps\Base\EveryMapTrait;
+use Veelkoov\Debris\Maps\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\StringToInt;
 
 /**

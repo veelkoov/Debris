@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base;
+namespace Veelkoov\Debris\Maps\Base;
 
 use Veelkoov\Debris\Exception\EmptyCollectionException;
+use Veelkoov\Debris\Map;
 use Veelkoov\Debris\Maps\Pair;
 
 /**

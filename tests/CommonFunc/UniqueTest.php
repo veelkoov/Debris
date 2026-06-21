@@ -8,8 +8,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DVec;
-use Veelkoov\Debris\Base\Internal\Freezer;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @internal

@@ -8,13 +8,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DVec;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Sets\IntSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
 use Veelkoov\Debris\Vecs\IntVec;
 
 /**

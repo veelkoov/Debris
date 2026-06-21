@@ -2,12 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base;
+namespace Veelkoov\Debris\Maps\Base;
 
-use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Map;
 use Veelkoov\Debris\Maps\Pair;
+use Veelkoov\Debris\Vec;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @template K of int|string

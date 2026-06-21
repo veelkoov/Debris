@@ -2,33 +2,38 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base;
+namespace Veelkoov\Debris\Sets\Base;
 
-use Veelkoov\Debris\Base\Internal\Freezer;
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
+use Veelkoov\Debris\Map;
+use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Set;
 
 /**
  * @template V of object|scalar|null
  *
- * @implements Vec<V>
+ * @implements Set<V>
  */
-class DVec implements Vec
+class DSet implements Set
 {
-    protected readonly Freezer $freezer;
-
     /**
-     * @var list<V>
+     * @var Map<V, null>
      */
-    protected array $items;
+    private Map $items;
 
     /**
      * @param iterable<V> $items
      */
     final public function __construct(iterable $items = [], bool $frozen = false)
     {
-        $this->items = array_values([...$items]);
-        $this->freezer = new Freezer($this, $frozen);
+        $this->items = self::getNewInternalContainer();
+
+        $this->addAll($items);
+
+        if ($frozen) {
+            $this->items->freeze();
+        }
     }
 
     public static function of(mixed ...$items): static
@@ -55,7 +60,7 @@ class DVec implements Vec
 
     public function freeze(): static
     {
-        $this->freezer->freeze();
+        $this->items->freeze();
 
         return $this;
     }
@@ -63,19 +68,19 @@ class DVec implements Vec
     #[\Override]
     public function isEmpty(): bool
     {
-        return [] === $this->items;
+        return $this->items->isEmpty();
     }
 
     #[\Override]
     public function isNotEmpty(): bool
     {
-        return [] !== $this->items;
+        return $this->items->isNotEmpty();
     }
 
     #[\Override]
     public function count(): int
     {
-        return \count($this->items);
+        return $this->items->count();
     }
 
     public function add(mixed ...$value): static
@@ -85,9 +90,9 @@ class DVec implements Vec
 
     public function addAll(iterable $values): static
     {
-        $this->freezer->protect();
-
-        array_push($this->items, ...$values); // @phpstan-ignore assign.propertyType (FIXME: I'm almost sure this is a false-positive.)
+        foreach ($values as $item) {
+            $this->items->set($item, null);
+        }
 
         return $this;
     }
@@ -99,7 +104,7 @@ class DVec implements Vec
 
     public function plusAll(iterable $values): static
     {
-        return new static([...$this->items, ...$values]);
+        return new static([...$this, ...$values]);
     }
 
     public function remove(mixed ...$value): static
@@ -109,21 +114,7 @@ class DVec implements Vec
 
     public function removeAll(iterable $values): static
     {
-        $this->freezer->protect();
-
-        $result = $this->items;
-
-        foreach ($values as $item) {
-            $key = array_search($item, $result, true);
-
-            if (false === $key) {
-                continue;
-            }
-
-            unset($result[$key]);
-        }
-
-        $this->items = array_values($result);
+        $this->items->removeAllKeys($values);
 
         return $this;
     }
@@ -140,7 +131,7 @@ class DVec implements Vec
 
     public function contains(mixed $value): bool
     {
-        return \in_array($value, $this->items, true);
+        return $this->items->hasKey($value);
     }
 
     public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static
@@ -157,13 +148,13 @@ class DVec implements Vec
     #[\Override]
     public function jsonSerialize(): mixed
     {
-        return $this->items;
+        return $this->getValuesArray();
     }
 
     #[\Override]
     public function getIterator(): \Traversable
     {
-        return new \ArrayIterator($this->items);
+        return new \ArrayIterator($this->getValuesArray());
     }
 
     public function intersect(iterable $other): static
@@ -175,21 +166,16 @@ class DVec implements Vec
 
     public function max(callable|\Closure|null $callable = null): mixed
     {
-        if ([] === $this->items) {
-            throw new EmptyCollectionException('Cannot find max() of an empty list.');
+        if ($this->isEmpty()) {
+            throw new EmptyCollectionException('Cannot find max() of an empty set.');
         }
 
-        return max(null === $callable ? $this->items : array_map($callable, $this->items));
-    }
-
-    public function at(int $index): mixed // FIXME: Somehow by key?
-    {
-        return $this->items[$index];
+        return max(null === $callable ? $this->getValuesArray() : array_map($callable, $this->getValuesArray())); // @phpstan-ignore argument.type (FIXME)
     }
 
     public function filter(callable|\Closure $filter): static
     {
-        return new static(array_filter($this->items, $filter));
+        return new static(array_filter($this->getValuesArray(), $filter));
     }
 
     public function filterNot(callable|\Closure $filter): static
@@ -199,30 +185,30 @@ class DVec implements Vec
 
     public function single(): mixed
     {
-        if (1 !== $this->count()) {
-            throw new NoSingleElementException('The list has '.$this->count().' items instead of exactly one.');
+        try {
+            return $this->items->singleKey();
+        } catch (NoSingleElementException) {
+            throw new NoSingleElementException('The set has '.$this->count().' items instead of exactly one.');
         }
-
-        return $this->items[0];
     }
 
     public function random(): mixed
     {
-        if ([] === $this->items) {
-            throw new EmptyCollectionException('The list is empty.');
+        if ($this->isEmpty()) {
+            throw new EmptyCollectionException('The set is empty.');
         }
 
-        return $this->at(array_rand($this->items));
+        return $this->items->randomKey();
     }
 
     public function map(callable|\Closure $function): static
     {
-        return new static(array_map($function, $this->items));
+        return new static(array_map($function, $this->getValuesArray()));
     }
 
-    public function mapInto(Vec $target, callable|\Closure $function): Vec
+    public function mapInto(callable|\Closure $function, Set $target): Set
     {
-        return $target->addAll(array_map($function, $this->items));
+        return $target->addAll(array_map($function, $this->getValuesArray()));
     }
 
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static
@@ -236,47 +222,38 @@ class DVec implements Vec
 
     public function getValuesArray(): array
     {
-        return $this->items;
+        return $this->items->getKeysArray();
     }
 
     public function any(callable|\Closure $testFunction): bool
     {
-        foreach ($this->items as $value) {
-            if ($testFunction($value)) {
-                return true;
-            }
-        }
-
-        return false;
+        return $this->items->anyKey($testFunction);
     }
 
     public function all(callable|\Closure $testFunction): bool
     {
-        foreach ($this->items as $value) {
-            if (!$testFunction($value)) {
-                return false;
-            }
-        }
-
-        return true;
+        return $this->items->allKeys($testFunction);
     }
 
     public function shuffle(): static
     {
-        $result = new static($this->items);
-        shuffle($result->items);
+        $items = $this->getValuesArray();
+        shuffle($items);
 
-        return $result;
+        return new static($items);
     }
 
     public function slice(int $offset, ?int $length = null): static
     {
-        return new static(\array_slice($this->items, $offset, $length));
+        return new static(\array_slice($this->getValuesArray(), $offset, $length));
     }
 
-    public function unique(): static
+    /**
+     * @return Map<V, null>
+     */
+    protected static function getNewInternalContainer(): Map
     {
-        return new static(array_unique($this->items, SORT_REGULAR));
+        return new DMap();
     }
 
     /**

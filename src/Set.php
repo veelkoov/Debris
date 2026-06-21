@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base;
+namespace Veelkoov\Debris;
 
 /**
  * @template V of object|scalar|null

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Vecs;
 
-use Veelkoov\Debris\Base\DVec;
-use Veelkoov\Debris\Base\Enforce;
+use Veelkoov\Debris\Enforce;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @extends DVec<int>

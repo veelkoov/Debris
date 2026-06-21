@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Vecs;
 
-use Veelkoov\Debris\Base\Collection;
-use Veelkoov\Debris\Base\DVec;
-use Veelkoov\Debris\Base\Enforce;
-use Veelkoov\Debris\Collections\Strings;
+use Veelkoov\Debris\Collection;
+use Veelkoov\Debris\Enforce;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Strings;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @implements Collection<int, string>

@@ -2,35 +2,34 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base;
+namespace Veelkoov\Debris\Vecs\Base;
 
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Vec;
 
 /**
  * @template V of object|scalar|null
  *
- * @implements Set<V>
+ * @implements Vec<V>
  */
-class DSet implements Set
+class DVec implements Vec
 {
+    protected readonly Freezer $freezer;
+
     /**
-     * @var Map<V, null>
+     * @var list<V>
      */
-    private Map $items;
+    protected array $items;
 
     /**
      * @param iterable<V> $items
      */
     final public function __construct(iterable $items = [], bool $frozen = false)
     {
-        $this->items = self::getNewInternalContainer();
-
-        $this->addAll($items);
-
-        if ($frozen) {
-            $this->items->freeze();
-        }
+        $this->items = array_values([...$items]);
+        $this->freezer = new Freezer($this, $frozen);
     }
 
     public static function of(mixed ...$items): static
@@ -57,7 +56,7 @@ class DSet implements Set
 
     public function freeze(): static
     {
-        $this->items->freeze();
+        $this->freezer->freeze();
 
         return $this;
     }
@@ -65,19 +64,19 @@ class DSet implements Set
     #[\Override]
     public function isEmpty(): bool
     {
-        return $this->items->isEmpty();
+        return [] === $this->items;
     }
 
     #[\Override]
     public function isNotEmpty(): bool
     {
-        return $this->items->isNotEmpty();
+        return [] !== $this->items;
     }
 
     #[\Override]
     public function count(): int
     {
-        return $this->items->count();
+        return \count($this->items);
     }
 
     public function add(mixed ...$value): static
@@ -87,9 +86,9 @@ class DSet implements Set
 
     public function addAll(iterable $values): static
     {
-        foreach ($values as $item) {
-            $this->items->set($item, null);
-        }
+        $this->freezer->protect();
+
+        array_push($this->items, ...$values); // @phpstan-ignore assign.propertyType (FIXME: I'm almost sure this is a false-positive.)
 
         return $this;
     }
@@ -101,7 +100,7 @@ class DSet implements Set
 
     public function plusAll(iterable $values): static
     {
-        return new static([...$this, ...$values]);
+        return new static([...$this->items, ...$values]);
     }
 
     public function remove(mixed ...$value): static
@@ -111,7 +110,21 @@ class DSet implements Set
 
     public function removeAll(iterable $values): static
     {
-        $this->items->removeAllKeys($values);
+        $this->freezer->protect();
+
+        $result = $this->items;
+
+        foreach ($values as $item) {
+            $key = array_search($item, $result, true);
+
+            if (false === $key) {
+                continue;
+            }
+
+            unset($result[$key]);
+        }
+
+        $this->items = array_values($result);
 
         return $this;
     }
@@ -128,7 +141,7 @@ class DSet implements Set
 
     public function contains(mixed $value): bool
     {
-        return $this->items->hasKey($value);
+        return \in_array($value, $this->items, true);
     }
 
     public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static
@@ -145,13 +158,13 @@ class DSet implements Set
     #[\Override]
     public function jsonSerialize(): mixed
     {
-        return $this->getValuesArray();
+        return $this->items;
     }
 
     #[\Override]
     public function getIterator(): \Traversable
     {
-        return new \ArrayIterator($this->getValuesArray());
+        return new \ArrayIterator($this->items);
     }
 
     public function intersect(iterable $other): static
@@ -163,16 +176,21 @@ class DSet implements Set
 
     public function max(callable|\Closure|null $callable = null): mixed
     {
-        if ($this->isEmpty()) {
-            throw new EmptyCollectionException('Cannot find max() of an empty set.');
+        if ([] === $this->items) {
+            throw new EmptyCollectionException('Cannot find max() of an empty list.');
         }
 
-        return max(null === $callable ? $this->getValuesArray() : array_map($callable, $this->getValuesArray())); // @phpstan-ignore argument.type (FIXME)
+        return max(null === $callable ? $this->items : array_map($callable, $this->items));
+    }
+
+    public function at(int $index): mixed // FIXME: Somehow by key?
+    {
+        return $this->items[$index];
     }
 
     public function filter(callable|\Closure $filter): static
     {
-        return new static(array_filter($this->getValuesArray(), $filter));
+        return new static(array_filter($this->items, $filter));
     }
 
     public function filterNot(callable|\Closure $filter): static
@@ -182,30 +200,30 @@ class DSet implements Set
 
     public function single(): mixed
     {
-        try {
-            return $this->items->singleKey();
-        } catch (NoSingleElementException) {
-            throw new NoSingleElementException('The set has '.$this->count().' items instead of exactly one.');
+        if (1 !== $this->count()) {
+            throw new NoSingleElementException('The list has '.$this->count().' items instead of exactly one.');
         }
+
+        return $this->items[0];
     }
 
     public function random(): mixed
     {
-        if ($this->isEmpty()) {
-            throw new EmptyCollectionException('The set is empty.');
+        if ([] === $this->items) {
+            throw new EmptyCollectionException('The list is empty.');
         }
 
-        return $this->items->randomKey();
+        return $this->at(array_rand($this->items));
     }
 
     public function map(callable|\Closure $function): static
     {
-        return new static(array_map($function, $this->getValuesArray()));
+        return new static(array_map($function, $this->items));
     }
 
-    public function mapInto(callable|\Closure $function, Set $target): Set
+    public function mapInto(Vec $target, callable|\Closure $function): Vec
     {
-        return $target->addAll(array_map($function, $this->getValuesArray()));
+        return $target->addAll(array_map($function, $this->items));
     }
 
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static
@@ -219,38 +237,47 @@ class DSet implements Set
 
     public function getValuesArray(): array
     {
-        return $this->items->getKeysArray();
+        return $this->items;
     }
 
     public function any(callable|\Closure $testFunction): bool
     {
-        return $this->items->anyKey($testFunction);
+        foreach ($this->items as $value) {
+            if ($testFunction($value)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function all(callable|\Closure $testFunction): bool
     {
-        return $this->items->allKeys($testFunction);
+        foreach ($this->items as $value) {
+            if (!$testFunction($value)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public function shuffle(): static
     {
-        $items = $this->getValuesArray();
-        shuffle($items);
+        $result = new static($this->items);
+        shuffle($result->items);
 
-        return new static($items);
+        return $result;
     }
 
     public function slice(int $offset, ?int $length = null): static
     {
-        return new static(\array_slice($this->getValuesArray(), $offset, $length));
+        return new static(\array_slice($this->items, $offset, $length));
     }
 
-    /**
-     * @return Map<V, null>
-     */
-    protected static function getNewInternalContainer(): Map
+    public function unique(): static
     {
-        return new DMap();
+        return new static(array_unique($this->items, SORT_REGULAR));
     }
 
     /**

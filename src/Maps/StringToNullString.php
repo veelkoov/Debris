@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Maps;
 
-use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\Base\Enforce;
+use Veelkoov\Debris\Enforce;
+use Veelkoov\Debris\Maps\Base\DStringMap;
 
 /**
  * @extends DStringMap<?string>

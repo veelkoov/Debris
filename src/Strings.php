@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Collections;
-
-use Veelkoov\Debris\Base\Collection;
+namespace Veelkoov\Debris;
 
 /**
  * @extends Collection<int, string>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base\Enforce;
+namespace Veelkoov\Debris\Enforce;
 
 trait AnyKeysTrait
 {

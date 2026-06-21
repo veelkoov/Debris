@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Sets;
 
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\Base\Enforce;
-use Veelkoov\Debris\Base\Map;
-use Veelkoov\Debris\Collections\Strings;
+use Veelkoov\Debris\Enforce;
+use Veelkoov\Debris\Map;
+use Veelkoov\Debris\Maps\Base\DStringMap;
+use Veelkoov\Debris\Sets\Base\DSet;
+use Veelkoov\Debris\Strings;
 
 /**
  * @extends DSet<string>

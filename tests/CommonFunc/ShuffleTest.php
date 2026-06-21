@@ -9,14 +9,14 @@ use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DIntMap;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\DVec;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\Base\SimpleKeyMapTrait;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DIntMap;
+use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Maps\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\IntToInt;
+use Veelkoov\Debris\Sets\Base\DSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @internal

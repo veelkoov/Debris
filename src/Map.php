@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base;
+namespace Veelkoov\Debris;
 
 use Veelkoov\Debris\Exception\MissingKeyException;
 use Veelkoov\Debris\Maps\Pair;

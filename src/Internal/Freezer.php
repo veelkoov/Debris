@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Veelkoov\Debris\Base\Internal;
+namespace Veelkoov\Debris\Internal;
 
 use Veelkoov\Debris\Exception\ChangingImmutableException;
 
