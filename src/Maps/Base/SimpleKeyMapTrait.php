@@ -30,10 +30,6 @@ trait SimpleKeyMapTrait
      */
     protected array $items = [];
 
-    //
-    // ===== CONSTRUCTOR =======================================
-    //
-
     /**
      * @param iterable<K, V> $items
      */
@@ -48,10 +44,6 @@ trait SimpleKeyMapTrait
         }
     }
 
-    //
-    // ===== ADD ===============================================
-    //
-
     public function set(mixed $key, mixed $value): static
     {
         $this->freezer->protect();
@@ -60,10 +52,6 @@ trait SimpleKeyMapTrait
 
         return $this;
     }
-
-    //
-    // ===== ITERATION =========================================
-    //
 
     #[\Override]
     public function current(): mixed
@@ -107,10 +95,6 @@ trait SimpleKeyMapTrait
         reset($this->items);
     }
 
-    //
-    // ===== GET ARRAY =========================================
-    //
-
     public function getKeysArray(): array
     {
         return array_keys($this->items);
@@ -145,10 +129,6 @@ trait SimpleKeyMapTrait
         return $this->items;
     }
 
-    //
-    // ===== ACCESSORS =========================================
-    //
-
     public function get(mixed $key): mixed
     {
         if (!$this->hasKey($key)) {
@@ -157,10 +137,6 @@ trait SimpleKeyMapTrait
 
         return $this->items[$key];
     }
-
-    //
-    // ===== EMPTY AND COUNT ===================================
-    //
 
     #[\Override]
     public function isEmpty(): bool
@@ -179,10 +155,6 @@ trait SimpleKeyMapTrait
     {
         return \count($this->items);
     }
-
-    //
-    // ===== REMOVE ============================================
-    //
 
     #[\Override]
     public function removeAllValues(iterable $values): static
@@ -214,10 +186,6 @@ trait SimpleKeyMapTrait
         return $this;
     }
 
-    //
-    // ===== CONTAINS ==========================================
-    //
-
     #[\Override]
     public function contains(mixed $value): bool
     {
@@ -229,10 +197,6 @@ trait SimpleKeyMapTrait
     {
         return static::isValidKey($key) && \array_key_exists($key, $this->items);
     }
-
-    //
-    // ===== SINGLE ============================================
-    //
 
     public function single(): Pair
     {
@@ -254,10 +218,6 @@ trait SimpleKeyMapTrait
 
         return array_key_first($this->items);
     }
-
-    //
-    // ===== OTHER ============================================
-    //
 
     public function flip(): Map
     {

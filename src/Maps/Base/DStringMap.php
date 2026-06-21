@@ -24,10 +24,6 @@ class DStringMap implements Map
         return new StringSet(array_keys($this->items));
     }
 
-    //
-    // ===== VALIDATION ========================================
-    //
-
     /**
      * @param string $key
      */

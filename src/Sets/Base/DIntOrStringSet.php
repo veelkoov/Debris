@@ -6,44 +6,46 @@ namespace Veelkoov\Debris\Sets\Base;
 
 use Veelkoov\Debris\Exception\EmptyCollectionException;
 use Veelkoov\Debris\Exception\NoSingleElementException;
-use Veelkoov\Debris\Map;
-use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Internal\Freezer;
 use Veelkoov\Debris\Set;
 
 /**
- * @template V of object|scalar|null
+ * @template V of int|string
  *
  * @implements Set<V>
  */
-class DSet implements Set
+class DIntOrStringSet implements Set
 {
     /**
      * @use EverySetTrait<V>
      */
     use EverySetTrait;
 
+    protected readonly Freezer $freezer;
+
     /**
-     * @var Map<V, null>
+     * @var array<V, V>
      */
-    private Map $items;
+    private array $items = [];
 
     /**
      * @param iterable<V> $items
      */
     final public function __construct(iterable $items = [], bool $frozen = false)
     {
-        $this->items = new DMap();
+        $this->freezer = new Freezer($this, false);
 
         $this->addAll($items);
 
         if ($frozen) {
-            $this->items->freeze();
+            $this->freezer->freeze();
         }
     }
 
+    #[\Override]
     public function freeze(): static
     {
-        $this->items->freeze();
+        $this->freezer->freeze();
 
         return $this;
     }
@@ -51,78 +53,101 @@ class DSet implements Set
     #[\Override]
     public function isEmpty(): bool
     {
-        return $this->items->isEmpty();
+        return 0 === \count($this->items);
     }
 
     #[\Override]
     public function isNotEmpty(): bool
     {
-        return $this->items->isNotEmpty();
+        return 0 !== \count($this->items);
     }
 
     #[\Override]
     public function count(): int
     {
-        return $this->items->count();
+        return \count($this->items);
     }
 
+    #[\Override]
     public function addAll(iterable $values): static
     {
         foreach ($values as $item) {
-            $this->items->set($item, null);
+            $this->items[$item] = $item;
         }
 
         return $this;
     }
 
+    #[\Override]
     public function removeAll(iterable $values): static
     {
-        $this->items->removeAllKeys($values);
+        foreach ($values as $item) {
+            unset($this->items[$item]);
+        }
 
         return $this;
     }
 
+    #[\Override]
     public function contains(mixed $value): bool
     {
-        return $this->items->hasKey($value);
+        return \array_key_exists($value, $this->items);
     }
 
+    #[\Override]
     public function single(): mixed
     {
-        try {
-            return $this->items->singleKey();
-        } catch (NoSingleElementException) {
+        if (1 !== \count($this->items)) {
             throw new NoSingleElementException('The set has '.$this->count().' items instead of exactly one.');
         }
+
+        return array_key_first($this->items);
     }
 
+    #[\Override]
     public function random(): mixed
     {
-        if ($this->isEmpty()) {
-            throw new EmptyCollectionException('The set is empty.');
+        if ([] === $this->items) {
+            throw new EmptyCollectionException('The list is empty.');
         }
 
-        return $this->items->randomKey();
+        return $this->items[array_rand($this->items)];
     }
 
+    #[\Override]
     public function getValuesArray(): array
     {
-        return $this->items->getKeysArray();
+        return array_values($this->items);
     }
 
+    #[\Override]
     public function any(callable|\Closure $testFunction): bool
     {
-        return $this->items->anyKey($testFunction);
+        foreach ($this->items as $value) {
+            if ($testFunction($value)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
+    #[\Override]
     public function all(callable|\Closure $testFunction): bool
     {
-        return $this->items->allKeys($testFunction);
+        foreach ($this->items as $value) {
+            if (!$testFunction($value)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
+    #[\Override]
     public function slice(int $offset, ?int $length = null): static
     {
-        return new static(\array_slice($this->getValuesArray(), $offset, $length));
+        return new static(\array_slice($this->items, $offset, $length)); // TODO: Implement test making sure keys don't break stuff
     }
 
     /**

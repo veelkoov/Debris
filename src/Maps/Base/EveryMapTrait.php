@@ -14,10 +14,6 @@ use Veelkoov\Debris\Maps\Pair;
  */
 trait EveryMapTrait
 {
-    //
-    // ===== MAGIC METHODS =====================================
-    //
-
     /**
      * @param K $key
      *
@@ -35,16 +31,6 @@ trait EveryMapTrait
     {
         return $this->hasKey($key);
     }
-
-    //
-    // ===== OF ================================================
-    //
-
-    // Not implemented
-
-    //
-    // ===== FROM UNSAFE =======================================
-    //
 
     #[\Override]
     public static function fromUnsafe(mixed $iterable): static
@@ -68,10 +54,6 @@ trait EveryMapTrait
         })());
     }
 
-    //
-    // ===== FREEZE ============================================
-    //
-
     #[\Override]
     public function freeze(): static
     {
@@ -79,10 +61,6 @@ trait EveryMapTrait
 
         return $this;
     }
-
-    //
-    // ===== ADD ===============================================
-    //
 
     #[\Override]
     public function setAll(iterable $items): static
@@ -93,10 +71,6 @@ trait EveryMapTrait
 
         return $this;
     }
-
-    //
-    // ===== PLUS ==============================================
-    //
 
     #[\Override]
     public function plus(mixed $key, mixed $value): static
@@ -110,10 +84,6 @@ trait EveryMapTrait
         return (new static($this))->setAll($items);
     }
 
-    //
-    // ===== REMOVE ============================================
-    //
-
     #[\Override]
     public function removeValue(mixed ...$value): static
     {
@@ -125,10 +95,6 @@ trait EveryMapTrait
     {
         return $this->removeAllKeys($key);
     }
-
-    //
-    // ===== MINUS =============================================
-    //
 
     #[\Override]
     public function minusValue(mixed ...$value): static
@@ -154,10 +120,6 @@ trait EveryMapTrait
         return (new static($this))->removeAllKeys($keys);
     }
 
-    //
-    // ===== SORTED ============================================
-    //
-
     #[\Override]
     public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static
     {
@@ -176,10 +138,6 @@ trait EveryMapTrait
         return $result;
     }
 
-    //
-    // ===== JSON SERIALIZE ====================================
-    //
-
     #[\Override]
     public function jsonSerialize(): mixed
     {
@@ -191,22 +149,6 @@ trait EveryMapTrait
     {
         $this->items->rewind();
     }
-
-    //
-    // ===== INTERSECT =========================================
-    //
-
-    // Not implemented
-
-    //
-    // ===== MAX ===============================================
-    //
-
-    // Not implemented
-
-    //
-    // ===== ACCESSORS =========================================
-    //
 
     public function getOrSet(mixed $key, callable|\Closure $newValueFunction): mixed
     {
@@ -239,10 +181,6 @@ trait EveryMapTrait
     {
         return $this->hasKey($key) ? $this->get($key) : $defaultValue;
     }
-
-    //
-    // ===== FILTER ============================================
-    //
 
     public function filter(callable|\Closure $filter): static
     {
@@ -284,10 +222,6 @@ trait EveryMapTrait
         return $this->filter(static fn (mixed $key, mixed $value) => !$filter($key));
     }
 
-    //
-    // ===== RANDOM ============================================
-    //
-
     public function random(): Pair
     {
         $key = $this->randomKey();
@@ -311,10 +245,6 @@ trait EveryMapTrait
 
         return $keys[array_rand($keys)];
     }
-
-    //
-    // ===== MAP ===============================================
-    //
 
     public function map(callable|\Closure $function): static
     {
@@ -358,10 +288,6 @@ trait EveryMapTrait
         return $this->mapInto($target, static fn (mixed $key, mixed $value) => [$key, $function($value)]);
     }
 
-    //
-    // ===== MAP FROM ==========================================
-    //
-
     #[\Override]
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static
     {
@@ -373,10 +299,6 @@ trait EveryMapTrait
             }
         })());
     }
-
-    //
-    // ===== ANY ===============================================
-    //
 
     public function any(callable|\Closure $testFunction): bool
     {
@@ -399,10 +321,6 @@ trait EveryMapTrait
         return $this->any(static fn (mixed $key, mixed $value) => $testFunction($key));
     }
 
-    //
-    // ===== ALL ===============================================
-    //
-
     public function all(callable|\Closure $testFunction): bool
     {
         foreach ($this as $key => $value) {
@@ -424,10 +342,6 @@ trait EveryMapTrait
         return $this->all(static fn (mixed $key, mixed $value) => $testFunction($key));
     }
 
-    //
-    // ===== SHUFFLE ===========================================
-    //
-
     public function shuffle(): static
     {
         $keys = $this->getKeys()->getValuesArray();
@@ -440,10 +354,6 @@ trait EveryMapTrait
         })());
     }
 
-    //
-    // ===== SLICE =============================================
-    //
-
     public function slice(int $offset, ?int $length = null): static
     {
         $keys = \array_slice($this->getKeys()->getValuesArray(), $offset, $length);
@@ -454,16 +364,6 @@ trait EveryMapTrait
             }
         })());
     }
-
-    //
-    // ===== UNIQUE ============================================
-    //
-
-    // Not implemented
-
-    //
-    // ===== OTHER ============================================
-    //
 
     #[\Override]
     public static function fromValues(iterable $input, callable|\Closure $valueToKeyFunction): static
@@ -528,10 +428,6 @@ trait EveryMapTrait
 
         return $result;
     }
-
-    //
-    // ===== VALIDATION ========================================
-    //
 
     /**
      * @param array<mixed>|\ArrayAccess<mixed, mixed> $input
