@@ -32,7 +32,7 @@ use Veelkoov\Debris\Maps\StringToString;
 #[CoversClass(StringToString::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
-final class FlipTest extends TestCase
+final class MapFlipTest extends TestCase
 {
     // @phpstan-ignore missingType.generics
     #[Test]
