@@ -112,7 +112,7 @@ class DIntOrStringSet implements Set
     public function random(): mixed
     {
         if ([] === $this->items) {
-            throw new EmptyCollectionException('The list is empty.');
+            throw new EmptyCollectionException('The set is empty.');
         }
 
         return $this->items[array_rand($this->items)];
@@ -151,7 +151,7 @@ class DIntOrStringSet implements Set
     #[\Override]
     public function slice(int $offset, ?int $length = null): static
     {
-        return new static(\array_slice($this->items, $offset, $length)); // TODO: Implement test making sure keys don't break stuff
+        return new static(\array_slice($this->items, $offset, $length));
     }
 
     /**

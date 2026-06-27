@@ -54,13 +54,23 @@ final class SetRandomTest extends TestCase
         ];
     }
 
+    // @phpstan-ignore missingType.generics
     #[Test]
-    public function random_empty(): void
+    #[DataProvider('provideRandom_emptyCases')]
+    public function random_empty(Set $subject): void
     {
         self::expectException(EmptyCollectionException::class);
         self::expectExceptionMessage('The set is empty.');
 
-        (new DSet())->random();
+        $subject->random();
+    }
+
+    public static function provideRandom_emptyCases(): iterable
+    {
+        return [
+            [new DSet()],
+            [new IntSet()],
+        ];
     }
 
     /**
