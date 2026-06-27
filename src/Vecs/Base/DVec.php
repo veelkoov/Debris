@@ -32,11 +32,13 @@ class DVec implements Vec
         $this->freezer = new Freezer($this, $frozen);
     }
 
+    #[\Override]
     public static function of(mixed ...$items): static
     {
         return new static($items);
     }
 
+    #[\Override]
     public static function fromUnsafe(mixed $iterable): static
     {
         if (!is_iterable($iterable)) {
@@ -54,6 +56,7 @@ class DVec implements Vec
         })());
     }
 
+    #[\Override]
     public function freeze(): static
     {
         $this->freezer->freeze();
@@ -79,11 +82,13 @@ class DVec implements Vec
         return \count($this->items);
     }
 
+    #[\Override]
     public function add(mixed ...$value): static
     {
         return $this->addAll($value);
     }
 
+    #[\Override]
     public function addAll(iterable $values): static
     {
         $this->freezer->protect();
@@ -93,21 +98,25 @@ class DVec implements Vec
         return $this;
     }
 
+    #[\Override]
     public function plus(mixed ...$value): static
     {
         return $this->plusAll($value);
     }
 
+    #[\Override]
     public function plusAll(iterable $values): static
     {
         return new static([...$this->items, ...$values]);
     }
 
+    #[\Override]
     public function remove(mixed ...$value): static
     {
         return $this->removeAll($value);
     }
 
+    #[\Override]
     public function removeAll(iterable $values): static
     {
         $this->freezer->protect();
@@ -129,21 +138,25 @@ class DVec implements Vec
         return $this;
     }
 
+    #[\Override]
     public function minus(mixed ...$value): static
     {
         return $this->minusAll($value);
     }
 
+    #[\Override]
     public function minusAll(iterable $values): static
     {
         return (new static($this))->removeAll($values);
     }
 
+    #[\Override]
     public function contains(mixed $value): bool
     {
         return \in_array($value, $this->items, true);
     }
 
+    #[\Override]
     public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
@@ -167,6 +180,7 @@ class DVec implements Vec
         return new \ArrayIterator($this->items);
     }
 
+    #[\Override]
     public function intersect(iterable $other): static
     {
         $otherValues = [...$other]; // TODO: Optimize for Debris collections
@@ -174,6 +188,7 @@ class DVec implements Vec
         return self::filter(static fn (mixed $item) => \in_array($item, $otherValues, true));
     }
 
+    #[\Override]
     public function max(callable|\Closure|null $callable = null): mixed
     {
         if ([] === $this->items) {
@@ -183,21 +198,25 @@ class DVec implements Vec
         return max(null === $callable ? $this->items : array_map($callable, $this->items));
     }
 
+    #[\Override]
     public function at(int $index): mixed // FIXME: Somehow by key?
     {
         return $this->items[$index];
     }
 
+    #[\Override]
     public function filter(callable|\Closure $filter): static
     {
         return new static(array_filter($this->items, $filter));
     }
 
+    #[\Override]
     public function filterNot(callable|\Closure $filter): static
     {
         return $this->filter(static fn (mixed $item) => !$filter($item));
     }
 
+    #[\Override]
     public function single(): mixed
     {
         if (1 !== $this->count()) {
@@ -207,6 +226,7 @@ class DVec implements Vec
         return $this->items[0];
     }
 
+    #[\Override]
     public function random(): mixed
     {
         if ([] === $this->items) {
@@ -216,16 +236,19 @@ class DVec implements Vec
         return $this->at(array_rand($this->items));
     }
 
+    #[\Override]
     public function map(callable|\Closure $function): static
     {
         return new static(array_map($function, $this->items));
     }
 
+    #[\Override]
     public function mapInto(Vec $target, callable|\Closure $function): Vec
     {
         return $target->addAll(array_map($function, $this->items));
     }
 
+    #[\Override]
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static
     {
         return new static((static function () use ($source, $mapFunction) {
@@ -235,11 +258,13 @@ class DVec implements Vec
         })());
     }
 
+    #[\Override]
     public function getValuesArray(): array
     {
         return $this->items;
     }
 
+    #[\Override]
     public function any(callable|\Closure $testFunction): bool
     {
         foreach ($this->items as $value) {
@@ -251,6 +276,7 @@ class DVec implements Vec
         return false;
     }
 
+    #[\Override]
     public function all(callable|\Closure $testFunction): bool
     {
         foreach ($this->items as $value) {
@@ -262,6 +288,7 @@ class DVec implements Vec
         return true;
     }
 
+    #[\Override]
     public function shuffle(): static
     {
         $result = new static($this->items);
@@ -270,11 +297,13 @@ class DVec implements Vec
         return $result;
     }
 
+    #[\Override]
     public function slice(int $offset, ?int $length = null): static
     {
         return new static(\array_slice($this->items, $offset, $length));
     }
 
+    #[\Override]
     public function unique(): static
     {
         return new static(array_unique($this->items, SORT_REGULAR));

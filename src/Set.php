@@ -45,10 +45,13 @@ interface Set extends Collection, \IteratorAggregate
     // ===== EMPTY AND COUNT ===================================
     //
 
+    #[\Override]
     public function isEmpty(): bool;
 
+    #[\Override]
     public function isNotEmpty(): bool;
 
+    #[\Override]
     public function count(): int;
 
     //
@@ -143,6 +146,7 @@ interface Set extends Collection, \IteratorAggregate
     // ===== JSON SERIALIZE ====================================
     //
 
+    #[\Override]
     public function jsonSerialize(): mixed;
 
     //
@@ -152,6 +156,7 @@ interface Set extends Collection, \IteratorAggregate
     /**
      * @return \Traversable<int, V>
      */
+    #[\Override]
     public function getIterator(): \Traversable;
 
     //

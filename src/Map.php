@@ -47,10 +47,13 @@ interface Map extends Collection, \Iterator
     /**
      * @phpstan-assert-if-false non-empty-list<K> $this->getKeysArray()
      */
+    #[\Override]
     public function isEmpty(): bool;
 
+    #[\Override]
     public function isNotEmpty(): bool;
 
+    #[\Override]
     public function count(): int;
 
     //
@@ -176,6 +179,7 @@ interface Map extends Collection, \Iterator
     // ===== JSON SERIALIZE ====================================
     //
 
+    #[\Override]
     public function jsonSerialize(): mixed;
 
     //
@@ -185,17 +189,22 @@ interface Map extends Collection, \Iterator
     /**
      * @return V
      */
+    #[\Override]
     public function current(): mixed;
 
+    #[\Override]
     public function next(): void;
 
     /**
      * @return K
      */
+    #[\Override]
     public function key(): mixed;
 
+    #[\Override]
     public function valid(): bool;
 
+    #[\Override]
     public function rewind(): void;
 
     //

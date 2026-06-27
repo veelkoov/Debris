@@ -44,6 +44,7 @@ trait SimpleKeyMapTrait
         }
     }
 
+    #[\Override]
     public function set(mixed $key, mixed $value): static
     {
         $this->freezer->protect();
@@ -56,11 +57,13 @@ trait SimpleKeyMapTrait
     #[\Override]
     public function current(): mixed
     {
-        if (null === key($this->items)) {
+        $key = key($this->items);
+
+        if (null === $key) {
             throw new \Error('No current element.');
         }
 
-        return current($this->items);
+        return $this->items[$key];
     }
 
     #[\Override]
@@ -93,21 +96,25 @@ trait SimpleKeyMapTrait
         reset($this->items);
     }
 
+    #[\Override]
     public function getKeysArray(): array
     {
         return array_keys($this->items);
     }
 
+    #[\Override]
     public function getValuesArray(): array
     {
         return array_values($this->items);
     }
 
+    #[\Override]
     public function getValues(): Vec
     {
         return new DVec(array_values($this->items));
     }
 
+    #[\Override]
     public function getPairsArray(): array
     {
         $result = [];
@@ -127,6 +134,7 @@ trait SimpleKeyMapTrait
         return $this->items;
     }
 
+    #[\Override]
     public function get(mixed $key): mixed
     {
         if (!$this->hasKey($key)) {
@@ -196,6 +204,7 @@ trait SimpleKeyMapTrait
         return static::isValidKey($key) && \array_key_exists($key, $this->items);
     }
 
+    #[\Override]
     public function single(): Pair
     {
         $key = $this->singleKey();
@@ -203,11 +212,13 @@ trait SimpleKeyMapTrait
         return new Pair($key, $this->items[$key]);
     }
 
+    #[\Override]
     public function singleValue(): mixed
     {
         return $this->items[$this->singleKey()];
     }
 
+    #[\Override]
     public function singleKey(): mixed
     {
         if (1 !== \count($this->items)) {
@@ -217,6 +228,7 @@ trait SimpleKeyMapTrait
         return array_key_first($this->items);
     }
 
+    #[\Override]
     public function flip(): Map
     {
         $result = new DMap();

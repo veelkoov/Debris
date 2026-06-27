@@ -21,6 +21,7 @@ class DStringMap implements Map
     use SimpleKeyMapTrait;
     use StringKeysTrait;
 
+    #[\Override]
     public function getKeys(): StringSet
     {
         return new StringSet(array_keys($this->items));

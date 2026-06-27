@@ -14,6 +14,7 @@ class IntToString extends DIntMap
 {
     use Enforce\StringValuesTrait;
 
+    #[\Override]
     public function flip(): StringToInt
     {
         return new StringToInt(array_flip($this->items));

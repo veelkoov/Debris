@@ -22,6 +22,7 @@ class DIntMap implements Map
      */
     use SimpleKeyMapTrait;
 
+    #[\Override]
     public function getKeys(): IntSet
     {
         return new IntSet(array_keys($this->items));

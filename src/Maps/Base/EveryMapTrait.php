@@ -150,6 +150,7 @@ trait EveryMapTrait
         $this->items->rewind();
     }
 
+    #[\Override]
     public function getOrSet(mixed $key, callable|\Closure $newValueFunction): mixed
     {
         if (!$this->hasKey($key)) {
@@ -159,6 +160,7 @@ trait EveryMapTrait
         return $this->get($key);
     }
 
+    #[\Override]
     public function getOrSetAs(mixed $key, mixed $newValue): mixed
     {
         if (!$this->hasKey($key)) {
@@ -168,6 +170,7 @@ trait EveryMapTrait
         return $this->get($key);
     }
 
+    #[\Override]
     public function getOrDefault(mixed $key, callable|\Closure $defaultValueFunction): mixed
     {
         if (!$this->hasKey($key)) {
@@ -177,11 +180,13 @@ trait EveryMapTrait
         return $this->get($key);
     }
 
+    #[\Override]
     public function getOrDefaultOf(mixed $key, mixed $defaultValue): mixed
     {
         return $this->hasKey($key) ? $this->get($key) : $defaultValue;
     }
 
+    #[\Override]
     public function filter(callable|\Closure $filter): static
     {
         $result = new static();
@@ -197,31 +202,37 @@ trait EveryMapTrait
         return $result;
     }
 
+    #[\Override]
     public function filterNot(callable|\Closure $filter): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => !$filter($key, $value));
     }
 
+    #[\Override]
     public function filterValues(callable|\Closure $filter): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => $filter($value));
     }
 
+    #[\Override]
     public function filterValuesNot(callable|\Closure $filter): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => !$filter($value));
     }
 
+    #[\Override]
     public function filterKeys(callable|\Closure $filter): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => $filter($key));
     }
 
+    #[\Override]
     public function filterKeysNot(callable|\Closure $filter): static
     {
         return $this->filter(static fn (mixed $key, mixed $value) => !$filter($key));
     }
 
+    #[\Override]
     public function random(): Pair
     {
         $key = $this->randomKey();
@@ -230,11 +241,13 @@ trait EveryMapTrait
         return new Pair($key, $value);
     }
 
+    #[\Override]
     public function randomValue(): mixed
     {
         return $this->get($this->randomKey());
     }
 
+    #[\Override]
     public function randomKey(): mixed
     {
         if ($this->isEmpty()) {
@@ -246,6 +259,7 @@ trait EveryMapTrait
         return $keys[array_rand($keys)];
     }
 
+    #[\Override]
     public function map(callable|\Closure $function): static
     {
         return new static((function () use ($function) {
@@ -257,6 +271,7 @@ trait EveryMapTrait
         })());
     }
 
+    #[\Override]
     public function mapInto(Map $target, callable|\Closure $function): Map
     {
         foreach ($this as $key => $value) {
@@ -268,21 +283,25 @@ trait EveryMapTrait
         return $target;
     }
 
+    #[\Override]
     public function mapKeys(callable|\Closure $function): static
     {
         return $this->map(static fn (mixed $key, mixed $value) => [$function($key), $value]);
     }
 
+    #[\Override]
     public function mapKeysInto(Map $target, callable|\Closure $function): Map
     {
         return $this->mapInto($target, static fn (mixed $key, mixed $value) => [$function($key), $value]);
     }
 
+    #[\Override]
     public function mapValues(callable|\Closure $function): static
     {
         return $this->map(static fn (mixed $key, mixed $value) => [$key, $function($value)]);
     }
 
+    #[\Override]
     public function mapValuesInto(Map $target, callable|\Closure $function): Map
     {
         return $this->mapInto($target, static fn (mixed $key, mixed $value) => [$key, $function($value)]);
@@ -300,6 +319,7 @@ trait EveryMapTrait
         })());
     }
 
+    #[\Override]
     public function any(callable|\Closure $testFunction): bool
     {
         foreach ($this as $key => $value) {
@@ -311,16 +331,19 @@ trait EveryMapTrait
         return false;
     }
 
+    #[\Override]
     public function anyValue(callable|\Closure $testFunction): bool
     {
         return $this->any(static fn (mixed $key, mixed $value) => $testFunction($value));
     }
 
+    #[\Override]
     public function anyKey(callable|\Closure $testFunction): bool
     {
         return $this->any(static fn (mixed $key, mixed $value) => $testFunction($key));
     }
 
+    #[\Override]
     public function all(callable|\Closure $testFunction): bool
     {
         foreach ($this as $key => $value) {
@@ -332,16 +355,19 @@ trait EveryMapTrait
         return true;
     }
 
+    #[\Override]
     public function allValues(callable|\Closure $testFunction): bool
     {
         return $this->all(static fn (mixed $key, mixed $value) => $testFunction($value));
     }
 
+    #[\Override]
     public function allKeys(callable|\Closure $testFunction): bool
     {
         return $this->all(static fn (mixed $key, mixed $value) => $testFunction($key));
     }
 
+    #[\Override]
     public function shuffle(): static
     {
         $keys = $this->getKeys()->getValuesArray();
@@ -354,6 +380,7 @@ trait EveryMapTrait
         })());
     }
 
+    #[\Override]
     public function slice(int $offset, ?int $length = null): static
     {
         $keys = \array_slice($this->getKeys()->getValuesArray(), $offset, $length);

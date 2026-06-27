@@ -41,6 +41,7 @@ class DSet implements Set
         }
     }
 
+    #[\Override]
     public function freeze(): static
     {
         $this->items->freeze();
@@ -66,6 +67,7 @@ class DSet implements Set
         return $this->items->count();
     }
 
+    #[\Override]
     public function addAll(iterable $values): static
     {
         foreach ($values as $item) {
@@ -75,6 +77,7 @@ class DSet implements Set
         return $this;
     }
 
+    #[\Override]
     public function removeAll(iterable $values): static
     {
         $this->items->removeAllKeys($values);
@@ -82,11 +85,13 @@ class DSet implements Set
         return $this;
     }
 
+    #[\Override]
     public function contains(mixed $value): bool
     {
         return $this->items->hasKey($value);
     }
 
+    #[\Override]
     public function single(): mixed
     {
         try {
@@ -96,6 +101,7 @@ class DSet implements Set
         }
     }
 
+    #[\Override]
     public function random(): mixed
     {
         if ($this->isEmpty()) {
@@ -105,21 +111,25 @@ class DSet implements Set
         return $this->items->randomKey();
     }
 
+    #[\Override]
     public function getValuesArray(): array
     {
         return $this->items->getKeysArray();
     }
 
+    #[\Override]
     public function any(callable|\Closure $testFunction): bool
     {
         return $this->items->anyKey($testFunction);
     }
 
+    #[\Override]
     public function all(callable|\Closure $testFunction): bool
     {
         return $this->items->allKeys($testFunction);
     }
 
+    #[\Override]
     public function slice(int $offset, ?int $length = null): static
     {
         return new static(\array_slice($this->getValuesArray(), $offset, $length));

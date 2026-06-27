@@ -12,11 +12,13 @@ use Veelkoov\Debris\Set;
  */
 trait EverySetTrait
 {
+    #[\Override]
     public static function of(mixed ...$items): static
     {
         return new static($items);
     }
 
+    #[\Override]
     public static function fromUnsafe(mixed $iterable): static
     {
         if (!is_iterable($iterable)) {
@@ -34,36 +36,43 @@ trait EverySetTrait
         })());
     }
 
+    #[\Override]
     public function add(mixed ...$value): static
     {
         return $this->addAll($value);
     }
 
+    #[\Override]
     public function plus(mixed ...$value): static
     {
         return $this->plusAll($value);
     }
 
+    #[\Override]
     public function plusAll(iterable $values): static
     {
         return new static([...$this, ...$values]);
     }
 
+    #[\Override]
     public function remove(mixed ...$value): static
     {
         return $this->removeAll($value);
     }
 
+    #[\Override]
     public function minus(mixed ...$value): static
     {
         return $this->minusAll($value);
     }
 
+    #[\Override]
     public function minusAll(iterable $values): static
     {
         return (new static($this))->removeAll($values);
     }
 
+    #[\Override]
     public function shuffle(): static
     {
         $items = $this->getValuesArray();
@@ -72,6 +81,7 @@ trait EverySetTrait
         return new static($items);
     }
 
+    #[\Override]
     public function sorted(callable|\Closure|null $comparator = null, bool $reverse = false): static
     {
         $times = $reverse ? -1 : 1;
@@ -95,6 +105,7 @@ trait EverySetTrait
         return new \ArrayIterator($this->getValuesArray());
     }
 
+    #[\Override]
     public function intersect(iterable $other): static
     {
         $otherValues = [...$other]; // TODO: Optimize for Debris collections
@@ -102,6 +113,7 @@ trait EverySetTrait
         return self::filter(static fn (mixed $item) => \in_array($item, $otherValues, true));
     }
 
+    #[\Override]
     public function max(callable|\Closure|null $callable = null): mixed
     {
         if ($this->isEmpty()) {
@@ -111,26 +123,31 @@ trait EverySetTrait
         return max(null === $callable ? $this->getValuesArray() : array_map($callable, $this->getValuesArray())); // @phpstan-ignore argument.type (FIXME)
     }
 
+    #[\Override]
     public function filter(callable|\Closure $filter): static
     {
         return new static(array_filter($this->getValuesArray(), $filter));
     }
 
+    #[\Override]
     public function filterNot(callable|\Closure $filter): static
     {
         return $this->filter(static fn (mixed $item) => !$filter($item));
     }
 
+    #[\Override]
     public function map(callable|\Closure $function): static
     {
         return new static(array_map($function, $this->getValuesArray()));
     }
 
+    #[\Override]
     public function mapInto(callable|\Closure $function, Set $target): Set
     {
         return $target->addAll(array_map($function, $this->getValuesArray()));
     }
 
+    #[\Override]
     public static function mapFrom(iterable $source, callable|\Closure $mapFunction): static
     {
         return new static((static function () use ($source, $mapFunction) {

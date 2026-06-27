@@ -14,6 +14,7 @@ class StringToString extends DStringMap
 {
     use Enforce\StringValuesTrait;
 
+    #[\Override]
     public function flip(): self
     {
         return new self(array_flip($this->items));
