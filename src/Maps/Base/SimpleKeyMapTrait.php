@@ -56,13 +56,11 @@ trait SimpleKeyMapTrait
     #[\Override]
     public function current(): mixed
     {
-        $result = current($this->items);
-
-        if (false === $result) {
+        if (null === key($this->items)) {
             throw new \Error('No current element.');
         }
 
-        return $result;
+        return current($this->items);
     }
 
     #[\Override]
@@ -86,7 +84,7 @@ trait SimpleKeyMapTrait
     #[\Override]
     public function valid(): bool
     {
-        return false !== current($this->items);
+        return null !== key($this->items);
     }
 
     #[\Override]
