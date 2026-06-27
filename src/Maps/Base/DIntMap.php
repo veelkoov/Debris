@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Veelkoov\Debris\Maps\Base;
 
+use Veelkoov\Debris\Enforce\IntKeysTrait;
 use Veelkoov\Debris\Map;
 use Veelkoov\Debris\Sets\IntSet;
 
@@ -14,6 +15,8 @@ use Veelkoov\Debris\Sets\IntSet;
  */
 class DIntMap implements Map
 {
+    use IntKeysTrait;
+
     /**
      * @use SimpleKeyMapTrait<int, V>
      */
@@ -22,21 +25,5 @@ class DIntMap implements Map
     public function getKeys(): IntSet
     {
         return new IntSet(array_keys($this->items));
-    }
-
-    /**
-     * @param int $key
-     */
-    protected static function enforceKeyType(mixed $key): int
-    {
-        return $key;
-    }
-
-    /**
-     * @phpstan-assert-if-true int $key
-     */
-    protected static function isValidKey(mixed $key): bool
-    {
-        return \is_int($key);
     }
 }
