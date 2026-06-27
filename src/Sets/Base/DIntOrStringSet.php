@@ -71,6 +71,8 @@ class DIntOrStringSet implements Set
     #[\Override]
     public function addAll(iterable $values): static
     {
+        $this->freezer->protect();
+
         foreach ($values as $item) {
             $this->items[$item] = $item;
         }
@@ -81,6 +83,8 @@ class DIntOrStringSet implements Set
     #[\Override]
     public function removeAll(iterable $values): static
     {
+        $this->freezer->protect();
+
         foreach ($values as $item) {
             unset($this->items[$item]);
         }
