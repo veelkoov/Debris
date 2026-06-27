@@ -13,14 +13,16 @@ use Veelkoov\Debris\Internal\Freezer;
 use Veelkoov\Debris\Internal\MapKeyMapper;
 use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Set;
+use Veelkoov\Debris\Sets\Base\DIntOrStringSet;
 use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Sets\IntSet;
 
 /**
  * @internal
  */
+#[CoversClass(DIntOrStringSet::class)]
 #[CoversClass(DSet::class)]
-#[CoversClass(DMap::class)]
+#[UsesClass(DMap::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 final class SetIterationTest extends TestCase

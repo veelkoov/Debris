@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Veelkoov\Debris\Tests\CommonFunc;
 
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\CoversTrait;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -14,6 +15,7 @@ use Veelkoov\Debris\Internal\MapKeyMapper;
 use Veelkoov\Debris\Map;
 use Veelkoov\Debris\Maps\AnyToNullString;
 use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Maps\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Maps\StringToNullString;
 
@@ -21,6 +23,7 @@ use Veelkoov\Debris\Maps\StringToNullString;
  * @internal
  */
 #[CoversClass(DMap::class)]
+#[CoversTrait(SimpleKeyMapTrait::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 final class MapIterationTest extends TestCase
