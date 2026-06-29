@@ -8,17 +8,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\Pair;
+use Veelkoov\Debris\Sets\Base\DSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[CoversClass(Pair::class)]
@@ -33,9 +33,9 @@ final class JsonSerializableTest extends TestCase
     }
 
     #[Test]
-    public function DList_jsonSerialize(): void
+    public function DVec_jsonSerialize(): void
     {
-        self::assertSame('["a","b"]', json_encode(new DList(['a', 'b'])));
+        self::assertSame('["a","b"]', json_encode(new DVec(['a', 'b'])));
     }
 
     #[Test]

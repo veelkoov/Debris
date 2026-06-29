@@ -8,22 +8,23 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Map;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\StringToString;
+use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
+use Veelkoov\Debris\Vecs\StringVec;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
-#[CoversClass(StringList::class)]
+#[CoversClass(StringVec::class)]
 #[CoversClass(StringSet::class)]
 #[CoversClass(StringToString::class)]
 #[UsesClass(Freezer::class)]
@@ -31,11 +32,11 @@ use Veelkoov\Debris\Sets\StringSet;
 final class MapFromTest extends TestCase
 {
     #[Test]
-    public function DList_mapFrom_withKeys(): void
+    public function DVec_mapFrom_withKeys(): void
     {
-        $subject = DList::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value, string $key) => $key.$value);
+        $subject = DVec::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value, string $key) => $key.$value);
 
-        self::assertInstanceOf(DList::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
+        self::assertInstanceOf(DVec::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
         self::assertSame(['aA', 'bB'], $subject->getValuesArray());
 
         self::assertFalse($subject->contains('C'));
@@ -43,11 +44,11 @@ final class MapFromTest extends TestCase
     }
 
     #[Test]
-    public function DList_mapFrom_noKeys(): void
+    public function DVec_mapFrom_noKeys(): void
     {
-        $subject = DList::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value): string => "{$value}"); // Necessity to use "" is weird
+        $subject = DVec::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value): string => "{$value}"); // Necessity to use "" is weird
 
-        self::assertInstanceOf(DList::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
+        self::assertInstanceOf(DVec::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
         self::assertSame(['A', 'B'], $subject->getValuesArray());
 
         self::assertFalse($subject->contains('C'));
@@ -55,11 +56,11 @@ final class MapFromTest extends TestCase
     }
 
     #[Test]
-    public function StringList_mapFrom_noKeys(): void
+    public function StringVec_mapFrom_noKeys(): void
     {
-        $subject = StringList::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value): string => "{$value}"); // Necessity to use "" is weird
+        $subject = StringVec::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value): string => "{$value}"); // Necessity to use "" is weird
 
-        self::assertInstanceOf(StringList::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
+        self::assertInstanceOf(StringVec::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
         self::assertSame(['A', 'B'], $subject->getValuesArray());
 
         self::assertFalse($subject->contains('C'));
@@ -137,7 +138,7 @@ final class MapFromTest extends TestCase
     {
         $subject = StringToString::mapFrom(['a' => 'A', 'b' => 'B'], static fn (string $value) => ["{$value}", "{$value}"]);
 
-        self::assertInstanceOf(DMap::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
+        self::assertInstanceOf(Map::class, $subject); // @phpstan-ignore staticMethod.alreadyNarrowedType (Paranoia)
         self::assertSame(['A', 'B'], $subject->getKeysArray());
         self::assertSame(['A', 'B'], $subject->getValuesArray());
 

@@ -8,18 +8,18 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 use Veelkoov\Debris\Exception\ChangingImmutableException;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\Pair;
+use Veelkoov\Debris\Sets\Base\DSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(ChangingImmutableException::class)]
@@ -29,9 +29,9 @@ use Veelkoov\Debris\Maps\Pair;
 final class MinusAllTest extends TestCase
 {
     #[Test]
-    public function DList_minusAll(): void
+    public function DVec_minusAll(): void
     {
-        $subject = new DList([1, 2, 2, 3, 2, 4]);
+        $subject = new DVec([1, 2, 2, 3, 2, 4]);
 
         $result = $subject->minusAll([2, 2, 4, 5]);
 

@@ -3,6 +3,7 @@ parameters:
 	paths:
 		- src
 		- tests
+	checkMissingOverrideMethodAttribute: true
 
 includes:
 	- phar://phpstan.phar/conf/bleedingEdge.neon

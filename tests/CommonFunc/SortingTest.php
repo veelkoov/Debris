@@ -8,17 +8,17 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\Pair;
+use Veelkoov\Debris\Sets\Base\DSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(Freezer::class)]
@@ -63,9 +63,9 @@ final class SortingTest extends TestCase
     ];
 
     #[Test]
-    public function DList_sorted(): void
+    public function DVec_sorted(): void
     {
-        $subject = new DList(array_values(self::$input));
+        $subject = new DVec(array_values(self::$input));
 
         self::assertSame(
             array_values(self::$expectedPlain),

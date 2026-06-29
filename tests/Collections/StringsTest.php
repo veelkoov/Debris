@@ -6,9 +6,9 @@ namespace Veelkoov\Debris\Tests\Collections;
 
 use PHPUnit\Framework\Attributes\CoversNothing;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Collections\Strings;
-use Veelkoov\Debris\Lists\StringList;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Strings;
+use Veelkoov\Debris\Vecs\StringVec;
 
 /**
  * @internal
@@ -20,7 +20,7 @@ final class StringsTest extends TestCase
 
     public function testInterfaces(): void
     {
-        $this->subject = new StringList();
+        $this->subject = new StringVec();
         self::assertTrue($this->subject->isEmpty());
 
         $this->subject = new StringSet();

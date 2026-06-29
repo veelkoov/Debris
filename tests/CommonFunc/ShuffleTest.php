@@ -7,31 +7,36 @@ namespace Veelkoov\Debris\Tests\CommonFunc;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DScalarMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DIntMap;
+use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Maps\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\IntToInt;
+use Veelkoov\Debris\Sets\Base\DIntOrStringSet;
+use Veelkoov\Debris\Sets\Base\DSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
-#[UsesClass(DScalarMap::class)]
+#[UsesClass(DIntMap::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
+#[UsesTrait(SimpleKeyMapTrait::class)]
+#[UsesClass(DIntOrStringSet::class)]
 final class ShuffleTest extends TestCase
 {
     #[Test]
-    public function DList_shuffle(): void
+    public function DVec_shuffle(): void
     {
         $input = self::getTestList();
-        $subject = (new DList($input))->shuffle();
+        $subject = (new DVec($input))->shuffle();
 
         self::assertIntListIsShuffledOriginal($input, $subject->getValuesArray());
     }

@@ -8,13 +8,13 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DScalarMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\DStringMap;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKey;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKey;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Maps\Base\DStringMap;
+use Veelkoov\Debris\Sets\Base\DIntOrStringSet;
+use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Sets\StringSet;
 
 /**
@@ -22,11 +22,11 @@ use Veelkoov\Debris\Sets\StringSet;
  */
 #[CoversClass(DStringMap::class)]
 #[UsesClass(DMap::class)]
-#[UsesClass(DScalarMap::class)]
 #[UsesClass(DSet::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKey::class)]
 #[UsesClass(MapKeyMapper::class)]
+#[UsesClass(DIntOrStringSet::class)]
 final class DStringMapTest extends TestCase
 {
     #[Test]

@@ -8,19 +8,21 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\Lists\IntList;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DMap;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\StringToBool;
 use Veelkoov\Debris\Sets\IntSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
+use Veelkoov\Debris\Vecs\IntVec;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
-#[CoversClass(IntList::class)]
+#[CoversClass(DVec::class)]
+#[CoversClass(DMap::class)]
+#[CoversClass(IntVec::class)]
 #[CoversClass(IntSet::class)]
 #[CoversClass(IntToString::class)]
 #[CoversClass(StringToBool::class)]
@@ -29,23 +31,23 @@ use Veelkoov\Debris\Sets\IntSet;
 final class FromUnsafeTest extends TestCase
 {
     #[Test]
-    public function IntList_fromUnsafe(): void
+    public function IntVec_fromUnsafe(): void
     {
         // Basic success test
-        self::assertSame([1, 2, 3, 4], IntList::fromUnsafe([1, 2, 3, 4])->getValuesArray());
+        self::assertSame([1, 2, 3, 4], IntVec::fromUnsafe([1, 2, 3, 4])->getValuesArray());
 
         // Keys in the source don't matter
-        self::assertSame([1, 10], IntList::fromUnsafe(['b' => 1, 5 => 10])->getValuesArray());
+        self::assertSame([1, 10], IntVec::fromUnsafe(['b' => 1, 5 => 10])->getValuesArray());
 
         try {
-            IntList::fromUnsafe([1, 2, 'a', 4]);
+            IntVec::fromUnsafe([1, 2, 'a', 4]);
             self::fail('Value "a" should not have been accepted.');
         } catch (\InvalidArgumentException) {
             // Expected
         }
 
         try {
-            IntList::fromUnsafe(new \stdClass());
+            IntVec::fromUnsafe(new \stdClass());
             self::fail('Non-iterable should not have been accepted.');
         } catch (\InvalidArgumentException) {
             // Expected

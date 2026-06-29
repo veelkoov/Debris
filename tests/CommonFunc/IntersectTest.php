@@ -8,16 +8,16 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Sets\Base\DSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DSet::class)]
 #[CoversClass(DMap::class)]
 #[UsesClass(Freezer::class)]
@@ -25,9 +25,9 @@ use Veelkoov\Debris\Base\Internal\MapKeyMapper;
 final class IntersectTest extends TestCase
 {
     #[Test]
-    public function DList_intersectWithArray(): void
+    public function DVec_intersectWithArray(): void
     {
-        $subject = new DList([10, 20, 30, 40, 50]);
+        $subject = new DVec([10, 20, 30, 40, 50]);
 
         $result = $subject->intersect([-10, 10, 30, 50, 70]);
 
@@ -35,11 +35,11 @@ final class IntersectTest extends TestCase
     }
 
     #[Test]
-    public function DList_intersectWithOther(): void
+    public function DVec_intersectWithOther(): void
     {
-        $subject = new DList([10, 20, 30, 40, 50]);
+        $subject = new DVec([10, 20, 30, 40, 50]);
 
-        $result = $subject->intersect(new DList([-10, 10, 30, 50, 70]));
+        $result = $subject->intersect(new DVec([-10, 10, 30, 50, 70]));
 
         self::assertSame([10, 30, 50], $result->getValuesArray());
     }

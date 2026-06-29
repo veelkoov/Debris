@@ -7,33 +7,38 @@ namespace Veelkoov\Debris\Tests\CommonFunc;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\Attributes\UsesTrait;
 use PHPUnit\Framework\TestCase;
-use Veelkoov\Debris\Base\DList;
-use Veelkoov\Debris\Base\DMap;
-use Veelkoov\Debris\Base\DSet;
-use Veelkoov\Debris\Base\Internal\Freezer;
-use Veelkoov\Debris\Base\Internal\MapKeyMapper;
-use Veelkoov\Debris\Lists\StringList;
+use Veelkoov\Debris\Internal\Freezer;
+use Veelkoov\Debris\Internal\MapKeyMapper;
+use Veelkoov\Debris\Maps\Base\DMap;
+use Veelkoov\Debris\Maps\Base\SimpleKeyMapTrait;
 use Veelkoov\Debris\Maps\IntToString;
 use Veelkoov\Debris\Maps\Pair;
 use Veelkoov\Debris\Maps\StringToInt;
+use Veelkoov\Debris\Sets\Base\DIntOrStringSet;
+use Veelkoov\Debris\Sets\Base\DSet;
 use Veelkoov\Debris\Sets\StringSet;
+use Veelkoov\Debris\Vecs\Base\DVec;
+use Veelkoov\Debris\Vecs\StringVec;
 
 /**
  * @internal
  */
-#[CoversClass(DList::class)]
+#[CoversClass(DVec::class)]
 #[CoversClass(DMap::class)]
 #[CoversClass(DSet::class)]
 #[UsesClass(Freezer::class)]
 #[UsesClass(MapKeyMapper::class)]
 #[UsesClass(Pair::class)]
+#[UsesClass(DIntOrStringSet::class)]
+#[UsesTrait(SimpleKeyMapTrait::class)]
 final class MapTest extends TestCase
 {
     #[Test]
-    public function DList_map(): void
+    public function DVec_map(): void
     {
-        $result = (new DList([1, 2, 3]))
+        $result = (new DVec([1, 2, 3]))
             ->map(static fn (int $value) => $value * 2)
         ;
 
@@ -41,15 +46,15 @@ final class MapTest extends TestCase
     }
 
     #[Test]
-    public function DList_mapInto(): void
+    public function DVec_mapInto(): void
     {
-        $target = new StringList();
+        $target = new StringVec();
 
-        $result = (new DList([1, 2, 3]))
-            ->mapInto(static fn (int $value) => (string) ($value * 2), $target)
+        $result = (new DVec([1, 2, 3]))
+            ->mapInto($target, static fn (int $value) => (string) ($value * 2))
         ;
 
-        self::assertInstanceOf(StringList::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
+        self::assertInstanceOf(StringVec::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
         self::assertSame($target, $result);
         self::assertSame(['2', '4', '6'], $result->getValuesArray());
     }
@@ -97,7 +102,7 @@ final class MapTest extends TestCase
         $target = new IntToString();
 
         $result = (new DMap(['a' => 1, 'b' => 2, 'c' => 3]))
-            ->mapInto(static fn (string $key, int $value) => [$value * 2, $key.$key], $target)
+            ->mapInto($target, static fn (string $key, int $value) => [$value * 2, $key.$key])
         ;
 
         self::assertInstanceOf(IntToString::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
@@ -123,7 +128,7 @@ final class MapTest extends TestCase
         $target = new IntToString();
 
         $result = (new DMap(['a' => 'aa', 'b' => 'bb', 'c' => 'cc']))
-            ->mapKeysInto(static fn (string $key) => 10 + (\ord($key) - \ord('a')), $target)
+            ->mapKeysInto($target, static fn (string $key) => 10 + (\ord($key) - \ord('a')))
         ;
 
         self::assertInstanceOf(IntToString::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
@@ -149,7 +154,7 @@ final class MapTest extends TestCase
         $target = new StringToInt();
 
         $result = (new DMap(['a' => '1', 'b' => '2', 'c' => '3']))
-            ->mapValuesInto(static fn (string $value) => 2 * (int) $value, $target)
+            ->mapValuesInto($target, static fn (string $value) => 2 * (int) $value)
         ;
 
         self::assertInstanceOf(StringToInt::class, $result); // @phpstan-ignore staticMethod.alreadyNarrowedType (Unneded ignore means broken annotations)
