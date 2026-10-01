@@ -66,6 +66,6 @@ final class MapKeyMapper
         $wrappedKey = new MapKey($key);
         $this->wrappedScalarKeys[$keyIntRepr][] = $wrappedKey;
 
-        return $wrappedKey; // @phpstan-ignore return.type (FIXME)
+        return $wrappedKey;
     }
 }

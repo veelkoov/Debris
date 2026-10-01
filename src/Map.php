@@ -253,8 +253,8 @@ interface Map extends Collection, \Iterator
     /**
      * @template T
      *
-     * @param K   $key
-     * @param T|V $defaultValue
+     * @param K $key
+     * @param T $defaultValue
      *
      * @return T|V
      */
