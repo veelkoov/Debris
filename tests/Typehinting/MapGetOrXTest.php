@@ -13,10 +13,10 @@ use Veelkoov\Debris\Maps\NullBoolToInt;
  * @internal
  */
 #[CoversNothing]
-final class MapGetTest extends TestCase
+final class MapGetOrXTest extends TestCase
 {
     #[Test]
-    public function get(): void
+    public function getOrDefaultOf(): void
     {
         self::expectNotToPerformAssertions();
 
@@ -24,6 +24,17 @@ final class MapGetTest extends TestCase
 
         self::requireInt($subject->getOrDefaultOf(null, 0));
         self::requireIntOrBool($subject->getOrDefaultOf(null, false));
+    }
+
+    #[Test]
+    public function getOrDefault(): void
+    {
+        self::expectNotToPerformAssertions();
+
+        $subject = new NullBoolToInt();
+
+        self::requireInt($subject->getOrDefault(null, static fn () => 0));
+        self::requireIntOrBool($subject->getOrDefault(null, static fn () => false));
     }
 
     private static function requireInt(int $input): void {}

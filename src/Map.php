@@ -243,8 +243,8 @@ interface Map extends Collection, \Iterator
     /**
      * @template T
      *
-     * @param K                                       $key
-     * @param (callable(): (T|V))|(\Closure(): (T|V)) $defaultValueFunction
+     * @param K                                   $key
+     * @param (callable(): (T))|(\Closure(): (T)) $defaultValueFunction
      *
      * @return T|V
      */
